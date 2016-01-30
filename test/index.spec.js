@@ -32,23 +32,49 @@ describe('FlipMove', () => {
   });
 
   describe('animations', () => {
-    let TestObjectComponent;
-    let TestClassComponent;
+    let ListItem, ListParent;
 
     before( () => {
-      // We need a couple components to move about.
-      // Let's test both the original reateClass way,
-      // as well as the newer ES6 class way.
-      // (Sadly, stateless functional components won't work D:)
-      TestObjectComponent = React.createClass({
+      // To test this, here is our setup:
+      // We're making a simple list of news articles, with the ability to
+      // change them from sorting ascending vs. descending.
+      // Doing so will cause the items to be re-rendered in a different
+      // order, and we want the transition to be animated.
+      //
+      // We need a list item, which just renders its name.
+      ListItem = class ListItem extends Component {
         render() {
-          return <li>{this.props.itemNum}</li>;
+          return <li>{this.props.name}</li>;
         }
-      });
+      };
+      // We need our list parent, which contains our FlipMove as well as
+      // all the list items.
+      ListParent = class ListParent extends Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            articles: [
+              { name: 'The Dawn of Time', timestamp: 123456 },
+              { name: 'A While Back', timestamp: 333333 },
+              { name: 'This Just Happened', timestamp: 654321 }
+            ]
+          }
+        }
 
-      TestClassComponent = class testComponent extends Component {
+        renderArticles() {
+          return this.state.articles.map( article => (
+            <ListItem key={article.timestamp} name={article.name} />
+          ));
+        }
+
         render() {
-          return <li>{this.props.itemNum}</li>;
+          return (
+            <ul>
+              <FlipMove>
+                { this.renderArticles() }
+              </FlipMove>
+            </ul>
+          );
         }
       };
     });
@@ -56,12 +82,20 @@ describe('FlipMove', () => {
     it('renders the children components', () => {
       // Quick test to ensure that FlipMove doesn't impede the rendering
       // of whatever children get passed in.
-      let children = _.times(3, n => <TestObjectComponent key={n} itemNum={n} />)
-      let renderedComponent = TestUtils.renderIntoDocument(
-        <FlipMove>
-          {children}
-        </FlipMove>
+      let renderedComponent = TestUtils.renderIntoDocument(<ListParent />);
+
+      let outputComponents = TestUtils.scryRenderedComponentsWithType(
+        renderedComponent,
+        ListItem
       );
+
+      let outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
+        renderedComponent,
+        'li'
+      );
+
+      expect(outputComponents).to.have.length.of(3);
+      expect(outputTags).to.have.length.of(3);
     });
   });
 });
