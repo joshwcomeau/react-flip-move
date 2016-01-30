@@ -58,7 +58,10 @@ The general approach was adapted from the [FLIP technique](https://aerotwist.com
 
 To understand, let's take a simplified example: Two items in a list that trade places. Here's the HTML output after React renders based on its props:
 
-    Note: I'm inlining CSS in these examples purely for illustrative purposes. This isn't how the code actually works =)
+_**Note:** I'm inlining CSS in these examples purely for illustrative purposes. This isn't how the code actually works =)_
+
+
+##### First
 
 ```html
 <ul id="article-titles">
@@ -69,7 +72,10 @@ To understand, let's take a simplified example: Two items in a list that trade p
 
 Before the animation has happened, List Item 1 is at 0px from the top. List item 2 is at 100px from the top, because it's underneath an item that is 100px tall. These values are our **first** position.
 
-Then, React sends new props, and the two items need to change places. Here's where they wind up:
+
+##### Last
+
+Our articles change places. This could be the result of React sending new props, with our articles in a different order.
 
 ```html
 <ul id="article-titles">
@@ -79,6 +85,8 @@ Then, React sends new props, and the two items need to change places. Here's whe
 ```
 
 So now, List Item 1 is 100px from the top, and List Item 2 is 0px from the top. These values are our **last** position.
+
+##### Invert
 
 Now, the fun bit. We want to take the difference in their positions, so that they APPEAR to not have moved. In order for that to happen:
 
@@ -98,7 +106,10 @@ Now, the fun bit. We want to take the difference in their positions, so that the
 
 Do you see what that does? Even though their position in the DOM has changed, the user would see these two items in their _original_ position: with List Item 1 on top of List Item 2. This is our **invert** stage.
 
-    Note that this transform is NOT animated. It happens instantly, and as far as the user is concerned, _nothing has happened yet_. The two list items are just sitting there.
+_**Note:** this transform is NOT animated. It happens instantly, and as far as the user is concerned, **nothing has happened yet**. The two list items are just sitting there, in their original positions._
+
+
+##### Play
 
 Finally, we *play* them. This involves animating both elements to have a `transform: translateY` of `0px`:
 
