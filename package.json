@@ -1,0 +1,58 @@
+{
+  "name": "flip-move",
+  "version": "0.1.0",
+  "description": "Effortless animation between DOM changes (eg. list reordering) using the FLIP technique.",
+  "main": "lib/index.js",
+  "files": [
+    "dist",
+    "lib",
+    "src"
+  ],
+  "scripts": {
+    "lint": "eslint src",
+    "build:lib": "babel src --out-dir lib",
+    "build:umd": "webpack src/index.js dist/redux-sounds.js --config webpack.config.development.js",
+    "build:umd:min": "webpack src/index.js dist/redux-sounds.min.js --config webpack.config.production.js",
+    "build": "npm run build:lib && npm run build:umd && npm run build:umd:min",
+    "test": "mocha --compilers js:babel-core/register --reporter spec test/*.js"
+  },
+  "author": "Joshua Comeau <joshwcomeau@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joshwcomeau/flip-mode.git"
+  },
+  "keywords": [
+    "react",
+    "react-dom",
+    "animation",
+    "magic-move",
+    "flip",
+    "web-animations"
+  ],
+  "dependencies": {
+    "web-animations-js": "^2.1.4"
+  },
+  "peerDependencies": {
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3"
+  },
+  "devDependencies": {
+    "babel": "^6.1.18",
+    "babel-cli": "^6.2.0",
+    "babel-core": "^6.2.1",
+    "babel-eslint": "^5.0.0-beta4",
+    "babel-loader": "^6.2.1",
+    "babel-plugin-add-module-exports": "^0.1.1",
+    "babel-plugin-transform-object-assign": "^6.3.13",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-stage-0": "^6.1.18",
+    "chai": "^3.2.0",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^3.1.0",
+    "mocha": "^2.2.5",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0",
+    "webpack": "^1.12.11"
+  }
+}
