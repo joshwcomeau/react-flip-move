@@ -11,8 +11,8 @@
   "scripts": {
     "lint": "eslint src",
     "build:lib": "babel src --out-dir lib",
-    "build:umd": "webpack src/index.js dist/redux-sounds.js --config webpack.config.development.js",
-    "build:umd:min": "webpack src/index.js dist/redux-sounds.min.js --config webpack.config.production.js",
+    "build:umd": "webpack src/index.js dist/react-flip-move.js --config webpack.config.development.js",
+    "build:umd:min": "webpack src/index.js dist/react-flip-move.min.js --config webpack.config.production.js",
     "build": "npm run build:lib && npm run build:umd && npm run build:umd:min",
     "test": "mocha --compilers js:babel-core/register --reporter spec --require ./test/helpers/jsdom.helper.js test/*.spec.js"
   },
@@ -27,6 +27,8 @@
     "react-dom",
     "animation",
     "magic-move",
+    "component",
+    "react-component",
     "flip",
     "web-animations"
   ],

@@ -13,7 +13,7 @@
     "no-console": 0,
     "comma-dangle": [2, "never"],
     "no-use-before-define": [2, "nofunc"],
-    "no-unused-vars": [2, {"vars": "all"],
+    "no-unused-vars": [2, {"vars": "all"}],
     "no-unused-expressions": 0
   }
 }
