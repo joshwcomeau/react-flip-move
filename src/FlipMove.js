@@ -48,15 +48,7 @@ class FlipMove extends Component {
     if ( !this.state ) return;
 
     previousProps.children.forEach(child => {
-      // We only want to animate if:
-      //  * The child has an associated key (stationary children are supported)
-      //  * The child still exists in the DOM.
-      //  * The child isn't brand new.
-      const isStationary = !child.key;
-      const isBrandNew   = !this.state[child.key];
-      const isDestroyed  = !this.refs[child.key];
-
-      if ( isStationary || isBrandNew || isDestroyed ) return;
+      if ( !this.childNeedsToBeAnimated ) return;
 
       // The new box can be calculated from the current DOM state.
       // The old box was stored in this.state when the component received props.
@@ -66,19 +58,34 @@ class FlipMove extends Component {
       const deltaX  = oldBox.left - newBox.left;
       const deltaY  = oldBox.top  - newBox.top;
 
-      // If the element has not moved, no animation is necessary.
-      if ( !deltaX && !deltaY ) return;
-
-      let settings = {...this.props};
-      if ( typeof settings.duration === 'string' ) {
-        settings.duration = parseInt(settings.duration)
+      if ( deltaX || deltaY ) {
+        this.animateTransform(domNode, deltaX, deltaY);
       }
-
-      domNode.animate([
-        { transform: `translate(${deltaX}px, ${deltaY}px)`},
-        { transform: 'translate(0,0)'}
-      ], settings);
     });
+  }
+
+  childNeedsToBeAnimated(child) {
+    // We only want to animate if:
+    //  * The child has an associated key (stationary children are supported)
+    //  * The child still exists in the DOM.
+    //  * The child isn't brand new.
+    const isStationary = !child.key;
+    const isBrandNew   = !this.state[child.key];
+    const isDestroyed  = !this.refs[child.key];
+
+    return !isStationary && !isBrandNew && !isDestroyed;
+  }
+
+  animateTransform(domNode, deltaX, deltaY) {
+    let settings = {...this.props};
+    if ( typeof settings.duration === 'string' ) {
+      settings.duration = parseInt(settings.duration)
+    }
+
+    domNode.animate([
+      { transform: `translate(${deltaX}px, ${deltaY}px)`},
+      { transform: 'translate(0,0)'}
+    ], settings);
   }
 
   childrenWithRefs () {
