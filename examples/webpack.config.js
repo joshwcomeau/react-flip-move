@@ -33,8 +33,7 @@ module.exports = {
       {
         test:     /\.jsx?$/,
         loader:   'babel',
-        exclude:  /node_modules/,
-        include:  /(client|common)/
+        exclude:  /node_modules/
       },
       // SASS
       {
