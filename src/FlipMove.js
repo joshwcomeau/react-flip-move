@@ -17,7 +17,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
-// Technique
+
 class FlipMove extends Component {
   componentWillReceiveProps() {
     // Get the bounding boxes of all currently-rendered, keyed children.
@@ -47,9 +47,11 @@ class FlipMove extends Component {
     // the first render; we only animate transitions between states =)
     if ( !this.state ) return;
 
-    previousProps.children.forEach(child => {
-      if ( !this.childNeedsToBeAnimated ) return;
+    const childrenToAnimate = previousProps.children.filter(
+      this.childNeedsToBeAnimated.bind(this)
+    );
 
+    childrenToAnimate.forEach( (child, index) => {
       // The new box can be calculated from the current DOM state.
       // The old box was stored in this.state when the component received props.
       const domNode = ReactDOM.findDOMNode( this.refs[child.key] );
@@ -59,7 +61,7 @@ class FlipMove extends Component {
       const deltaY  = oldBox.top  - newBox.top;
 
       if ( deltaX || deltaY ) {
-        this.animateTransform(domNode, deltaX, deltaY);
+        this.animateTransform(domNode, deltaX, deltaY, index);
       }
     });
   }
@@ -76,11 +78,13 @@ class FlipMove extends Component {
     return !isStationary && !isBrandNew && !isDestroyed;
   }
 
-  animateTransform(domNode, deltaX, deltaY) {
+  animateTransform(domNode, deltaX, deltaY, index) {
     let settings = {...this.props};
     if ( typeof settings.duration === 'string' ) {
-      settings.duration = parseInt(settings.duration)
+      settings.duration = parseInt(settings.duration);
     }
+
+    settings.duration += index * settings.staggerDurationBy;
 
     domNode.animate([
       { transform: `translate(${deltaX}px, ${deltaY}px)`},
@@ -113,7 +117,8 @@ class FlipMove extends Component {
     iterations: PropTypes.number,
     direction:  PropTypes.string,
     fill:       PropTypes.string,
-    onComplete: PropTypes.func
+    onComplete: PropTypes.func,
+    staggerDurationBy: PropTypes.number
   };
 
   static defaultProps = {
@@ -122,7 +127,8 @@ class FlipMove extends Component {
     delay:      0,
     iterations: 1,
     direction:  'normal',
-    fill:       'none'
+    fill:       'none',
+    staggerDurationBy: 0
   };
 }
 
