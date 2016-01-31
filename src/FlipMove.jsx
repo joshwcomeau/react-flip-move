@@ -3,10 +3,6 @@ import ReactDOM from 'react-dom';
 
 
 class FlipMove extends Component {
-  static propTypes = {
-    children: PropTypes.array.isRequired
-  };
-
   componentWillReceiveProps(nextProps) {
     this.props.children.forEach(child => {
       // It is possible that a child does not have a `key` property;
@@ -36,16 +32,18 @@ class FlipMove extends Component {
       const deltaX  = oldBox.left - newBox.left;
       const deltaY  = oldBox.top  - newBox.top;
 
-      // If the deltas have not changed, no animation is necessary.
+      // If the element has not moved, no animation is necessary.
       if ( !deltaX && !deltaY ) return;
 
+      let settings = {...this.props};
+      if ( typeof settings.duration === 'string' ) {
+        settings.duration = parseInt(settings.duration)
+      }
 
       domNode.animate([
         { transform: `translate(${deltaX}px, ${deltaY}px)`},
         { transform: 'translate(0,0)'}
-      ], {
-        duration: 150
-      });
+      ], settings);
     });
   }
 
@@ -62,6 +60,29 @@ class FlipMove extends Component {
       </div>
     );
   }
+
+  static propTypes = {
+    children:   PropTypes.array.isRequired,
+    duration:   PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]),
+    easing:     PropTypes.string,
+    delay:      PropTypes.number,
+    iterations: PropTypes.number,
+    direction:  PropTypes.string,
+    fill:       PropTypes.string,
+    onComplete: PropTypes.func
+  };
+
+  static defaultProps = {
+    duration:   350,
+    easing:     'ease-in-out',
+    delay:      0,
+    iterations: 1,
+    direction:  'normal',
+    fill:       'none'
+  };
 }
 
 export default FlipMove;

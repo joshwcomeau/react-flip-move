@@ -5,9 +5,12 @@ import sinonChai            from 'sinon-chai';
 import equalJSX             from 'chai-equal-jsx';
 
 import React, { Component } from 'react';
+import ReactDOM             from 'react-dom';
 import TestUtils            from 'react-addons-test-utils';
 
 import FlipMove             from '../src/FlipMove.jsx';
+
+var jsdom = require('jsdom');
 
 chai.use(sinonChai);
 chai.use(equalJSX);
@@ -31,71 +34,93 @@ describe('FlipMove', () => {
     });
   });
 
-  describe('animations', () => {
-    let ListItem, ListParent;
+  describe('functionality', () => {
+    // To test this, here is our setup:
+    // We're making a simple list of news articles, with the ability to
+    // change them from sorting ascending vs. descending.
+    // Doing so will cause the items to be re-rendered in a different
+    // order, and we want the transition to be animated.
+    const articles = [
+      { id: 'a', name: 'The Dawn of Time', timestamp: 123456 },
+      { id: 'b', name: 'A While Back', timestamp: 333333 },
+      { id: 'c', name: 'This Just Happened', timestamp: 654321 }
+    ];
+
+    // We need a list item, the thing we'll be moving about.
+    const ListItem = class ListItem extends Component {
+      render() {
+        return <li className={this.props.id}>{this.props.name}</li>;
+      }
+    };
+    // We need our list parent, which contains our FlipMove as well as
+    // all the list items.
+    const ListParent = class ListParent extends Component {
+      constructor(props) {
+        super(props);
+        this.state = { articles };
+      }
+
+      renderArticles() {
+        return this.state.articles.map( article => (
+          <ListItem key={article.id} id={article.id} name={article.name} />
+        ));
+      }
+
+      render() {
+        return (
+          <ul>
+            <FlipMove>
+              { this.renderArticles() }
+            </FlipMove>
+          </ul>
+        );
+      }
+    };
+
+    let renderedComponent;
 
     before( () => {
-      // To test this, here is our setup:
-      // We're making a simple list of news articles, with the ability to
-      // change them from sorting ascending vs. descending.
-      // Doing so will cause the items to be re-rendered in a different
-      // order, and we want the transition to be animated.
-      //
-      // We need a list item, which just renders its name.
-      ListItem = class ListItem extends Component {
-        render() {
-          return <li>{this.props.name}</li>;
-        }
-      };
-      // We need our list parent, which contains our FlipMove as well as
-      // all the list items.
-      ListParent = class ListParent extends Component {
-        constructor(props) {
-          super(props);
-          this.state = {
-            articles: [
-              { name: 'The Dawn of Time', timestamp: 123456 },
-              { name: 'A While Back', timestamp: 333333 },
-              { name: 'This Just Happened', timestamp: 654321 }
-            ]
-          }
-        }
-
-        renderArticles() {
-          return this.state.articles.map( article => (
-            <ListItem key={article.timestamp} name={article.name} />
-          ));
-        }
-
-        render() {
-          return (
-            <ul>
-              <FlipMove>
-                { this.renderArticles() }
-              </FlipMove>
-            </ul>
-          );
-        }
-      };
+      renderedComponent = TestUtils.renderIntoDocument(<ListParent />);
     });
 
     it('renders the children components', () => {
-      // Quick test to ensure that FlipMove doesn't impede the rendering
-      // of whatever children get passed in.
-      let renderedComponent = TestUtils.renderIntoDocument(<ListParent />);
-
       let outputComponents = TestUtils.scryRenderedComponentsWithType(
-        renderedComponent,
-        ListItem
+        renderedComponent, ListItem
       );
 
       let outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
-        renderedComponent,
-        'li'
+        renderedComponent, 'li'
       );
 
       expect(outputComponents).to.have.length.of(3);
       expect(outputTags).to.have.length.of(3);
+
+      // Check that they're rendered in order
+      expect(outputComponents[0].props.id).to.equal('a');
+      expect(outputComponents[1].props.id).to.equal('b');
+      expect(outputComponents[2].props.id).to.equal('c');
     });
+
+    describe('updating state', () => {
+      before( () => {
+        renderedComponent.setState({ articles: articles.reverse() });
+      });
+
+      it('has rearranged the DOM nodes', () => {
+        let outputComponents = TestUtils.scryRenderedComponentsWithType(
+          renderedComponent, ListItem
+        );
+        expect(outputComponents[0].props.id).to.equal('c');
+        expect(outputComponents[1].props.id).to.equal('b');
+        expect(outputComponents[2].props.id).to.equal('a');
+      });
+    });
+
+    // TODO: Test the actual animation, handling params, callback...
+    // This is unfortunately impossible in jsdom because FlipMove uses
+    // the bounding box to determine whether animation is necessary or not.
+    // jsdom cannot calculate bounding boxes, and so no animation is ever
+    // triggered.
+    // PhantomJS is probably the best tool for the job.
   });
 });
