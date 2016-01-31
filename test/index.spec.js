@@ -1,19 +1,16 @@
-import _                    from 'lodash';
 import chai, { expect }     from 'chai';
 import sinon                from 'sinon';
 import sinonChai            from 'sinon-chai';
-import equalJSX             from 'chai-equal-jsx';
 
 import React, { Component } from 'react';
 import ReactDOM             from 'react-dom';
 import TestUtils            from 'react-addons-test-utils';
 
-import FlipMove             from '../src/FlipMove.jsx';
+import FlipMove             from '../src/FlipMove';
 
 var jsdom = require('jsdom');
 
 chai.use(sinonChai);
-chai.use(equalJSX);
 
 const shallowDOM = TestUtils.createRenderer();
 

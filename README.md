@@ -1,8 +1,8 @@
-FLIP Move
+React Flip Move
 =========
 
-[![build status](https://img.shields.io/travis/joshwcomeau/flip-move/master.svg?style=flat-square)](https://travis-ci.org/joshwcomeau/flip-move)
-[![npm version](https://img.shields.io/npm/v/flip-move.svg?style=flat-square)](https://www.npmjs.com/package/flip-move)
+[![build status](https://img.shields.io/travis/joshwcomeau/react-flip-move/master.svg?style=flat-square)](https://travis-ci.org/joshwcomeau/react-flip-move)
+[![npm version](https://img.shields.io/npm/v/react-flip-move.svg?style=flat-square)](https://www.npmjs.com/package/react-flip-move)
 
 Animations library for React that automagically handles animations when a DOM element gets reordered or moved.
 
