@@ -1,28 +1,62 @@
+/**
+ * React Flip Move
+ * Automagically animate the transition when the DOM gets reordered.
+ *
+ * How it works:
+ * The basic idea with this component is pretty straightforward:
+ *
+ *   - We track all rendered elements by their `key` property, and we keep
+ *     their bounding boxes (their top/left/right/bottom coordinates) in this
+ *     component's state.
+ *   - When the component updates, we compare its former position (held in
+ *     state) with its new position (derived from the DOM after update).
+ *   - If the two have moved, we use the FLIP technique to animate the
+ *     transition between their positions.
+ */
+
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
-
+// Technique
 class FlipMove extends Component {
-  componentWillReceiveProps(nextProps) {
-    this.props.children.forEach(child => {
+  componentWillReceiveProps() {
+    // Get the bounding boxes of all currently-rendered, keyed children.
+    // Store it in this.state.
+    const newState = this.props.children.reduce( (state, child) => {
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
-      if ( !child.key ) return;
+      if ( !child.key ) return state;
 
       const domNode     = ReactDOM.findDOMNode( this.refs[child.key] );
       const boundingBox = domNode.getBoundingClientRect();
 
-      this.setState({ [child.key]: boundingBox });
-    });
+      return { ...state, [child.key]: boundingBox };
+    }, {});
+
+    this.setState(newState);
   }
 
-  componentDidUpdate(prevProps) {
-    // If we haven't assigned any keys to state yet, it's the first render.
-    // The first render cannot possibly have any animations. No work needed.
+  componentDidUpdate(previousProps) {
+    // Re-calculate the bounding boxes of tracked elements.
+    // Compare to the bounding boxes stored in state.
+    // Animate as required =)
+
+    // On the very first render, `componentWillReceiveProps` is not called.
+    // This means that `this.state` will be undefined.
+    // That's alright, though, because there is no possible transition on
+    // the first render; we only animate transitions between states =)
     if ( !this.state ) return;
 
-    this.props.children.forEach(child => {
-      if ( !child.key ) return;
+    previousProps.children.forEach(child => {
+      // We only want to animate if:
+      //  * The child has an associated key (stationary children are supported)
+      //  * The child still exists in the DOM.
+      //  * The child isn't brand new.
+      const isStationary = !child.key;
+      const isBrandNew   = !this.state[child.key];
+      const isDestroyed  = !this.refs[child.key];
+
+      if ( isStationary || isBrandNew || isDestroyed ) return;
 
       // The new box can be calculated from the current DOM state.
       // The old box was stored in this.state when the component received props.
