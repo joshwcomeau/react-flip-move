@@ -1,7 +1,10 @@
 @import './normalize.scss';
 @import './header.scss';
-@import './1_shuffle.scss';
 @import './variables.scss';
+
+@import './1_shuffle.scss';
+@import './2_square.scss';
+
 
 *, *:before, *:after { box-sizing: border-box; }
 
