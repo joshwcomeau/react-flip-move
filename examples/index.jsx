@@ -3,8 +3,9 @@ import ReactDOM, { render }             from 'react-dom';
 import classNames                       from 'classnames';
 import { Router, Route, Link }          from 'react-router';
 
-import Header from './Components/Header.jsx';
-import Shuffle from './Components/1_Shuffle.jsx';
+import Header   from './Components/Header.jsx';
+import Shuffle  from './Components/1_Shuffle.jsx';
+import Square   from './Components/2_Square.jsx';
 
 require('./scss/main.scss');
 
@@ -24,6 +25,7 @@ render((
   <Router>
     <Route path="/" component={App}>
       <Route path="shuffle" component={Shuffle} />
+      <Route path="square" component={Square} />
     </Route>
   </Router>
 ), document.getElementById('app'))

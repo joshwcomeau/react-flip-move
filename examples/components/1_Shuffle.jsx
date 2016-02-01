@@ -3,9 +3,9 @@ import moment                           from 'moment';
 import { shuffle }                      from 'lodash';
 import classNames                       from 'classnames';
 
-import articles from './data/articles';
+import articles from '../data/articles';
 
-import FlipMove from './TEMP_flip-move';
+import FlipMove from '../TEMP_flip-move';
 
 
 class ListItem extends Component {
