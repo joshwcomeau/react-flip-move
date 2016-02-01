@@ -5,9 +5,7 @@ import { shuffle }                      from 'lodash';
 import classNames                       from 'classnames';
 
 
-import FlipMove from '../TEMP_flip-move';
-
-require('../scss/main.scss');
+import FlipMove from './TEMP_flip-move';
 
 const articles = [
   { id: 'a', timestamp: 1401336000000, name: 'The Dawn of Time' },

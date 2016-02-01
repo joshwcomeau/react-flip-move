@@ -5,20 +5,19 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
   devtool: 'source-map',
 
-  entry: {
-    '1_shuffle': './1_shuffle/index.jsx'
-  },
+  entry: './index.jsx',
 
   output: {
     path: __dirname,
-    filename: '[name]/bundle.js',
-    sourceMapFilename: '[name]/bundle.map'
+    publicPath: '/react-flip-move/examples',
+    filename: 'dist/bundle.js',
+    sourceMapFilename: 'dist/bundle.map'
   },
 
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('[name]/style.css'),
+    new ExtractTextPlugin('dist/style.css'),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV:       JSON.stringify('production'),
