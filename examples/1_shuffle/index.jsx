@@ -21,7 +21,7 @@ const articles = [
 class ListItem extends Component {
   render() {
     return (
-      <li id={this.props.id}>
+      <li id={this.props.id} className="list-item">
         <h3>{this.props.name}</h3>
         <h5>{moment(this.props.timestamp).format('MMM Do, YYYY')}</h5>
       </li>

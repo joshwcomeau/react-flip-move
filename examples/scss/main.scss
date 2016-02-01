@@ -1,7 +1,20 @@
 @import './normalize.scss';
+@import './header.scss';
+@import './1_shuffle.scss';
+@import './variables.scss';
 
 *, *:before, *:after { box-sizing: border-box; }
 
-html, body {
-  font-family: sans-serif;
+html, body, input, button, select, option {
+  color: $darkgray;
+  font-family: "museo-sans-rounded", sans-serif;
+}
+
+body {
+  background: $aqua;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
 }
