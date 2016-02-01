@@ -5,20 +5,20 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
   devtool: 'source-map',
 
-  entry: [
-    './1_shuffle/index.jsx'
-  ],
+  entry: {
+    '1_shuffle': './1_shuffle/index.jsx'
+  },
 
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/dist/'
+    path: __dirname,
+    filename: '[name]/bundle.js',
+    sourceMapFilename: '[name]/bundle.map'
   },
 
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('style.css'),
+    new ExtractTextPlugin('[name]/style.css'),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV:       JSON.stringify('production'),
