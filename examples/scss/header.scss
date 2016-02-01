@@ -1,0 +1,102 @@
+@import './variables.scss';
+
+$header-height: 75px;
+
+
+#header {
+  position: relative;
+  height: $header-height;
+  background: $white;
+
+  #logo {
+    position: absolute;
+    left: 16px;
+    height: $header-height;
+
+    h2, h4 {
+      margin: 0; padding: 0;
+    }
+
+    h2 {
+      font-weight: 700;
+      font-size: 36px;
+      line-height: $header-height;
+    }
+  }
+
+  nav {
+    position: absolute;
+    right: 16px;
+    height: $header-height;
+    padding: 0;
+
+    .nav-item {
+      position: relative;
+      height: $header-height;
+      width: $header-height;
+      display: block;
+      float: left;
+      text-align: center;
+
+
+
+      &.active h2 {
+        color: $white;
+
+        &:before {
+          background: $fuscia;
+        }
+      }
+
+      &:not(.active) h2:before:hover {
+        background: $lightgray;
+      }
+
+      h2 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        width: $header-height * 0.5;
+        height: $header-height * 0.5;
+        line-height: $header-height * 0.5;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+
+        &:hover {
+          &:before {
+            transform: scale(1.2, 1.2);
+            transition: 200ms;
+          }
+        }
+
+        &:before {
+          content: '';
+          z-index: 0;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+          width: $header-height * 0.5;
+          height: $header-height * 0.5;
+          background: lighten($lightgray, 10%);
+          border-radius: 100%;
+          transition: 750ms;
+
+
+        }
+
+        span {
+          position: relative;
+          z-index: 1;
+        }
+      }
+
+    }
+  }
+}
