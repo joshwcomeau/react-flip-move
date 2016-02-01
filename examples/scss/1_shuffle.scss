@@ -1,7 +1,32 @@
 @import './variables.scss';
 
-#shuffle-vertical {
+#shuffle {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  margin: auto;
+
+  header {
+    position: relative;
+    padding: 16px;
+    height: 45px;
+    margin: 4px 0;
+
+
+  }
   .list-item {
+    margin: 6px;
+    padding: 16px;
+    list-style-type: none;
     background: $white;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+
+    &.list {
+      display: block;
+    }
+    &.grid {
+      display: inline-block;
+    }
   }
 }
