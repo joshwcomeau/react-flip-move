@@ -2,6 +2,7 @@ import React, { Component, PropTypes }  from 'react';
 import ReactDOM, { render }             from 'react-dom';
 import moment                           from 'moment';
 import { shuffle }                      from 'lodash';
+import classNames                       from 'classnames';
 
 
 import FlipMove from '../TEMP_flip-move';
@@ -20,8 +21,10 @@ const articles = [
 
 class ListItem extends Component {
   render() {
+    const listClass = `list-item ${this.props.view}`;
+
     return (
-      <li id={this.props.id} className="list-item">
+      <li id={this.props.id} className={listClass}>
         <h3>{this.props.name}</h3>
         <h5>{moment(this.props.timestamp).format('MMM Do, YYYY')}</h5>
       </li>
@@ -33,48 +36,107 @@ class ListParent extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      view: 'list',
+      order: 'asc',
       articles: this.props.articles
     };
 
-    this.sortAscending = this.sortAscending.bind(this);
-    this.sortDescending = this.sortDescending.bind(this);
-    this.sortShuffle = this.sortShuffle.bind(this);
+    this.toggleList     = this.toggleList.bind(this);
+    this.toggleGrid     = this.toggleGrid.bind(this);
+    this.toggleSort     = this.toggleSort.bind(this);
+    this.sortShuffle    = this.sortShuffle.bind(this);
+    this.sortRotate     = this.sortRotate.bind(this);
+
   }
 
-  renderArticles() {
-    return this.state.articles.map( article => (
-      <ListItem key={article.id} {...article} />
-    ));
-  }
-
-  sortAscending() {
+  toggleList() {
     this.setState({
-      articles: this.state.articles.sort( (a, b) => a.timestamp - b.timestamp)
+      view: 'list'
     });
   }
 
-  sortDescending() {
+  toggleGrid() {
     this.setState({
-      articles: this.state.articles.sort( (a, b) => b.timestamp - a.timestamp)
+      view: 'grid'
+    });
+  }
+
+  toggleSort() {
+    const sortAsc   = (a, b) => a.timestamp - b.timestamp;
+    const sortDesc  = (a, b) => b.timestamp - a.timestamp;
+
+    this.setState({
+      order: (this.state.order === 'asc' ? 'desc' : 'asc'),
+      articles: this.state.articles.sort(
+        this.state.order === 'asc' ? sortDesc : sortAsc
+      )
     });
   }
 
   sortShuffle() {
     this.setState({
+      order: 'shuffle',
       articles: shuffle(this.state.articles)
     });
   }
 
+  sortRotate() {
+    let articles = this.state.articles.slice();
+    articles.unshift(articles.pop())
+
+    this.setState({
+      order: 'rotate',
+      articles
+    });
+  }
+
+  renderArticles() {
+    return this.state.articles.map( article => (
+      <ListItem key={article.id} view={this.state.view} {...article} />
+    ));
+  }
+
   render() {
     return (
-      <div id="shuffle-vertical">
+      <div id="shuffle" class={this.state.view}>
         <header>
-          <ButtonToggle clickHandler={this.sortShuffle} text="Shuffle" />
-          <ButtonToggle clickHandler={this.sortAscending} text="Ascending" />
-          <ButtonToggle clickHandler={this.sortDescending} text="Descending" />
+          <div className="abs-left">
+            <Toggle
+              clickHandler={this.toggleList}
+              text="List"
+              icon="list"
+              active={this.state.view === 'list'}
+            />
+            <Toggle
+              clickHandler={this.toggleGrid}
+              text="Grid"
+              icon="th"
+              active={this.state.view === 'grid'}
+            />
+          </div>
+          <div className="abs-right">
+            <Toggle
+              clickHandler={this.toggleSort}
+              text={this.state.order === 'asc' ? 'Ascending' : 'Descending'}
+              icon={this.state.order === 'asc' ? 'angle-up' : 'angle-down'}
+              active={this.state.order === 'asc' || this.state.order === 'desc'}
+            />
+            <Toggle
+              clickHandler={this.sortShuffle}
+              text="Shuffle"
+              icon="random"
+              active={this.state.order === 'shuffle'}
+            />
+            <Toggle
+              clickHandler={this.sortRotate}
+              text="Rotate"
+              icon="refresh"
+              active={this.state.order === 'rotate'}
+            />
+          </div>
         </header>
         <ul>
-          <FlipMove staggerDurationBy="25">
+          <FlipMove staggerDurationBy="30" duration="350">
             { this.renderArticles() }
           </FlipMove>
         </ul>
@@ -83,11 +145,20 @@ class ListParent extends Component {
   }
 };
 
-const ButtonToggle = ({clickHandler, text, icon}) => (
-  <button className="button-toggle" onClick={clickHandler}>
-    {text}
-  </button>
-)
+const Toggle = ({clickHandler, text, icon, active}) => {
+  const buttonClass = classNames({
+    'button-toggle': true,
+    active
+  });
+  const iconClass = `fa fa-fw fa-${icon}`;
+
+  return (
+    <button className={buttonClass} onClick={clickHandler}>
+      <i className={iconClass} />
+      {text}
+    </button>
+  );
+};
 
 render(
   <ListParent articles={articles} />,
