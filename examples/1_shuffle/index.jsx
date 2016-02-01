@@ -38,6 +38,7 @@ class ListParent extends Component {
     this.state = {
       view: 'list',
       order: 'asc',
+      sortingMethod: 'chronological',
       articles: this.props.articles
     };
 
@@ -67,6 +68,7 @@ class ListParent extends Component {
 
     this.setState({
       order: (this.state.order === 'asc' ? 'desc' : 'asc'),
+      sortingMethod: 'chronological',
       articles: this.state.articles.sort(
         this.state.order === 'asc' ? sortDesc : sortAsc
       )
@@ -75,7 +77,7 @@ class ListParent extends Component {
 
   sortShuffle() {
     this.setState({
-      order: 'shuffle',
+      sortingMethod: 'shuffle',
       articles: shuffle(this.state.articles)
     });
   }
@@ -85,7 +87,7 @@ class ListParent extends Component {
     articles.unshift(articles.pop())
 
     this.setState({
-      order: 'rotate',
+      sortingMethod: 'rotate',
       articles
     });
   }
@@ -119,19 +121,19 @@ class ListParent extends Component {
               clickHandler={this.toggleSort}
               text={this.state.order === 'asc' ? 'Ascending' : 'Descending'}
               icon={this.state.order === 'asc' ? 'angle-up' : 'angle-down'}
-              active={this.state.order === 'asc' || this.state.order === 'desc'}
+              active={this.state.sortingMethod === 'chronological'}
             />
             <Toggle
               clickHandler={this.sortShuffle}
               text="Shuffle"
               icon="random"
-              active={this.state.order === 'shuffle'}
+              active={this.state.sortingMethod === 'shuffle'}
             />
             <Toggle
               clickHandler={this.sortRotate}
               text="Rotate"
               icon="refresh"
-              active={this.state.order === 'rotate'}
+              active={this.state.sortingMethod === 'rotate'}
             />
           </div>
         </header>

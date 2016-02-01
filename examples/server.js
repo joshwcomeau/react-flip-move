@@ -10,13 +10,6 @@ var port = 5678
 var compiler = webpack(config)
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
 
-// Allow static files in the /static directory
-app.use( '/dist', express.static('dist') )
-
-// app.get("/", function(req, res) {
-//   res.sendFile(__dirname + '/index.html')
-// })
-//
 app.get("/", function(req, res) {
   res.sendFile(__dirname + '/1_shuffle/index.html')
 })
