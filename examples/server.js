@@ -10,6 +10,8 @@ var port = 5678
 var compiler = webpack(config)
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
 
+app.use('/react-flip-move/examples', express.static(__dirname))
+
 app.get("/", function(req, res) {
   res.sendFile(__dirname + '/1_shuffle/index.html')
 })
