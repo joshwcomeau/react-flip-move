@@ -4,7 +4,7 @@ import classNames                       from 'classnames';
 import { Router, Route, Link }          from 'react-router';
 
 import Header from './Components/Header.jsx';
-import Shuffle from './1_Shuffle.jsx';
+import Shuffle from './Components/1_Shuffle.jsx';
 
 require('./scss/main.scss');
 
@@ -23,7 +23,7 @@ class App extends Component {
 render((
   <Router>
     <Route path="/" component={App}>
-      <Route path="shuffle" component={Shuffle}/>
+      <Route path="shuffle" component={Shuffle} />
     </Route>
   </Router>
 ), document.getElementById('app'))

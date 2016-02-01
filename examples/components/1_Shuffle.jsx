@@ -1,21 +1,12 @@
 import React, { Component, PropTypes }  from 'react';
-import ReactDOM, { render }             from 'react-dom';
 import moment                           from 'moment';
 import { shuffle }                      from 'lodash';
 import classNames                       from 'classnames';
 
+import articles from './data/articles';
 
 import FlipMove from './TEMP_flip-move';
 
-const articles = [
-  { id: 'a', timestamp: 1401336000000, name: 'The Dawn of Time' },
-  { id: 'b', timestamp: 1426305600000, name: 'A While Back' },
-  { id: 'c', timestamp: 1439006400000, name: 'This Just Happened' },
-  { id: 'd', timestamp: 1451710800000, name: 'Another Headline' },
-  { id: 'e', timestamp: 1452315600000, name: 'Whatever will we do' },
-  { id: 'f', timestamp: 1453525200000, name: 'Words' },
-  { id: 'g', timestamp: 1500000000000, name: 'This Just Happened' }
-]
 
 class ListItem extends Component {
   render() {
@@ -30,22 +21,36 @@ class ListItem extends Component {
   }
 };
 
-class ListParent extends Component {
+const Toggle = ({clickHandler, text, icon, active}) => {
+  const buttonClass = classNames({
+    'button-toggle': true,
+    active
+  });
+  const iconClass = `fa fa-fw fa-${icon}`;
+
+  return (
+    <button className={buttonClass} onClick={clickHandler}>
+      <i className={iconClass} />
+      {text}
+    </button>
+  );
+};
+
+class Shuffle extends Component {
   constructor(props) {
     super(props);
     this.state = {
       view: 'list',
       order: 'asc',
       sortingMethod: 'chronological',
-      articles: this.props.articles
+      articles
     };
 
-    this.toggleList     = this.toggleList.bind(this);
-    this.toggleGrid     = this.toggleGrid.bind(this);
-    this.toggleSort     = this.toggleSort.bind(this);
-    this.sortShuffle    = this.sortShuffle.bind(this);
-    this.sortRotate     = this.sortRotate.bind(this);
-
+    this.toggleList   = this.toggleList.bind(this);
+    this.toggleGrid   = this.toggleGrid.bind(this);
+    this.toggleSort   = this.toggleSort.bind(this);
+    this.sortShuffle  = this.sortShuffle.bind(this);
+    this.sortRotate   = this.sortRotate.bind(this);
   }
 
   toggleList() {
@@ -103,14 +108,12 @@ class ListParent extends Component {
           <div className="abs-left">
             <Toggle
               clickHandler={this.toggleList}
-              text="List"
-              icon="list"
+              text="List" icon="list"
               active={this.state.view === 'list'}
             />
             <Toggle
               clickHandler={this.toggleGrid}
-              text="Grid"
-              icon="th"
+              text="Grid" icon="th"
               active={this.state.view === 'grid'}
             />
           </div>
@@ -123,14 +126,12 @@ class ListParent extends Component {
             />
             <Toggle
               clickHandler={this.sortShuffle}
-              text="Shuffle"
-              icon="random"
+              text="Shuffle" icon="random"
               active={this.state.sortingMethod === 'shuffle'}
             />
             <Toggle
               clickHandler={this.sortRotate}
-              text="Rotate"
-              icon="refresh"
+              text="Rotate" icon="refresh"
               active={this.state.sortingMethod === 'rotate'}
             />
           </div>
@@ -145,22 +146,4 @@ class ListParent extends Component {
   }
 };
 
-const Toggle = ({clickHandler, text, icon, active}) => {
-  const buttonClass = classNames({
-    'button-toggle': true,
-    active
-  });
-  const iconClass = `fa fa-fw fa-${icon}`;
-
-  return (
-    <button className={buttonClass} onClick={clickHandler}>
-      <i className={iconClass} />
-      {text}
-    </button>
-  );
-};
-
-render(
-  <ListParent articles={articles} />,
-  document.getElementById('app')
-);
+export default Shuffle;
