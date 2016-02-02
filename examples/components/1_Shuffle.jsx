@@ -103,7 +103,7 @@ class Shuffle extends Component {
 
   render() {
     return (
-      <div id="shuffle" class={this.state.view}>
+      <div id="shuffle" className={this.state.view}>
         <header>
           <div className="abs-left">
             <Toggle

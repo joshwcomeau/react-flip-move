@@ -7,7 +7,7 @@ module.exports = {
 
   entry: [
     'webpack-hot-middleware/client',
-    './index.jsx'
+    './index'
   ],
 
   output: {
@@ -22,12 +22,6 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin('dist/style.css')
-    // new webpack.DefinePlugin({
-    //   'process.env': {
-    //     NODE_ENV:       JSON.stringify('development'),
-    //     UNIVERSAL_ENV:  JSON.stringify('client')
-    //   }
-    // })
   ],
 
   module: {
@@ -36,7 +30,8 @@ module.exports = {
       {
         test:     /\.jsx?$/,
         loader:   'babel',
-        exclude:  /node_modules/
+        exclude:  /node_modules/,
+        include:  __dirname
       },
       // SASS
       {
@@ -44,10 +39,5 @@ module.exports = {
         loader: ExtractTextPlugin.extract('style-loader', 'css!sass')
       }
     ]
-  },
-
-  resolve: {
-    extensions: ['', '.js', '.jsx', '.sass'],
-    modulesDirectories: ['src', 'node_modules']
   }
 }
