@@ -13,6 +13,7 @@ $board-padding: 8px;
 
   .square {
     position: relative;
+    z-index: 1;
     float: left;
     width: $square-size;
     height: $square-size;
@@ -31,6 +32,7 @@ $board-padding: 8px;
   }
 
   #red {
+    z-index: 2;
     &:after {
       background: $fuscia;
       border-radius: 6px;

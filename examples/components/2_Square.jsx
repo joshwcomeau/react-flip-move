@@ -7,21 +7,27 @@ import classNames                       from 'classnames';
 
 import FlipMove from '../TEMP_flip-move';
 
-const SQUARES_PER_EDGE  = 5
+const SQUARES_PER_EDGE  = 5;
 const NUM_SQUARES       = Math.pow(SQUARES_PER_EDGE, 2);
 const RED_SQUARE        = Math.floor(NUM_SQUARES / 2);
 const { UP, DOWN, LEFT, RIGHT } = Keys;
 
 // Monkeypatching is bad, but so much fun (=
-Array.prototype.move = function (old_index, new_index) {
-    if (new_index >= this.length) return;
-    this.splice(new_index, 0, this.splice(old_index, 1)[0]);
-    return this; // for testing purposes
+Array.prototype.swap = function (a, b) {
+  console.log(a, b)
+  if ( b >= this.length || b < 0 ) return this;
+
+  // Temporary variable to hold data while we juggle
+  let temp = this[a];
+  this[a] = this[b];
+  this[b] = temp;
+  return this;
 };
 
 class Board extends Component {
   constructor(props) {
     super(props);
+    console.log("Constructed with props", props)
     this.state = {
       squares: times(NUM_SQUARES, i => ({
         id: i,
@@ -32,11 +38,14 @@ class Board extends Component {
 
   renderSquares() {
     return this.state.squares.map( square => (
-      <div className="square" id={ square.red ? 'red' : null } />
+      <div key={square.id} className="square" id={ square.red ? 'red' : null } />
     ));
   }
 
-  @keydownScoped( UP, DOWN, LEFT, RIGHT )
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+  }
+
   move(event) {
     const currentIndex = this.state.squares.findIndex( square => square.red );
     let newIndex;
@@ -57,14 +66,14 @@ class Board extends Component {
     }
 
     this.setState({
-      squares: this.state.squares.slice().move(currentIndex, newIndex)
+      squares: this.state.squares.slice().swap(currentIndex, newIndex)
     });
   }
 
   render() {
     return (
       <div id="board">
-        <FlipMove staggerDurationBy="30">
+        <FlipMove duration="200">
           { this.renderSquares() }
         </FlipMove>
       </div>
