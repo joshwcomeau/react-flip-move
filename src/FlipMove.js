@@ -20,9 +20,12 @@ import ReactDOM from 'react-dom';
 
 class FlipMove extends Component {
   componentWillReceiveProps() {
+    // Ensure we're dealing with an array, and not an only child.
+    const children = React.Children.toArray(this.props.children);
+
     // Get the bounding boxes of all currently-rendered, keyed children.
     // Store it in this.state.
-    const newState = this.props.children.reduce( (state, child) => {
+    const newState = children.reduce( (state, child) => {
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
       if ( !child.key ) return state;
@@ -47,23 +50,10 @@ class FlipMove extends Component {
     // the first render; we only animate transitions between states =)
     if ( !this.state ) return;
 
-    const childrenToAnimate = previousProps.children.filter(
-      this.childNeedsToBeAnimated.bind(this)
-    );
-
-    childrenToAnimate.forEach( (child, index) => {
-      // The new box can be calculated from the current DOM state.
-      // The old box was stored in this.state when the component received props.
-      const domNode = ReactDOM.findDOMNode( this.refs[child.key] );
-      const newBox  = domNode.getBoundingClientRect();
-      const oldBox  = this.state[child.key];
-      const deltaX  = oldBox.left - newBox.left;
-      const deltaY  = oldBox.top  - newBox.top;
-
-      if ( deltaX || deltaY ) {
-        this.animateTransform(domNode, deltaX, deltaY, index);
-      }
-    });
+    React.Children
+      .toArray(previousProps.children)
+      .filter(this.childNeedsToBeAnimated.bind(this))
+      .forEach(this.animateTransform.bind(this));
   }
 
   childNeedsToBeAnimated(child) {
@@ -78,22 +68,55 @@ class FlipMove extends Component {
     return !isStationary && !isBrandNew && !isDestroyed;
   }
 
-  animateTransform(domNode, deltaX, deltaY, index) {
-    let settings = {...this.props};
-    if ( typeof settings.duration === 'string' ) {
-      settings.duration = parseInt(settings.duration);
+  getPositionDelta(domNode, key) {
+    const newBox  = domNode.getBoundingClientRect();
+    const oldBox  = this.state[key];
+
+    return [
+      oldBox.left - newBox.left,
+      oldBox.top  - newBox.top
+    ];
+  }
+
+  pickAndPrepAnimationProps(n) {
+    // Omit the props that aren't settings for web-animations
+    // see: https://facebook.github.io/react/docs/transferring-props.html
+    let { children, onComplete, staggerDurationBy, ...animationProps} = this.props;
+
+    if ( typeof animationProps.duration === 'string' ) {
+      animationProps.duration = parseInt(animationProps.duration);
     }
+    animationProps.duration += n * this.props.staggerDurationBy;
 
-    settings.duration += index * settings.staggerDurationBy;
+    return animationProps;
+  }
 
-    domNode.animate([
+  animateTransform(child, n) {
+    const domNode = ReactDOM.findDOMNode( this.refs[child.key] );
+
+    // Get the △X and △Y, and return if the child hasn't budged.
+    const [ deltaX, deltaY ] = this.getPositionDelta(domNode, child.key);
+    if ( deltaX === 0 && deltaY === 0 ) return;
+
+    let animationProps = this.pickAndPrepAnimationProps(n);
+
+    const player = domNode.animate([
       { transform: `translate(${deltaX}px, ${deltaY}px)`},
       { transform: 'translate(0,0)'}
-    ], settings);
+    ], animationProps);
+
+    if ( this.props.onComplete ) {
+      player.addEventListener('finish', this.props.onComplete.bind(null, domNode));
+    }
   }
 
   childrenWithRefs () {
-    return this.props.children.map(child => {
+    // Convert the children to an array, and map.
+    // Cannot use React.Children.map directly, because the #toArray method
+    // re-maps some of the keys ('1' -> '.$1'). We need this behaviour to
+    // be consistent, so we do this conversion upfront.
+    // See: https://github.com/facebook/react/pull/3650/files
+    return React.Children.toArray(this.props.children).map( child => {
       return React.cloneElement(child, { ref: child.key });
     });
   }
@@ -107,31 +130,34 @@ class FlipMove extends Component {
   }
 
   static propTypes = {
-    children:   PropTypes.array.isRequired,
-    duration:   PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
-    easing:     PropTypes.string,
-    delay:      PropTypes.number,
-    iterations: PropTypes.number,
-    direction:  PropTypes.string,
-    fill:       PropTypes.string,
-    onComplete: PropTypes.func,
-    staggerDurationBy: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ])
+    children:           PropTypes.oneOfType([
+                          PropTypes.array,
+                          PropTypes.object
+                        ]).isRequired,
+    duration:           PropTypes.oneOfType([
+                          PropTypes.string,
+                          PropTypes.number
+                        ]),
+    easing:             PropTypes.string,
+    delay:              PropTypes.number,
+    iterations:         PropTypes.number,
+    direction:          PropTypes.string,
+    fill:               PropTypes.string,
+    onComplete:         PropTypes.func,
+    staggerDurationBy:  PropTypes.oneOfType([
+                          PropTypes.string,
+                          PropTypes.number
+                        ])
   };
 
   static defaultProps = {
-    duration:   350,
-    easing:     'ease-in-out',
-    delay:      0,
-    iterations: 1,
-    direction:  'normal',
-    fill:       'none',
-    staggerDurationBy: 0
+    duration:           350,
+    easing:             'ease-in-out',
+    delay:              0,
+    iterations:         1,
+    direction:          'normal',
+    fill:               'none',
+    staggerDurationBy:  0
   };
 }
 
