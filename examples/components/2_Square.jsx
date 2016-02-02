@@ -1,8 +1,9 @@
 import React, { Component, PropTypes }  from 'react';
+import keydown, { Keys, keydownScoped } from 'react-keydown';
 import moment                           from 'moment';
 import { times }                        from 'lodash';
 import classNames                       from 'classnames';
-import keydown, { Keys }                from 'react-keydown';
+
 
 import FlipMove from '../TEMP_flip-move';
 
@@ -18,7 +19,6 @@ Array.prototype.move = function (old_index, new_index) {
     return this; // for testing purposes
 };
 
-@keydown(UP, DOWN, LEFT, RIGHT)
 class Board extends Component {
   constructor(props) {
     super(props);
@@ -36,16 +36,23 @@ class Board extends Component {
     ));
   }
 
-  componentWillReceiveProps( { keydown } ) {
-    if ( keydown.event ) {
-      // inspect the keydown event and decide what to do
-      console.log( keydown.event.which );
-    }
-  }
-
+  @keydownScoped( UP, DOWN, LEFT, RIGHT )
   move(event) {
-    // TODO: Directions aside from right =)
-    console.log("Move fired!", this, event)
+    const currentIndex = this.state.squares.findIndex( square => square.red );
+    switch (event.which) {
+      case UP:
+        console.log("UP event hit!")
+        break;
+      case DOWN:
+        console.log("DOWN event hit!")
+        break;
+      case LEFT:
+        console.log("LEFT event hit!")
+        break;
+      case RIGHT:
+        console.log("RIGHT event hit!")
+        break;
+    }
   }
 
   render() {
