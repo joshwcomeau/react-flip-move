@@ -4,17 +4,16 @@ import moment                           from 'moment';
 import { times }                        from 'lodash';
 import classNames                       from 'classnames';
 
-
 import FlipMove from '../TEMP_flip-move';
+
 
 const SQUARES_PER_EDGE  = 5;
 const NUM_SQUARES       = Math.pow(SQUARES_PER_EDGE, 2);
 const RED_SQUARE        = Math.floor(NUM_SQUARES / 2);
-const { UP, DOWN, LEFT, RIGHT } = Keys;
+const [ LEFT, UP, RIGHT, DOWN ] = [37, 38, 39, 40];
 
 // Monkeypatching is bad, but so much fun (=
 Array.prototype.swap = function (a, b) {
-  console.log(a, b)
   if ( b >= this.length || b < 0 ) return this;
 
   // Temporary variable to hold data while we juggle
@@ -27,7 +26,6 @@ Array.prototype.swap = function (a, b) {
 class Board extends Component {
   constructor(props) {
     super(props);
-    console.log("Constructed with props", props)
     this.state = {
       squares: times(NUM_SQUARES, i => ({
         id: i,
@@ -36,14 +34,14 @@ class Board extends Component {
     }
   }
 
+  componentDidMount() {
+    window.addEventListener('keydown', this.move.bind(this));
+  }
+
   renderSquares() {
     return this.state.squares.map( square => (
       <div key={square.id} className="square" id={ square.red ? 'red' : null } />
     ));
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
   }
 
   move(event) {
@@ -63,6 +61,8 @@ class Board extends Component {
       case RIGHT:
         newIndex = currentIndex + 1;
         break;
+      default:
+        return;
     }
 
     this.setState({
