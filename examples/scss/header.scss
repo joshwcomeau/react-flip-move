@@ -27,29 +27,36 @@ $header-height: 75px;
   nav {
     position: absolute;
     right: 16px;
+    width: $header-height * 2;
     height: $header-height;
     padding: 0;
 
+    .nav-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      &.links           { z-index: 3; }
+      &.current-circle  { z-index: 2; }
+      &.gray-circles    { z-index: 1; }
+
+    }
+
     .nav-item {
+      color: $darkgray;
       position: relative;
       height: $header-height;
       width: $header-height;
       display: block;
       float: left;
       text-align: center;
+      transition: 300ms;
 
-
-
-      &.active h2 {
+      &.current {
+        transition: 300ms;
         color: $white;
-
-        &:before {
-          background: $fuscia;
-        }
-      }
-
-      &:not(.active) h2:before:hover {
-        background: $lightgray;
       }
 
       h2 {
@@ -65,33 +72,40 @@ $header-height: 75px;
         text-align: center;
         font-size: 16px;
         cursor: pointer;
+      }
+    }
 
-        &:hover {
-          &:before {
-            transform: scale(1.2, 1.2);
-            transition: 200ms;
-          }
-        }
+    .circle {
+      position: relative;
+      height: $header-height;
+      width: $header-height;
+      display: block;
+      float: left;
+
+      // The actual circle is a pseudo-element.
+      // .circle is the square container that holds its place.
+      &:before {
+        content: '';
+        z-index: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        width: $header-height * 0.5;
+        height: $header-height * 0.5;
+        background: lighten($lightgray, 10%);
+        border-radius: 100%;
+        transition: 750ms;
+      }
+
+
+      &.current {
+        position: absolute;
 
         &:before {
-          content: '';
-          z-index: 0;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          margin: auto;
-          width: $header-height * 0.5;
-          height: $header-height * 0.5;
-          background: lighten($lightgray, 10%);
-          border-radius: 100%;
-          transition: 750ms;
-        }
-
-        span {
-          position: relative;
-          z-index: 1;
+          background: $fuscia;
         }
       }
     }

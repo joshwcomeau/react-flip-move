@@ -4,9 +4,12 @@ import ReactDOM from 'react-dom';
 
 class FlipMove extends Component {
   componentWillReceiveProps() {
+    // Ensure we're dealing with an array, and not an only child.
+    const children = React.Children.toArray(this.props.children);
+
     // Get the bounding boxes of all currently-rendered, keyed children.
     // Store it in this.state.
-    const newState = this.props.children.reduce( (state, child) => {
+    const newState = children.reduce( (state, child) => {
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
       if ( !child.key ) return state;
@@ -31,21 +34,10 @@ class FlipMove extends Component {
     // the first render; we only animate transitions between states =)
     if ( !this.state ) return;
 
-    const childrenToAnimate = previousProps.children.filter(this.childNeedsToBeAnimated.bind(this));
-
-    childrenToAnimate.forEach( (child, n) => {
-      // The new box can be calculated from the current DOM state.
-      // The old box was stored in this.state when the component received props.
-      const domNode = ReactDOM.findDOMNode( this.refs[child.key] );
-      const newBox  = domNode.getBoundingClientRect();
-      const oldBox  = this.state[child.key];
-      const deltaX  = oldBox.left - newBox.left;
-      const deltaY  = oldBox.top  - newBox.top;
-
-      if ( deltaX || deltaY ) {
-        this.animateTransform(domNode, deltaX, deltaY, n);
-      }
-    });
+    React.Children
+      .toArray(previousProps.children)
+      .filter(this.childNeedsToBeAnimated.bind(this))
+      .forEach(this.animateTransform.bind(this));
   }
 
   childNeedsToBeAnimated(child) {
@@ -60,7 +52,22 @@ class FlipMove extends Component {
     return !isStationary && !isBrandNew && !isDestroyed;
   }
 
-  animateTransform(domNode, deltaX, deltaY, n) {
+  getPositionDelta(domNode, key) {
+    const newBox  = domNode.getBoundingClientRect();
+    const oldBox  = this.state[key];
+    return [
+      (oldBox.left - newBox.left),
+      (oldBox.top  - newBox.top)
+    ];
+  }
+
+  animateTransform(child, n) {
+    const domNode = ReactDOM.findDOMNode( this.refs[child.key] );
+    const [ deltaX, deltaY ] = this.getPositionDelta(domNode, child.key);
+
+    // Don't bother animating it if it hasn't actually moved.
+    if ( deltaX === 0 && deltaY === 0 ) return;
+
     let settings = {...this.props};
     if ( typeof settings.duration === 'string' ) {
       settings.duration = parseInt(settings.duration);
@@ -79,7 +86,7 @@ class FlipMove extends Component {
   }
 
   childrenWithRefs () {
-    return this.props.children.map(child => {
+    return React.Children.toArray(this.props.children).map( child => {
       return React.cloneElement(child, { ref: child.key });
     });
   }
@@ -93,7 +100,10 @@ class FlipMove extends Component {
   }
 
   static propTypes = {
-    children:   PropTypes.array.isRequired,
+    children:   PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object
+    ]).isRequired,
     duration:   PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
