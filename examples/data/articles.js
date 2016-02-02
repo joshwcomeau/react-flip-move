@@ -1,11 +1,12 @@
 const articles = [
-  { id: 'a', timestamp: 1401336000000, name: 'The Dawn of Time' },
-  { id: 'b', timestamp: 1426305600000, name: 'A While Back' },
-  { id: 'c', timestamp: 1439006400000, name: 'This Just Happened' },
-  { id: 'd', timestamp: 1451710800000, name: 'Another Headline' },
-  { id: 'e', timestamp: 1452315600000, name: 'Whatever will we do' },
-  { id: 'f', timestamp: 1453525200000, name: 'Words' },
-  { id: 'g', timestamp: 1500000000000, name: 'This Just Happened' }
+  { id: 'a', timestamp: 811396800000, name: 'Netscape 2.0 ships, introducing Javascript' },
+  { id: 'b', timestamp: 1108702800000, name: 'Jesse James Garrett releases AJAX spec' },
+  { id: 'c', timestamp: 1156564800000, name: 'jQuery 1.0 released' },
+  { id: 'e', timestamp: 1256443200000, name: 'First underscore.js commit' },
+  { id: 'd', timestamp: 1286942400000, name: 'Backbone.js becomes a thing' },
+
+  { id: 'f', timestamp: 1331697600000, name: 'Angular 1.0 released' },
+  { id: 'g', timestamp: 1369800000000, name: 'React is open-sourced; developers rejoice' }
 ]
 
 export default articles;
