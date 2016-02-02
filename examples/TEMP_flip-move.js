@@ -1,4 +1,20 @@
-import React, { Component, PropTypes }  from 'react';
+/**
+ * React Flip Move
+ * Automagically animate the transition when the DOM gets reordered.
+ *
+ * How it works:
+ * The basic idea with this component is pretty straightforward:
+ *
+ *   - We track all rendered elements by their `key` property, and we keep
+ *     their bounding boxes (their top/left/right/bottom coordinates) in this
+ *     component's state.
+ *   - When the component updates, we compare its former position (held in
+ *     state) with its new position (derived from the DOM after update).
+ *   - If the two have moved, we use the FLIP technique to animate the
+ *     transition between their positions.
+ */
+
+import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
 
@@ -55,37 +71,51 @@ class FlipMove extends Component {
   getPositionDelta(domNode, key) {
     const newBox  = domNode.getBoundingClientRect();
     const oldBox  = this.state[key];
+
     return [
-      (oldBox.left - newBox.left),
-      (oldBox.top  - newBox.top)
+      oldBox.left - newBox.left,
+      oldBox.top  - newBox.top
     ];
+  }
+
+  pickAndPrepAnimationProps(n) {
+    // Omit the props that aren't settings for web-animations
+    // see: https://facebook.github.io/react/docs/transferring-props.html
+    let { children, onComplete, staggerDurationBy, ...animationProps} = this.props;
+
+    if ( typeof animationProps.duration === 'string' ) {
+      animationProps.duration = parseInt(animationProps.duration);
+    }
+    animationProps.duration += n * this.props.staggerDurationBy;
+
+    return animationProps;
   }
 
   animateTransform(child, n) {
     const domNode = ReactDOM.findDOMNode( this.refs[child.key] );
-    const [ deltaX, deltaY ] = this.getPositionDelta(domNode, child.key);
 
-    // Don't bother animating it if it hasn't actually moved.
+    // Get the △X and △Y, and return if the child hasn't budged.
+    const [ deltaX, deltaY ] = this.getPositionDelta(domNode, child.key);
     if ( deltaX === 0 && deltaY === 0 ) return;
 
-    let settings = {...this.props};
-    if ( typeof settings.duration === 'string' ) {
-      settings.duration = parseInt(settings.duration);
-    }
-
-    settings.duration += n * settings.staggerDurationBy;
+    let animationProps = this.pickAndPrepAnimationProps(n);
 
     const player = domNode.animate([
       { transform: `translate(${deltaX}px, ${deltaY}px)`},
       { transform: 'translate(0,0)'}
-    ], settings);
+    ], animationProps);
 
-    if ( settings.onComplete ) {
-      player.addEventListener('finish', settings.onComplete.bind(null, domNode));
+    if ( this.props.onComplete ) {
+      player.addEventListener('finish', this.props.onComplete.bind(null, domNode));
     }
   }
 
   childrenWithRefs () {
+    // Convert the children to an array, and map.
+    // Cannot use React.Children.map directly, because the #toArray method
+    // re-maps some of the keys ('1' -> '.$1'). We need this behaviour to
+    // be consistent, so we do this conversion upfront.
+    // See: https://github.com/facebook/react/pull/3650/files
     return React.Children.toArray(this.props.children).map( child => {
       return React.cloneElement(child, { ref: child.key });
     });
@@ -100,34 +130,34 @@ class FlipMove extends Component {
   }
 
   static propTypes = {
-    children:   PropTypes.oneOfType([
-      PropTypes.array,
-      PropTypes.object
-    ]).isRequired,
-    duration:   PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
-    easing:     PropTypes.string,
-    delay:      PropTypes.number,
-    iterations: PropTypes.number,
-    direction:  PropTypes.string,
-    fill:       PropTypes.string,
-    onComplete: PropTypes.func,
-    staggerDurationBy: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ])
+    children:           PropTypes.oneOfType([
+                          PropTypes.array,
+                          PropTypes.object
+                        ]).isRequired,
+    duration:           PropTypes.oneOfType([
+                          PropTypes.string,
+                          PropTypes.number
+                        ]),
+    easing:             PropTypes.string,
+    delay:              PropTypes.number,
+    iterations:         PropTypes.number,
+    direction:          PropTypes.string,
+    fill:               PropTypes.string,
+    onComplete:         PropTypes.func,
+    staggerDurationBy:  PropTypes.oneOfType([
+                          PropTypes.string,
+                          PropTypes.number
+                        ])
   };
 
   static defaultProps = {
-    duration:   350,
-    easing:     'ease-in-out',
-    delay:      0,
-    iterations: 1,
-    direction:  'normal',
-    fill:       'none',
-    staggerDurationBy: 0
+    duration:           350,
+    easing:             'ease-in-out',
+    delay:              0,
+    iterations:         1,
+    direction:          'normal',
+    fill:               'none',
+    staggerDurationBy:  0
   };
 }
 

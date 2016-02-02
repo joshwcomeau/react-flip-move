@@ -12,12 +12,10 @@ $header-height: 75px;
     position: absolute;
     left: 16px;
     height: $header-height;
-
-    h2, h4 {
-      margin: 0; padding: 0;
-    }
+    text-decoration: none;
 
     h2 {
+      color: $darkgray;
       font-weight: 700;
       font-size: 36px;
       line-height: $header-height;
