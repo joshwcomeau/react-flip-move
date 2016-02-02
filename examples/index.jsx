@@ -20,7 +20,7 @@ class App extends Component {
     return (
       <div className="app">
         <Header />
-        { React.cloneElement(this.props.children, {keydown: this.props.keydown}) }
+        { this.props.children && React.cloneElement(this.props.children, {keydown: this.props.keydown}) }
       </div>
     );
   }
