@@ -7,9 +7,9 @@ import classNames                       from 'classnames';
 
 import FlipMove from '../TEMP_flip-move';
 
-
-const NUM_SQUARES = Math.pow(5, 2);
-const RED_SQUARE  = Math.floor(NUM_SQUARES / 2);
+const SQUARES_PER_EDGE  = 5
+const NUM_SQUARES       = Math.pow(SQUARES_PER_EDGE, 2);
+const RED_SQUARE        = Math.floor(NUM_SQUARES / 2);
 const { UP, DOWN, LEFT, RIGHT } = Keys;
 
 // Monkeypatching is bad, but so much fun (=
@@ -39,26 +39,34 @@ class Board extends Component {
   @keydownScoped( UP, DOWN, LEFT, RIGHT )
   move(event) {
     const currentIndex = this.state.squares.findIndex( square => square.red );
+    let newIndex;
+
     switch (event.which) {
       case UP:
-        console.log("UP event hit!")
+        newIndex = currentIndex - SQUARES_PER_EDGE;
         break;
       case DOWN:
-        console.log("DOWN event hit!")
+        newIndex = currentIndex + SQUARES_PER_EDGE;
         break;
       case LEFT:
-        console.log("LEFT event hit!")
+        newIndex = currentIndex - 1;
         break;
       case RIGHT:
-        console.log("RIGHT event hit!")
+        newIndex = currentIndex + 1;
         break;
     }
+
+    this.setState({
+      squares: this.state.squares.slice().move(currentIndex, newIndex)
+    });
   }
 
   render() {
     return (
       <div id="board">
-        { this.renderSquares() }
+        <FlipMove staggerDurationBy="30">
+          { this.renderSquares() }
+        </FlipMove>
       </div>
     );
   }
