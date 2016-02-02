@@ -59,9 +59,9 @@ class Header extends Component {
   render() {
     return (
       <header id="header">
-        <div id="logo">
+        <Link to="/" id="logo">
           <h2>flip move</h2>
-        </div>
+        </Link>
         <nav>
           <div className="nav-layer links">
             { this.generateNavLinks() }
