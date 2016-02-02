@@ -118,7 +118,10 @@ class FlipMove extends Component {
     direction:  PropTypes.string,
     fill:       PropTypes.string,
     onComplete: PropTypes.func,
-    staggerDurationBy: PropTypes.number
+    staggerDurationBy: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ])
   };
 
   static defaultProps = {
