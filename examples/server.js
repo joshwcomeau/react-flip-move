@@ -1,3 +1,4 @@
+var path = require('path');
 var webpack = require('webpack')
 var webpackDevMiddleware = require('webpack-dev-middleware')
 var webpackHotMiddleware = require('webpack-hot-middleware')
@@ -13,8 +14,8 @@ app.use(webpackHotMiddleware(compiler));
 
 // app.use('/react-flip-move/examples', express.static(__dirname))
 
-app.get("/", function(req, res) {
-  res.sendFile(__dirname + '/')
+app.get("*", function(req, res) {
+  res.sendFile(path.join(__dirname, 'index.html'));
 })
 
 app.listen(port, function(error) {

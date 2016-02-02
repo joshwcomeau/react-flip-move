@@ -68,10 +68,14 @@ class FlipMove extends Component {
 
     settings.duration += n * settings.staggerDurationBy;
 
-    domNode.animate([
+    const player = domNode.animate([
       { transform: `translate(${deltaX}px, ${deltaY}px)`},
       { transform: 'translate(0,0)'}
     ], settings);
+
+    if ( settings.onComplete ) {
+      player.addEventListener('finish', settings.onComplete.bind(null, domNode));
+    }
   }
 
   childrenWithRefs () {
