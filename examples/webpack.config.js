@@ -3,9 +3,12 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'cheap-module-eval-source-map',
 
-  entry: './index.jsx',
+  entry: [
+    'webpack-hot-middleware/client',
+    './index.jsx'
+  ],
 
   output: {
     path: __dirname,
@@ -16,14 +19,15 @@ module.exports = {
 
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('dist/style.css'),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV:       JSON.stringify('production'),
-        UNIVERSAL_ENV:  JSON.stringify('client')
-      }
-    })
+    new ExtractTextPlugin('dist/style.css')
+    // new webpack.DefinePlugin({
+    //   'process.env': {
+    //     NODE_ENV:       JSON.stringify('development'),
+    //     UNIVERSAL_ENV:  JSON.stringify('client')
+    //   }
+    // })
   ],
 
   module: {
