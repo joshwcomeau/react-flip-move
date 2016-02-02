@@ -11,10 +11,13 @@ require('./scss/main.scss');
 
 
 class App extends Component {
+  availablePaths() { return this.props.route.childRoutes.map( route => route.path )}
+  currentPath() { return this.props.location.pathname.replace(/^\//, '') }
+
   render() {
     return (
       <div className="app">
-        <Header />
+        <Header paths={this.availablePaths()} path={this.currentPath()} />
         { this.props.children }
       </div>
     );
