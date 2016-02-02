@@ -9,6 +9,7 @@ var port = 5678
 
 var compiler = webpack(config)
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
+app.use(webpackHotMiddleware(compiler));
 
 // app.use('/react-flip-move/examples', express.static(__dirname))
 
