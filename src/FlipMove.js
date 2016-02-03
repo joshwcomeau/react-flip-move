@@ -14,6 +14,7 @@
  *     transition between their positions.
  */
 
+import 'web-animations-js'
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
