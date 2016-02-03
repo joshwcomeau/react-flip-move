@@ -1,6 +1,8 @@
 @import './normalize.scss';
-@import './header.scss';
 @import './variables.scss';
+
+@import './header.scss';
+@import './footer.scss';
 
 @import './1_shuffle.scss';
 @import './2_square.scss';
@@ -11,15 +13,31 @@
 html, body, input, button, select, option {
   color: $darkgray;
   font-family: "museo-sans-rounded", sans-serif;
+
 }
 
-body {
+html, body, #render-target {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   background: $aqua;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
   padding: 0;
+}
+
+.app {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+}
+
+#main-content {
+  flex: 1;
+  padding-bottom: 60px;
 }
 
 .abs-left {

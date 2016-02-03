@@ -1,0 +1,63 @@
+#details {
+  position: relative;
+  padding: 20px 80px;
+  background: $darkgray;
+  color: $white;
+
+  .centering-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 780px;
+    margin: auto;
+  }
+
+  h2 {
+    color: darken($lightgray, 15%);
+    font-size: 40px;
+  }
+
+  a {
+    color: lighten($fuscia, 8%);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .copyright {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 100;
+    color: darken($lightgray, 15%);
+  }
+
+  .mono {
+    font-family: monospace;
+  }
+
+  .arrow {
+    position: absolute;
+    font-size: 28px;
+    padding: 10px;
+    top: -3px;
+    color: rgba(255,255,255,0.3);
+
+    &.enabled {
+      color: $white;
+    }
+
+    &.next {
+      right: -40px;
+    }
+
+    &.previous {
+      left: -40px;
+    }
+
+    a {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+}

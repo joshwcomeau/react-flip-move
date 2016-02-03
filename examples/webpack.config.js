@@ -20,8 +20,7 @@ module.exports = {
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('dist/style.css')
+    new webpack.NoErrorsPlugin()
   ],
 
   module: {
@@ -36,7 +35,7 @@ module.exports = {
       // SASS
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css!sass')
+        loader: 'style!css!sass'
       }
     ]
   }
