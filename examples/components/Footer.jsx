@@ -3,6 +3,8 @@ import ReactDOM, { render }             from 'react-dom';
 import { Link }                         from 'react-router';
 import classNames                       from 'classnames';
 
+import data                             from '../data/details';
+
 // God this footer is hideous.
 // Will refactor if I have the time.
 const Footer = ({paths, path}) => {
@@ -42,18 +44,5 @@ function generateLink(direction, linkTo, hasData) {
     </div>
   );
 }
-
-const data = {
-  shuffle: {
-    title: 'List/Grid Reordering',
-    details: 'Handle smooth re-ordering of arbitrarily-sized DOM nodes.',
-    source: 'https://github.com/joshwcomeau/react-flip-move/blob/gh-pages/examples/components/1_Shuffle.jsx'
-  },
-  square: {
-    title: 'Fuscia Square',
-    details: 'Use your arrow keys to move a square about.',
-    source: 'https://github.com/joshwcomeau/react-flip-move/blob/gh-pages/examples/components/2_Square.jsx'
-  }
-};
 
 export default Footer;
