@@ -12,7 +12,7 @@ const SQUARES_HEIGHT  = 5;
 const NUM_SQUARES     = SQUARES_WIDTH * SQUARES_HEIGHT;
 const RED_SQUARE      = Math.floor(NUM_SQUARES / 2);
 
-const FLIP_DURATION   = 400;
+const FLIP_DURATION   = 425;
 const [ LEFT, UP, RIGHT, DOWN ] = [37, 38, 39, 40];
 
 
@@ -33,6 +33,9 @@ class Board extends Component {
 
   componentDidMount() {
     window.addEventListener('keydown', this.move);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.move);
   }
 
   renderSquares() {
@@ -89,7 +92,7 @@ class Board extends Component {
       const squareIndex = squares.findIndex( s => s.id === parseInt(node.id) );
       squares[squareIndex].painted = true;
       this.setState({ squares });
-    }, FLIP_DURATION / 2)
+    }, FLIP_DURATION / 6)
   }
 
   startMove(element, node) {
@@ -106,7 +109,7 @@ class Board extends Component {
       <div id="board">
         <FlipMove
           duration={FLIP_DURATION}
-          easing="cubic-bezier(.12,.36,.17,1.3)"
+          easing="cubic-bezier(.12,.36,.14,1.2)"
           onStart={this.startMove.bind(this)}
           onFinish={this.finishMove.bind(this)}
         >
