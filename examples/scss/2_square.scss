@@ -1,12 +1,14 @@
 $square-size: 80px;
-$num-of-edge-squares: 5;
-$board-width: $square-size * $num-of-edge-squares;
+$squares-width: 9;
+$squares-height: 5;
+$board-width: $square-size * $squares-width;
+$board-height: $square-size * $squares-height;
 $board-padding: 8px;
 
 #board {
   position: relative;
   width: $board-width + $board-padding * 2;
-  height: $board-width + $board-padding * 2;
+  height: $board-height + $board-padding * 2;
   background: $darkgray;
   padding: $board-padding;
   margin: 2rem auto;
@@ -28,14 +30,29 @@ $board-padding: 8px;
       bottom: 2px;
       background: $white;
       border-radius: 3px;
+      transition: 1000ms;
     }
   }
 
-  #red {
+  .red {
     z-index: 2;
     &:after {
       background: $fuscia;
       border-radius: 6px;
     }
+  }
+
+  @for $i from 1 through 10 {
+    .imprint-#{$i} {
+      &:after {
+        background-color: mix($mauve, $white, ($i / 10 * 100));
+        transition: 300ms;
+      }
+    }
+  }
+
+  .imprint-10 {
+    transition-timing-function: cubic-bezier(.64,.23,0,1);
+    -webkit-transition-timing-function: cubic-bezier(.64,.23,0,1);
   }
 }
