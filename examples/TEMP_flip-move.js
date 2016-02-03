@@ -14,6 +14,7 @@
  *     transition between their positions.
  */
 
+import 'web-animations-js'
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -81,7 +82,10 @@ class FlipMove extends Component {
   pickAndPrepAnimationProps(n) {
     // Omit the props that aren't settings for web-animations
     // see: https://facebook.github.io/react/docs/transferring-props.html
-    let { children, onFinish, staggerDurationBy, ...animationProps} = this.props;
+    let {
+      children, onStart, onFinish, staggerDurationBy,
+      ...animationProps
+    } = this.props;
 
     if ( typeof animationProps.duration === 'string' ) {
       animationProps.duration = parseInt(animationProps.duration);

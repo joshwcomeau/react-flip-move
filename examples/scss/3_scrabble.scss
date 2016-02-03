@@ -1,0 +1,49 @@
+$square-size: 80px;
+$squares-width: 9;
+$squares-height: 5;
+$board-width: $square-size * $squares-width;
+$board-height: $square-size * $squares-height;
+$board-padding: 8px;
+
+#scrabble {
+  position: relative;
+  width: $board-width + $board-padding * 2;
+  height: $board-height + $board-padding * 2;
+  background: $darkgray;
+  padding: $board-padding;
+  margin: 2rem auto;
+
+  .square {
+    position: relative;
+    z-index: 1;
+    float: left;
+    width: $square-size;
+    height: $square-size;
+
+    &:after {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      top: 2px;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      background: $white;
+      border-radius: 3px;
+    }
+  }
+
+  .red {
+    z-index: 2;
+    &:after {
+      background: $fuscia;
+      border-radius: 6px;
+    }
+  }
+
+  .painted {
+    &:after {
+      background: $lightgray;
+    }
+  }
+}
