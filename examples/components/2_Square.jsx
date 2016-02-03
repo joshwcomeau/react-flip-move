@@ -1,5 +1,4 @@
 import React, { Component, PropTypes }  from 'react';
-import keydown, { Keys, keydownScoped } from 'react-keydown';
 import moment                           from 'moment';
 import { times }                        from 'lodash';
 import classNames                       from 'classnames';
