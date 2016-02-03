@@ -7,25 +7,14 @@ import classNames                       from 'classnames';
 import FlipMove from '../TEMP_flip-move';
 
 
-const SQUARES_WIDTH  = 9;
-const SQUARES_HEIGHT = 5;
-const NUM_SQUARES    = SQUARES_WIDTH * SQUARES_HEIGHT;
-const RED_SQUARE     = Math.floor(NUM_SQUARES / 2);
+const SQUARES_WIDTH   = 9;
+const SQUARES_HEIGHT  = 5;
+const NUM_SQUARES     = SQUARES_WIDTH * SQUARES_HEIGHT;
+const RED_SQUARE      = Math.floor(NUM_SQUARES / 2);
+
+const FLIP_DURATION   = 200;
 const [ LEFT, UP, RIGHT, DOWN ] = [37, 38, 39, 40];
 
-// Going over a square leaves an imprint that lasts N ticks:
-const IMPRINT_TICK_LENGTH = 10;
-
-// Monkeypatching is bad, but so much fun (=
-Array.prototype.swap = function (a, b) {
-  if ( b >= this.length || b < 0 ) return this;
-
-  // Temporary variable to hold data while we juggle
-  let temp = this[a];
-  this[a] = this[b];
-  this[b] = temp;
-  return this;
-};
 
 class Board extends Component {
   constructor(props) {
@@ -33,9 +22,10 @@ class Board extends Component {
     this.state = {
       squares: times(NUM_SQUARES, i => ({
         id: i,
-        imprint: 0,
+        painted: false,
         red: i === RED_SQUARE
-      }))
+      })),
+      isMoving: false
     };
 
     this.move = this.move.bind(this);
@@ -50,7 +40,7 @@ class Board extends Component {
       const classes = classNames({
         square: true,
         red: square.red,
-        [`imprint-${square.imprint}`]: true
+        painted: square.painted
       });
 
       return <div key={square.id} className={classes} {...square} />;
@@ -58,6 +48,8 @@ class Board extends Component {
   }
 
   move(event) {
+    if ( this.state.isMoving ) return false;
+
     const currentIndex = this.state.squares.findIndex( square => square.red );
     let newIndex;
 
@@ -84,33 +76,57 @@ class Board extends Component {
   }
 
   paintSquare(element, node) {
+    // For visual flair, we're going to colour the tiles as they pass under us.
+    // We'll do this by adding a state to the square, and we'll delay it so
+    // that it happens while the Fuscia Square is covering it.
+
     // Don't paint the Fuscia square!
     if ( element.props.red ) return;
 
-    let nextSquares = this.state.squares.slice().map( square => {
-      if ( element.props.id === square.id ) {
-        square.imprint = IMPRINT_TICK_LENGTH;
-      } else {
-        // Decrement square.imprint, but don't allow it to go below zero.
-        square.imprint = square.imprint <= 0 ? 0 : square.imprint - 1;
-      }
-      return square;
-    });
+    // Wait half the duration of the FlipMove animation, and then paint it!
+    setTimeout( () => {
+      const squares = this.state.squares.slice();
+      const squareIndex = squares.findIndex( s => s.id === parseInt(node.id) );
+      squares[squareIndex].painted = true;
+      this.setState({ squares });
+    }, FLIP_DURATION / 2)
+  }
 
-    this.setState({
-      squares: nextSquares
-    });
+  startMove(element, node) {
+    this.setState({ isMoving: true });
+    this.paintSquare(element, node);
+  }
+
+  finishMove() {
+    this.setState({ isMoving: false })
   }
 
   render() {
     return (
       <div id="board">
-        <FlipMove duration="200" onStart={this.paintSquare.bind(this)}>
+        <FlipMove
+          duration={FLIP_DURATION}
+          onStart={this.startMove.bind(this)}
+          onFinish={this.finishMove.bind(this)}
+        >
           { this.renderSquares() }
         </FlipMove>
       </div>
     );
   }
 };
+
+
+// Monkeypatching is bad, but so much fun (=
+Array.prototype.swap = function (a, b) {
+  if ( b >= this.length || b < 0 ) return this;
+
+  // Temporary variable to hold data while we juggle
+  let temp = this[a];
+  this[a] = this[b];
+  this[b] = temp;
+  return this;
+};
+
 
 export default Board;

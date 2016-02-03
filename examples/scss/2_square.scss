@@ -30,7 +30,6 @@ $board-padding: 8px;
       bottom: 2px;
       background: $white;
       border-radius: 3px;
-      transition: 1000ms;
     }
   }
 
@@ -42,17 +41,9 @@ $board-padding: 8px;
     }
   }
 
-  @for $i from 1 through 10 {
-    .imprint-#{$i} {
-      &:after {
-        background-color: mix($mauve, $white, ($i / 10 * 100));
-        transition: 300ms;
-      }
+  .painted {
+    &:after {
+      background: $lightgray;
     }
-  }
-
-  .imprint-10 {
-    transition-timing-function: cubic-bezier(.64,.23,0,1);
-    -webkit-transition-timing-function: cubic-bezier(.64,.23,0,1);
   }
 }
