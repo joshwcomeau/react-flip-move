@@ -82,7 +82,10 @@ class FlipMove extends Component {
   pickAndPrepAnimationProps(n) {
     // Omit the props that aren't settings for web-animations
     // see: https://facebook.github.io/react/docs/transferring-props.html
-    let { children, onComplete, staggerDurationBy, ...animationProps} = this.props;
+    let {
+      children, onStart, onFinish, staggerDurationBy,
+      ...animationProps
+    } = this.props;
 
     if ( typeof animationProps.duration === 'string' ) {
       animationProps.duration = parseInt(animationProps.duration);
@@ -106,8 +109,15 @@ class FlipMove extends Component {
       { transform: 'translate(0,0)'}
     ], animationProps);
 
-    if ( this.props.onComplete ) {
-      player.addEventListener('finish', this.props.onComplete.bind(null, domNode));
+    if ( this.props.onStart) {
+      this.props.onStart(child, domNode);
+    }
+
+    if ( this.props.onFinish ) {
+      player.addEventListener('finish', () => {
+        // Invoke our callback, with our child element and the DOM node.
+        this.props.onFinish(child, domNode);
+      });
     }
   }
 
@@ -144,7 +154,8 @@ class FlipMove extends Component {
     iterations:         PropTypes.number,
     direction:          PropTypes.string,
     fill:               PropTypes.string,
-    onComplete:         PropTypes.func,
+    onStart:            PropTypes.func,
+    onFinish:           PropTypes.func,
     staggerDurationBy:  PropTypes.oneOfType([
                           PropTypes.string,
                           PropTypes.number
