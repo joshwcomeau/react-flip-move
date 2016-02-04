@@ -10,6 +10,7 @@ import {
 }                                       from 'react-dnd';
 
 import FlipMove from '../TEMP_flip-move';
+import tiles from '../data/tiles.js';
 
 
 const BOARD_WIDTH   = 11;
@@ -21,18 +22,14 @@ const NUM_SQUARES   = BOARD_WIDTH * BOARD_HEIGHT;
 class Scrabble extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      tiles: [
-        { letter: 'F', points: 4, x: 1, y: 3 },
-        { letter: 'L', points: 2, x: 2, y: 3 },
-        { letter: 'I', points: 1, x: 3, y: 3 },
-        { letter: 'P', points: 2, x: 4, y: 3 },
-        { letter: 'M', points: 6, x: 6, y: 3 },
-        { letter: 'O', points: 1, x: 7, y: 3 },
-        { letter: 'V', points: 8, x: 8, y: 3 },
-        { letter: 'E', points: 2, x: 9, y: 3 }
-      ]
-    }
+    this.state = { tiles }
+  }
+
+  updateDroppedTilePosition(x, y, tile) {
+    // Normally, this would be done through a Redux action, but because this
+    // is such a contrived example, I'm just passing the action down through
+    // the child.
+    console.log("UPDATE", x, y, tile);
   }
 
   renderTiles() {
@@ -41,12 +38,26 @@ class Scrabble extends Component {
     });
   }
 
+  renderBoardSquares() {
+    // Create a 2D array to represent the board
+    // Using a monkey-patched method, see below >:)
+    const matrix = Array.matrix(BOARD_WIDTH, BOARD_HEIGHT);
+
+    return matrix.map( (row, rowIndex) => (
+      row.map( (index) => {
+        // TODO: Figure out if there's a tile in here. Render it if there is.
+        return <BoardSquare x={index} y={rowIndex} />
+      })
+    ));
+  }
+
   render() {
     return (
       <div id="scrabble">
         <FlipMove>
           { this.renderTiles() }
         </FlipMove>
+        { this.renderBoardSquares() }
       </div>
     );
   }
@@ -93,16 +104,29 @@ const squareTarget = {
   }
 }
 
+@DropTarget('square', squareTarget, (connect, monitor) => ({
+  connectDropTarget:  connect.dropTarget(),
+  isOver:             monitor.isOver()
+}))
 class BoardSquare extends Component {
+  renderSquare() {
+    return <div className="board-square"></div>
+  }
   render() {
-  if ( this.props.tile ) {
-    // If this square already has a tile in it, we don't want to allow drops.
-    return this.renderSquare();
-  } else {
-    return this.props.connectDropTarget( this.renderSquare() );
+    if ( this.props.tile ) {
+      // If this square already has a tile in it, we don't want to allow drops.
+      return this.renderSquare();
+    } else {
+      return this.props.connectDropTarget( this.renderSquare() );
+    }
   }
 }
 
+Array.range = n => Array.from(new Array(n), (x,i) => i);
+Array.matrix = (x, y) => {
+  const rows = Array.range(y);
+  const columns = Array.range(x);
+  return rows.map( (row, i) => columns.slice() );
 }
 
 export default Scrabble;
