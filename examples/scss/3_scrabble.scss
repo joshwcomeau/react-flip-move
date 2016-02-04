@@ -1,49 +1,103 @@
-$square-size: 80px;
-$squares-width: 9;
-$squares-height: 5;
-$board-width: $square-size * $squares-width;
-$board-height: $square-size * $squares-height;
-$board-padding: 8px;
+$tile-size:       42px;
+$square-size:     42px;
+$squares-per-row: 11;
+$squares-per-col: 7;
+$gutter-width:    8px;
+$board-width:     $square-size * $squares-per-row + ($gutter-width * 2);
+$board-height:    $square-size * $squares-per-col + ($gutter-width * 2);
 
 #scrabble {
   position: relative;
-  width: $board-width + $board-padding * 2;
-  height: $board-height + $board-padding * 2;
-  background: $darkgray;
-  padding: $board-padding;
+  width:  $board-width;
+  height: $board-height;
   margin: 2rem auto;
+  padding: $gutter-width;
+  display: flex;
+  flex-wrap: wrap;
+  background: $lightgray;
+  user-select: none;
 
-  .square {
+  .board-square {
     position: relative;
-    z-index: 1;
-    float: left;
     width: $square-size;
     height: $square-size;
+    background: $white;
+    border-top: 1px solid #CCC;
+    border-left: 1px solid #CCC;
 
-    &:after {
-      content: '';
-      position: absolute;
-      z-index: 1;
-      top: 2px;
-      left: 2px;
-      right: 2px;
-      bottom: 2px;
-      background: $white;
-      border-radius: 3px;
+    &.dragged-over {
+      background: darken($white, 8%);
+    }
+
+    // Only the right-edge ones should have a right border
+    &:nth-child(#{$squares-per-row}n) {
+      border-right: 1px solid #CCC;
+    }
+    // Only the bottom row should have a bottom border.
+    // Math = width * width - width + 1.
+    // eg.      13  *  13   - 12
+    &:nth-child(n+#{$squares-per-row * $squares-per-col - $squares-per-row + 1}) {
+      border-bottom: 1px solid #CCC;
     }
   }
 
-  .red {
+
+  .tile {
+    position: absolute;
     z-index: 2;
-    &:after {
-      background: $fuscia;
-      border-radius: 6px;
-    }
-  }
+    top:  ($square-size - $tile-size) / 2 - 3px;
+    left: ($square-size - $tile-size) / 2 - 3px;
+    width: $tile-size;
+    height: $tile-size;
+    background: $yellow;
+    cursor:default;
+    -webkit-box-shadow:
+      0.5px 0.5px 0px $fadedyellow,
+      1px 1px 0px $fadedyellow,
+      1.5px 1.5px 0px $fadedyellow,
+      2px 2px 0px $fadedyellow,
+      2.5px 2.5px 0px $fadedyellow,
+      3px 3px 0px $fadedyellow,
+    ;
+    box-shadow:
+      0.5px 0.5px 0px $fadedyellow,
+      1px 1px 0px $fadedyellow,
+      1.5px 1.5px 0px $fadedyellow,
+      2px 2px 0px $fadedyellow,
+      2.5px 2.5px 0px $fadedyellow,
+      3px 3px 0px $fadedyellow,
+    ;
 
-  .painted {
-    &:after {
-      background: $lightgray;
+    &.draggable { cursor: move; }
+
+    &.is-dragging { opacity: 0.7; }
+
+    &.is-established {
+      background: lighten($yellow, 15%);
+    }
+
+    .tile-letter {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      font-size: $tile-size * 0.5;
+      line-height: $tile-size;
+      text-align: center;
+      font-weight: 700;
+      color: $darkgray;
+    }
+
+    .tile-points {
+      position: absolute;
+      top: 0;
+      right: -2px;
+      width: $tile-size * 0.4;
+      height: $tile-size * 0.4;
+      line-height: $tile-size * 0.4;
+      text-align: center;
+      font-size: $tile-size * 0.25;
     }
   }
 }
