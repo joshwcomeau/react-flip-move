@@ -2,6 +2,12 @@ import React, { Component, PropTypes }  from 'react';
 import moment                           from 'moment';
 import { times }                        from 'lodash';
 import classNames                       from 'classnames';
+import HTML5Backend                     from 'react-dnd-html5-backend';
+import {
+  DragSource,
+  DropTarget,
+  DragDropContext
+}                                       from 'react-dnd';
 
 import FlipMove from '../TEMP_flip-move';
 
@@ -11,6 +17,7 @@ const BOARD_HEIGHT  = 7;
 const SQUARE_SIZE   = 42;
 const NUM_SQUARES   = BOARD_WIDTH * BOARD_HEIGHT;
 
+@DragDropContext(HTML5Backend)
 class Scrabble extends Component {
   constructor(props) {
     super(props);
@@ -45,20 +52,57 @@ class Scrabble extends Component {
   }
 };
 
+const tileSource = {
+  beginDrag(props) { return props; }
+};
+
+@DragSource('tile', tileSource, (connect, monitor) => ({
+  connectDragSource:  connect.dragSource(),
+  isDragging:         monitor.isDragging()
+}))
 class Tile extends Component {
+  static propTypes = {
+    x:                  PropTypes.number.isRequired,
+    y:                  PropTypes.number.isRequired,
+    letter:             PropTypes.string.isRequired,
+    points:             PropTypes.number.isRequired,
+    connectDragSource:  PropTypes.func.isRequired,
+    isDragging:         PropTypes.bool.isRequired
+  };
+
   render() {
+    const { connectDragSource, isDragging, letter, points, x, y } = this.props;
     const styles = {
-      left: this.props.x * SQUARE_SIZE,
-      top:  this.props.y * SQUARE_SIZE
+      left:     x * SQUARE_SIZE,
+      top:      y * SQUARE_SIZE,
+      opacity:  isDragging ? 0.5 : 1
     };
 
-    return (
+    return connectDragSource(
       <div className="tile" style={styles}>
-        <span className="letter">{this.props.letter}</span>
-        <span className="points">{this.props.points}</span>
+        <span className="letter">{letter}</span>
+        <span className="points">{points}</span>
       </div>
     )
   }
+}
+
+const squareTarget = {
+  drop(props, monitor) {
+
+  }
+}
+
+class BoardSquare extends Component {
+  render() {
+  if ( this.props.tile ) {
+    // If this square already has a tile in it, we don't want to allow drops.
+    return this.renderSquare();
+  } else {
+    return this.props.connectDropTarget( this.renderSquare() );
+  }
+}
+
 }
 
 export default Scrabble;
