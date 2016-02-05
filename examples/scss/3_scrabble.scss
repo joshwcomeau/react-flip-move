@@ -1,43 +1,49 @@
-$tile-size:       42px;
-$square-size:     42px;
+$tile-size:       50px;
+$square-size:     50px;
 $squares-per-row: 11;
 $squares-per-col: 7;
 $gutter-width:    8px;
-$board-width:     $square-size * $squares-per-row + ($gutter-width * 2);
-$board-height:    $square-size * $squares-per-col + ($gutter-width * 2);
+$board-width:     $square-size * $squares-per-row;
+$board-height:    $square-size * $squares-per-col;
 
 #scrabble {
   position: relative;
-  width:  $board-width;
-  height: $board-height;
-  margin: 2rem auto;
-  padding: $gutter-width;
-  display: flex;
-  flex-wrap: wrap;
   background: $lightgray;
-  user-select: none;
+  margin: 2rem auto;
+  width:  $board-width + ($gutter-width * 2);
+  height: $board-height + ($gutter-width * 2);
+  padding: $gutter-width;
 
-  .board-square {
+  .board {
     position: relative;
-    width: $square-size;
-    height: $square-size;
-    background: $white;
-    border-top: 1px solid #CCC;
-    border-left: 1px solid #CCC;
+    width:  $board-width;
+    height: $board-height;
+    display: flex;
+    flex-wrap: wrap;
+    user-select: none;
 
-    &.dragged-over {
-      background: darken($white, 8%);
-    }
+    .board-square {
+      position: relative;
+      width: $square-size;
+      height: $square-size;
+      background: $white;
+      border-top: 1px solid #CCC;
+      border-left: 1px solid #CCC;
 
-    // Only the right-edge ones should have a right border
-    &:nth-child(#{$squares-per-row}n) {
-      border-right: 1px solid #CCC;
-    }
-    // Only the bottom row should have a bottom border.
-    // Math = width * width - width + 1.
-    // eg.      13  *  13   - 12
-    &:nth-child(n+#{$squares-per-row * $squares-per-col - $squares-per-row + 1}) {
-      border-bottom: 1px solid #CCC;
+      &.dragged-over {
+        background: darken($white, 8%);
+      }
+
+      // Only the right-edge ones should have a right border
+      &:nth-child(#{$squares-per-row}n + 1) {
+        border-right: 1px solid #CCC;
+      }
+      // Only the bottom row should have a bottom border.
+      // Math = width * width - width + 1.
+      // eg.      13  *  13   - 12
+      &:nth-child(n+#{$squares-per-row * $squares-per-col - $squares-per-row + 2}) {
+        border-bottom: 1px solid #CCC;
+      }
     }
   }
 
@@ -45,8 +51,6 @@ $board-height:    $square-size * $squares-per-col + ($gutter-width * 2);
   .tile {
     position: absolute;
     z-index: 2;
-    top:  ($square-size - $tile-size) / 2 - 3px;
-    left: ($square-size - $tile-size) / 2 - 3px;
     width: $tile-size;
     height: $tile-size;
     background: $yellow;
@@ -98,6 +102,7 @@ $board-height:    $square-size * $squares-per-col + ($gutter-width * 2);
       line-height: $tile-size * 0.4;
       text-align: center;
       font-size: $tile-size * 0.25;
+      color: $fadedyellow;
     }
   }
 }
