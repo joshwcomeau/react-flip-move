@@ -9,9 +9,10 @@ $board-padding: 8px;
   position: relative;
   width: $board-width + $board-padding * 2;
   height: $board-height + $board-padding * 2;
-  background: $darkgray;
+  background: rgba(0,0,0,0.1);
   padding: $board-padding;
   margin: 2rem auto;
+  border-radius: 8px;
 
   .square {
     position: relative;
