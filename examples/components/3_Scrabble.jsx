@@ -15,7 +15,8 @@ import tiles from '../data/tiles.js';
 
 const BOARD_WIDTH   = 11;
 const BOARD_HEIGHT  = 7;
-const SQUARE_SIZE   = 42;
+const SQUARE_SIZE   = 50;
+const TILE_OFFSET   = 3;
 const NUM_SQUARES   = BOARD_WIDTH * BOARD_HEIGHT;
 
 @DragDropContext(HTML5Backend)
@@ -54,10 +55,12 @@ class Scrabble extends Component {
   render() {
     return (
       <div id="scrabble">
-        <FlipMove>
-          { this.renderTiles() }
-        </FlipMove>
-        { this.renderBoardSquares() }
+        <div className="board">
+          <FlipMove>
+            { this.renderTiles() }
+          </FlipMove>
+          { this.renderBoardSquares() }
+        </div>
       </div>
     );
   }
@@ -84,15 +87,15 @@ class Tile extends Component {
   render() {
     const { connectDragSource, isDragging, letter, points, x, y } = this.props;
     const styles = {
-      left:     x * SQUARE_SIZE,
-      top:      y * SQUARE_SIZE,
+      left:     x * SQUARE_SIZE - TILE_OFFSET,
+      top:      y * SQUARE_SIZE - TILE_OFFSET,
       opacity:  isDragging ? 0.5 : 1
     };
 
     return connectDragSource(
       <div className="tile" style={styles}>
-        <span className="letter">{letter}</span>
-        <span className="points">{points}</span>
+        <span className="tile-letter">{letter}</span>
+        <span className="tile-points">{points}</span>
       </div>
     )
   }
