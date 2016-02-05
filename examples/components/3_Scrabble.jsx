@@ -45,7 +45,13 @@ class Scrabble extends Component {
 
   renderTiles() {
     return this.state.tiles.map( (tile, index) => {
-      return <Tile key={index} {...tile} />;
+      return (
+        <Tile
+          key={index}
+          onDrop={this.updateDroppedTilePosition}
+          {...tile}
+        />
+      );
     });
   }
 
@@ -85,6 +91,20 @@ const tileSource = {
   beginDrag(props) { return props; }
 };
 
+const tileTarget = {
+  drop(props, monitor) {
+    const tile1 = props;
+    const tile2 = monitor.getItem();
+
+    props.onDrop(tile1, tile2);
+    props.onDrop(tile2, tile1);
+  }
+}
+
+@DropTarget('tile', tileTarget, (connect, monitor) => ({
+  connectDropTarget:  connect.dropTarget(),
+  isOver:             monitor.isOver()
+}))
 @DragSource('tile', tileSource, (connect, monitor) => ({
   connectDragSource:  connect.dragSource(),
   isDragging:         monitor.isDragging()
@@ -100,7 +120,10 @@ class Tile extends Component {
   };
 
   render() {
-    const { connectDragSource, isDragging, letter, points, x, y } = this.props;
+    const {
+      connectDropTarget, connectDragSource, isDragging, letter, points, x, y
+    } = this.props;
+
     const styles = {
       left:     x * SQUARE_SIZE - TILE_OFFSET,
       top:      y * SQUARE_SIZE - TILE_OFFSET,
@@ -108,12 +131,12 @@ class Tile extends Component {
       opacity:  isDragging ? 0.5 : 1
     };
 
-    return connectDragSource(
+    return connectDropTarget(connectDragSource(
       <div className="tile" style={styles}>
         <span className="tile-letter">{letter}</span>
         <span className="tile-points">{points}</span>
       </div>
-    )
+    ));
   }
 }
 
