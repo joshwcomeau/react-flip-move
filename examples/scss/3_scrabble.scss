@@ -24,32 +24,29 @@ $board-height:    $square-size * $squares-per-col;
     display: flex;
     flex-wrap: wrap;
     user-select: none;
-
-    .board-square {
-      position: relative;
-      width: $square-size;
-      height: $square-size;
-      background: $white;
-      border-top: 1px solid #CCC;
-      border-left: 1px solid #CCC;
-
-      &.dragged-over {
-        background: darken($white, 8%);
-      }
-
-      // Only the right-edge ones should have a right border
-      &:nth-child(#{$squares-per-row}n + 1) {
-        border-right: 1px solid #CCC;
-      }
-      // Only the bottom row should have a bottom border.
-      // Math = width * width - width + 1.
-      // eg.      13  *  13   - 12
-      &:nth-child(n+#{$squares-per-row * $squares-per-col - $squares-per-row + 2}) {
-        border-bottom: 1px solid #CCC;
-      }
-    }
   }
 
+  .board-square {
+    position: relative;
+    width: $square-size;
+    height: $square-size;
+    background: $white;
+    border-top: 1px solid #CCC;
+    border-left: 1px solid #CCC;
+
+    &.dragged-over {
+      background: darken($white, 8%);
+    }
+
+    // Only the right-edge ones should have a right border
+    &:nth-child(#{$squares-per-row}n + 1) {
+      border-right: 1px solid #CCC;
+    }
+    // Only the bottom row should have a bottom border.
+    &:nth-child(n+#{$squares-per-row * $squares-per-col - $squares-per-row + 2}) {
+      border-bottom: 1px solid #CCC;
+    }
+  }
 
   .tile {
     position: absolute;

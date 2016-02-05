@@ -169,7 +169,12 @@ const squareTarget = {
 }))
 class BoardSquare extends Component {
   renderSquare() {
-    return <div className="board-square"></div>
+    const classes = classNames({
+      'board-square': true,
+      'dragged-over': this.props.isOver
+    });
+
+    return <div className={classes}></div>
   }
   render() {
     if ( this.props.tile ) {
