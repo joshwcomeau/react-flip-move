@@ -7,12 +7,15 @@ $board-width:     $square-size * $squares-per-row;
 $board-height:    $square-size * $squares-per-col;
 
 #scrabble {
-  position: relative;
-  background: $lightgray;
-  margin: 2rem auto;
-  width:  $board-width + ($gutter-width * 2);
-  height: $board-height + ($gutter-width * 2);
-  padding: $gutter-width;
+
+  .board-border {
+    position: relative;
+    background: $lightgray;
+    margin: 2rem auto;
+    width:  $board-width + ($gutter-width * 2);
+    height: $board-height + ($gutter-width * 2);
+    padding: $gutter-width;
+  }
 
   .board {
     position: relative;
@@ -105,4 +108,12 @@ $board-height:    $square-size * $squares-per-col;
       color: $fadedyellow;
     }
   }
+
+  .controls {
+    position: relative;
+    margin: 1rem auto;
+    width:  $board-width + ($gutter-width * 2);
+    text-align: right;
+  }
+
 }

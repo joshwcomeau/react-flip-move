@@ -10,6 +10,7 @@ import {
 }                                       from 'react-dnd';
 
 import FlipMove from '../TEMP_flip-move';
+import Toggle from './Toggle.jsx';
 import tiles from '../data/tiles.js';
 
 
@@ -26,6 +27,7 @@ class Scrabble extends Component {
     this.state = { tiles }
 
     this.updateDroppedTilePosition = this.updateDroppedTilePosition.bind(this);
+    this.resetTiles = this.resetTiles.bind(this);
   }
 
   updateDroppedTilePosition({x, y}, tile) {
@@ -41,6 +43,10 @@ class Scrabble extends Component {
     stateTiles[index] = { ...tile, x, y };
 
     this.setState({ tiles: stateTiles });
+  }
+
+  resetTiles() {
+    this.setState({ tiles });
   }
 
   renderTiles() {
@@ -76,11 +82,22 @@ class Scrabble extends Component {
   render() {
     return (
       <div id="scrabble">
-        <div className="board">
-          <FlipMove>
-            { this.renderTiles() }
-          </FlipMove>
-          { this.renderBoardSquares() }
+        <div className="board-border">
+          <div className="board">
+            <FlipMove>
+              { this.renderTiles() }
+            </FlipMove>
+            { this.renderBoardSquares() }
+          </div>
+        </div>
+
+        <div className="controls">
+          <Toggle
+            clickHandler={this.resetTiles}
+            text="Reset" icon="refresh"
+            active={true}
+            large={true}
+          />
         </div>
       </div>
     );
