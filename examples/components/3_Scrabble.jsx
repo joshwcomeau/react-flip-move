@@ -15,7 +15,7 @@ import tiles from '../data/tiles.js';
 
 const BOARD_WIDTH   = 11;
 const BOARD_HEIGHT  = 7;
-const SQUARE_SIZE   = 50;
+const SQUARE_SIZE   = 56;
 const TILE_OFFSET   = 3;
 const NUM_SQUARES   = BOARD_WIDTH * BOARD_HEIGHT;
 
@@ -24,13 +24,23 @@ class Scrabble extends Component {
   constructor(props) {
     super(props);
     this.state = { tiles }
+
+    this.updateDroppedTilePosition = this.updateDroppedTilePosition.bind(this);
   }
 
-  updateDroppedTilePosition(x, y, tile) {
+  updateDroppedTilePosition({x, y}, tile) {
     // Normally, this would be done through a Redux action, but because this
     // is such a contrived example, I'm just passing the action down through
     // the child.
-    console.log("UPDATE", x, y, tile);
+
+    // Create a copy of the state, find the newly-dropped tile.
+    let stateTiles = this.state.tiles.slice();
+    const index = stateTiles.findIndex( stateTile => stateTile.id === tile.id );
+
+    // Set it to a new copy of the tile, but with the new coords
+    stateTiles[index] = { ...tile, x, y };
+
+    this.setState({ tiles: stateTiles });
   }
 
   renderTiles() {
@@ -41,13 +51,18 @@ class Scrabble extends Component {
 
   renderBoardSquares() {
     // Create a 2D array to represent the board
-    // Using a monkey-patched method, see below >:)
+    // Array#matrix is a monkeypatched, custom method >:)
     const matrix = Array.matrix(BOARD_WIDTH, BOARD_HEIGHT);
 
     return matrix.map( (row, rowIndex) => (
       row.map( (index) => {
-        // TODO: Figure out if there's a tile in here. Render it if there is.
-        return <BoardSquare x={index} y={rowIndex} />
+        return (
+          <BoardSquare
+            x={index}
+            y={rowIndex}
+            onDrop={this.updateDroppedTilePosition}
+          />
+        );
       })
     ));
   }
@@ -89,6 +104,7 @@ class Tile extends Component {
     const styles = {
       left:     x * SQUARE_SIZE - TILE_OFFSET,
       top:      y * SQUARE_SIZE - TILE_OFFSET,
+      zIndex:   `${x}${y}`,
       opacity:  isDragging ? 0.5 : 1
     };
 
@@ -103,11 +119,11 @@ class Tile extends Component {
 
 const squareTarget = {
   drop(props, monitor) {
-
+    props.onDrop(props, monitor.getItem());
   }
 }
 
-@DropTarget('square', squareTarget, (connect, monitor) => ({
+@DropTarget('tile', squareTarget, (connect, monitor) => ({
   connectDropTarget:  connect.dropTarget(),
   isOver:             monitor.isOver()
 }))

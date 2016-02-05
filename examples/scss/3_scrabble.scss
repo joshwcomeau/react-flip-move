@@ -1,5 +1,5 @@
-$tile-size:       50px;
-$square-size:     50px;
+$tile-size:       56px;
+$square-size:     56px;
 $squares-per-row: 11;
 $squares-per-col: 7;
 $gutter-width:    8px;
@@ -54,7 +54,7 @@ $board-height:    $square-size * $squares-per-col;
     width: $tile-size;
     height: $tile-size;
     background: $yellow;
-    cursor:default;
+    cursor: move;
     -webkit-box-shadow:
       0.5px 0.5px 0px $fadedyellow,
       1px 1px 0px $fadedyellow,
