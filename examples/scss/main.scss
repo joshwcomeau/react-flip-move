@@ -80,4 +80,11 @@ ul {
   &.active {
     background: $fuscia;
   }
+
+  &.large {
+    font-size: 14px;
+    padding: 12px 24px 12px 50px;
+
+    i { font-size: 18px; }
+  }
 }

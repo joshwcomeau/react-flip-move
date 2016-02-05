@@ -6,6 +6,7 @@ import classNames                       from 'classnames';
 import articles from '../data/articles';
 
 import FlipMove from '../TEMP_flip-move';
+import Toggle from './Toggle.jsx';
 
 
 class ListItem extends Component {
@@ -21,20 +22,6 @@ class ListItem extends Component {
   }
 };
 
-const Toggle = ({clickHandler, text, icon, active}) => {
-  const buttonClass = classNames({
-    'button-toggle': true,
-    active
-  });
-  const iconClass = `fa fa-fw fa-${icon}`;
-
-  return (
-    <button className={buttonClass} onClick={clickHandler}>
-      <i className={iconClass} />
-      {text}
-    </button>
-  );
-};
 
 class Shuffle extends Component {
   constructor(props) {
