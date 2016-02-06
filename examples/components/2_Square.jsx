@@ -1,7 +1,11 @@
+import '../helpers/array_helpers';
+import '../helpers/throttle';
+
 import React, { Component, PropTypes }  from 'react';
 import moment                           from 'moment';
 import { times }                        from 'lodash';
 import classNames                       from 'classnames';
+
 
 import FlipMove from '../TEMP_flip-move';
 
@@ -23,11 +27,10 @@ class Board extends Component {
         id: i,
         painted: false,
         red: i === RED_SQUARE
-      })),
-      isMoving: false
+      }))
     };
 
-    this.move = this.move.bind(this);
+    this.move = throttle(this.move, { context: this });
   }
 
   componentDidMount() {
@@ -50,8 +53,6 @@ class Board extends Component {
   }
 
   move(event) {
-    if ( this.state.isMoving ) return false;
-
     const currentIndex = this.state.squares.findIndex( square => square.red );
     let newIndex;
 
@@ -95,12 +96,7 @@ class Board extends Component {
   }
 
   startMove(element, node) {
-    this.setState({ isMoving: true });
     this.paintSquare(element, node);
-  }
-
-  finishMove() {
-    this.setState({ isMoving: false })
   }
 
   render() {
@@ -110,25 +106,12 @@ class Board extends Component {
           duration={FLIP_DURATION}
           easing="cubic-bezier(.12,.36,.14,1.2)"
           onStart={this.startMove.bind(this)}
-          onFinish={this.finishMove.bind(this)}
         >
           { this.renderSquares() }
         </FlipMove>
       </div>
     );
   }
-};
-
-
-// Monkeypatching is bad, but so much fun (=
-Array.prototype.swap = function (a, b) {
-  if ( b >= this.length || b < 0 ) return this;
-
-  // Temporary variable to hold data while we juggle
-  let temp = this[a];
-  this[a] = this[b];
-  this[b] = temp;
-  return this;
 };
 
 
