@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "Example of React Flip Move",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "webpack index.js --config webpack.config.production.js"
   },
   "repository": {
     "type": "git",

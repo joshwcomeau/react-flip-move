@@ -99,14 +99,17 @@ class FlipMove extends Component {
     const [ deltaX, deltaY ] = this.getPositionDelta(domNode, child.key);
     if ( deltaX === 0 && deltaY === 0 ) return;
 
-    // Don't love the nested callbacks.
-    // Doesn't seem worth it to include a promises polyfill though.
-    requestAnimationFrame( () => {
-      // TODO: Don't clobber existing properties!
-      domNode.style.transition = '';
-      domNode.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+    // TODO: Don't clobber existing properties!
+    domNode.style.transition = '';
+    domNode.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
 
-      requestAnimationFrame( () => {
+    // Sadly, this is the most browser-compatible way to do this I've found.
+    // Essentially we need to set the initial styles outside of any request
+    // callbacks to avoid batching them. Then, a frame needs to pass with
+    // the styles above rendered. Then, on the second frame, we can apply
+    // our final styles to perform the animation.
+    requestAnimationFrame( (t1) => {
+      requestAnimationFrame( (t2) => {
         domNode.style.transition = this.createTransitionString(n);
         domNode.style.transform  = '';
       });
@@ -116,8 +119,6 @@ class FlipMove extends Component {
 
     domNode.addEventListener(transitionEnd, () => {
       domNode.style.transition = '';
-
-      // Invoke our callback, with our child element and the DOM node.
       if ( this.props.onFinish ) this.props.onFinish(child, domNode);
     });
   }
