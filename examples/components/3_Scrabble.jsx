@@ -1,3 +1,5 @@
+import '../helpers/array_helpers';
+
 import React, { Component, PropTypes }  from 'react';
 import moment                           from 'moment';
 import { times }                        from 'lodash';
@@ -186,11 +188,5 @@ class BoardSquare extends Component {
   }
 }
 
-Array.range = n => Array.from(new Array(n), (x,i) => i);
-Array.matrix = (x, y) => {
-  const rows = Array.range(y);
-  const columns = Array.range(x);
-  return rows.map( (row, i) => columns.slice() );
-}
 
 export default Scrabble;

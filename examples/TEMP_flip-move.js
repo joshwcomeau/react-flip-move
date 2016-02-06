@@ -14,9 +14,10 @@
  *     transition between their positions.
  */
 
-import 'web-animations-js'
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+
+const transitionEnd = whichTransitionEvent();
 
 
 class FlipMove extends Component {
@@ -48,7 +49,7 @@ class FlipMove extends Component {
     // On the very first render, `componentWillReceiveProps` is not called.
     // This means that `this.state` will be undefined.
     // That's alright, though, because there is no possible transition on
-    // the first render; we only animate transitions between states =)
+    // the first render; we only animate transitions between state changes =)
     if ( !this.state ) return;
 
     React.Children
@@ -79,46 +80,46 @@ class FlipMove extends Component {
     ];
   }
 
-  pickAndPrepAnimationProps(n) {
-    // Omit the props that aren't settings for web-animations
-    // see: https://facebook.github.io/react/docs/transferring-props.html
-    let {
-      children, onStart, onFinish, staggerDurationBy,
-      ...animationProps
-    } = this.props;
+  createTransitionString(n) {
+    let { duration, staggeredDuration, delay, staggeredDelay, easing } = this.props;
 
-    if ( typeof animationProps.duration === 'string' ) {
-      animationProps.duration = parseInt(animationProps.duration);
-    }
-    animationProps.duration += n * this.props.staggerDurationBy;
+    // There has to be a nicer way to do this...
+    [ duration, delay, staggeredDuration, staggeredDelay ] = convertToInt(duration, delay, staggeredDuration, staggeredDelay);
 
-    return animationProps;
+    delay     += n * staggeredDelay;
+    duration  += n * staggeredDuration;
+
+    return `transform ${duration}ms ${easing} ${delay}ms`;
   }
 
   animateTransform(child, n) {
-    const domNode = ReactDOM.findDOMNode( this.refs[child.key] );
+    let domNode = ReactDOM.findDOMNode( this.refs[child.key] );
 
     // Get the △X and △Y, and return if the child hasn't budged.
     const [ deltaX, deltaY ] = this.getPositionDelta(domNode, child.key);
     if ( deltaX === 0 && deltaY === 0 ) return;
 
-    let animationProps = this.pickAndPrepAnimationProps(n);
+    // Don't love the nested callbacks.
+    // Doesn't seem worth it to include a promises polyfill though.
+    requestAnimationFrame( () => {
+      // TODO: Don't clobber existing properties!
+      domNode.style.transition = '';
+      domNode.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
 
-    const player = domNode.animate([
-      { transform: `translate(${deltaX}px, ${deltaY}px)`},
-      { transform: 'translate(0,0)'}
-    ], animationProps);
-
-    if ( this.props.onStart) {
-      this.props.onStart(child, domNode);
-    }
-
-    if ( this.props.onFinish ) {
-      player.addEventListener('finish', () => {
-        // Invoke our callback, with our child element and the DOM node.
-        this.props.onFinish(child, domNode);
+      requestAnimationFrame( () => {
+        domNode.style.transition = this.createTransitionString(n);
+        domNode.style.transform  = '';
       });
-    }
+    });
+
+    if ( this.props.onStart ) this.props.onStart(child, domNode);
+
+    domNode.addEventListener(transitionEnd, () => {
+      domNode.style.transition = '';
+
+      // Invoke our callback, with our child element and the DOM node.
+      if ( this.props.onFinish ) this.props.onFinish(child, domNode);
+    });
   }
 
   childrenWithRefs () {
@@ -145,32 +146,57 @@ class FlipMove extends Component {
                           PropTypes.array,
                           PropTypes.object
                         ]).isRequired,
+    easing:             PropTypes.string,
     duration:           PropTypes.oneOfType([
                           PropTypes.string,
                           PropTypes.number
                         ]),
-    easing:             PropTypes.string,
-    delay:              PropTypes.number,
-    iterations:         PropTypes.number,
-    direction:          PropTypes.string,
-    fill:               PropTypes.string,
-    onStart:            PropTypes.func,
-    onFinish:           PropTypes.func,
-    staggerDurationBy:  PropTypes.oneOfType([
+    delay:              PropTypes.oneOfType([
                           PropTypes.string,
                           PropTypes.number
-                        ])
+                        ]),
+    staggeredDuration:  PropTypes.oneOfType([
+                          PropTypes.string,
+                          PropTypes.number
+                        ]),
+    staggeredDelay:     PropTypes.oneOfType([
+                          PropTypes.string,
+                          PropTypes.number
+                        ]),
+    onStart:            PropTypes.func,
+    onFinish:           PropTypes.func
   };
 
   static defaultProps = {
-    duration:           350,
     easing:             'ease-in-out',
+    duration:           350,
     delay:              0,
-    iterations:         1,
-    direction:          'normal',
-    fill:               'none',
-    staggerDurationBy:  0
+    staggeredDuration:  0,
+    staggeredDelay:     0
   };
+}
+
+
+// Tiny utility functions!
+// TODO: Move these.
+function convertToInt(...values) {
+  return values.map( val => typeof val === 'string' ? parseInt(val) : val );
+}
+
+// Modified from Modernizr
+function whichTransitionEvent() {
+  const el = document.createElement('fakeelement');
+
+  const transitions = {
+    'transition':       'transitionend',
+    'OTransition':      'oTransitionEnd',
+    'MozTransition':    'transitionend',
+    'WebkitTransition': 'webkitTransitionEnd'
+  }
+
+  for ( let t in transitions ) {
+    if ( el.style[t] !== undefined ) return transitions[t];
+  }
 }
 
 export default FlipMove;

@@ -10,7 +10,7 @@
  *   @param {Object} context - The `this` value that should be passed to fn
  * @returns {Function}
  */
-function throttle(fn, { threshold = 200, context = window }) {
+export default function throttle(fn, { threshold = 200, context = window }) {
   let last;
 
   return function () {
