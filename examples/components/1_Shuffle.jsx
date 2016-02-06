@@ -124,7 +124,7 @@ class Shuffle extends Component {
           </div>
         </header>
         <ul>
-          <FlipMove staggerDurationBy="30" duration="350">
+          <FlipMove staggeredDuration="30" duration="350">
             { this.renderArticles() }
           </FlipMove>
         </ul>

@@ -1,11 +1,10 @@
 import '../helpers/array_helpers';
-import '../helpers/throttle';
 
 import React, { Component, PropTypes }  from 'react';
 import moment                           from 'moment';
 import { times }                        from 'lodash';
 import classNames                       from 'classnames';
-
+import throttle                         from '../helpers/throttle';
 
 import FlipMove from '../TEMP_flip-move';
 

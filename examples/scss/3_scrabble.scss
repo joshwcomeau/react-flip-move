@@ -31,8 +31,8 @@ $board-height:    $square-size * $squares-per-col;
     width: $square-size;
     height: $square-size;
     background: $white;
-    border-top: 1px solid #CCC;
-    border-left: 1px solid #CCC;
+    border-top: 1px solid #AAA;
+    border-left: 1px solid #AAA;
 
     &.dragged-over {
       background: darken($white, 8%);
@@ -40,11 +40,11 @@ $board-height:    $square-size * $squares-per-col;
 
     // Only the right-edge ones should have a right border
     &:nth-child(#{$squares-per-row}n + 1) {
-      border-right: 1px solid #CCC;
+      border-right: 1px solid #AAA;
     }
     // Only the bottom row should have a bottom border.
     &:nth-child(n+#{$squares-per-row * $squares-per-col - $squares-per-row + 2}) {
-      border-bottom: 1px solid #CCC;
+      border-bottom: 1px solid #AAA;
     }
   }
 
