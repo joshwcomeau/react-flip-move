@@ -11,7 +11,7 @@ import {
   DragDropContext
 }                                       from 'react-dnd';
 
-import FlipMove from '../TEMP_flip-move';
+import FlipMove from 'react-flip-move';
 import Toggle from './Toggle.jsx';
 import tiles from '../data/tiles.js';
 
@@ -86,7 +86,7 @@ class Scrabble extends Component {
       <div id="scrabble">
         <div className="board-border">
           <div className="board">
-            <FlipMove>
+            <FlipMove duration={200} staggerDelayBy={200}>
               { this.renderTiles() }
             </FlipMove>
             { this.renderBoardSquares() }

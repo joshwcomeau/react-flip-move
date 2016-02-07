@@ -5,7 +5,7 @@ import classNames                       from 'classnames';
 
 import articles from '../data/articles';
 
-import FlipMove from '../TEMP_flip-move';
+import FlipMove from 'react-flip-move';
 import Toggle from './Toggle.jsx';
 
 
