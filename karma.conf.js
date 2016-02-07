@@ -2,8 +2,9 @@
 // var webpack = require('webpack');
 
 module.exports = function(config) {
+  'use strict';
+
   config.set({
-    browsers: ['Chrome'],
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
@@ -11,7 +12,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha'],
+    frameworks: ['mocha', 'sinon-chai'],
 
     client: {
       mocha: {
@@ -47,15 +48,18 @@ module.exports = function(config) {
 
     plugins: [
       require("karma-webpack"),
-      'karma-mocha'
+      'karma-mocha',
+      'karma-sinon-chai',
+      'karma-sourcemap-loader',
+      'karma-chrome-launcher'
     ],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'src/**/*.js': ['webpack'],
-      'test/**/*.js': ['webpack']
+      'src/**/*.js': ['webpack', 'sourcemap'],
+      'test/**/*.js': ['webpack', 'sourcemap']
     },
 
 
@@ -84,7 +88,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-
+    browsers: ['Chrome'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
