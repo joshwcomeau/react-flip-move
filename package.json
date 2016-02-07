@@ -12,7 +12,7 @@
     "lint": "eslint src",
     "build:lib": "babel src --out-dir lib",
     "build:umd": "webpack src/index.js dist/react-flip-move.js --config webpack.config.production.js",
-    "build:umd:min": "webpack src/index.js dist/react-flip-move.min.js --config webpack.config.production.js",
+    "build:umd:min": "webpack src/index.js dist/react-flip-move.min.js --config webpack.config.production.min.js",
     "build": "npm run build:lib && npm run build:umd && npm run build:umd:min",
     "test": "./node_modules/.bin/karma start --single-run",
     "test:dev": "karma start karma.conf.js"
