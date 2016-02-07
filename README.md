@@ -9,6 +9,7 @@ Animations library for React that automagically handles animations when a DOM no
 [![demo](https://s3.amazonaws.com/githubdocs/demo-with-dev-tools.gif)](http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle)
 
 
+
 ## Demos
 
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle" target="_blank">__List/Grid Shuffle__</a>
@@ -16,19 +17,27 @@ Animations library for React that automagically handles animations when a DOM no
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/scrabble" target="_blank">__Scrabble__</a>
 
 
+## Installation
+
+```
+npm i -S react-flip-move
+```
+
+UMD builds are also available, in minified and non-minified form.
+
+## Quickstart
+
 The implementation couldn't be simpler. Just wrap the items you'd like to move in a `FlipMove`:
 
 ```js
 class TopArticles extends Component {
   renderTopArticles() {
-    return this.props.articles.map( (article, i) => {
-      return <Article {...article} key={i} />;
-    });
+    return this.props.articles.map( (article, i) => <Article {...article} key={i} /> );
   }
   render() {
     return (
       <div className="top-articles">
-        <FlipMove transition="300" easing="ease-in-out">
+        <FlipMove easing="ease-in-out">
           { this.renderTopArticles() }
         </FlipMove>
       </div>
@@ -38,9 +47,6 @@ class TopArticles extends Component {
 ```
 
 
-## Installation
-
-TODO
 
 
 ## Examples
