@@ -62,14 +62,19 @@ class FlipMove extends Component {
 
   childNeedsToBeAnimated(child) {
     // We only want to animate if:
-    //  * The child has an associated key (stationary children are supported)
+    //  * The child has an associated key (immovable children are supported)
     //  * The child still exists in the DOM.
     //  * The child isn't brand new.
-    const isStationary = !child.key;
-    const isBrandNew   = !this.state[child.key];
-    const isDestroyed  = !this.refs[child.key];
+    //  * The child has moved
+    const isImmovable   = !child.key;
+    const isBrandNew    = !this.state[child.key];
+    const isDestroyed   = !this.refs[child.key];
 
-    return !isStationary && !isBrandNew && !isDestroyed;
+    const domNode       = ReactDOM.findDOMNode( this.refs[child.key] );
+    const [ dX, dY ]    = this.getPositionDelta( domNode, child.key );
+    const isStationary  = dX === 0 && dY === 0;
+
+    return !isImmovable && !isBrandNew && !isDestroyed && !isStationary;
   }
 
   getPositionDelta(domNode, key) {
@@ -99,13 +104,12 @@ class FlipMove extends Component {
   animateTransform(child, n) {
     let domNode = ReactDOM.findDOMNode( this.refs[child.key] );
 
-    // Get the △X and △Y, and return if the child hasn't budged.
-    const [ deltaX, deltaY ] = this.getPositionDelta(domNode, child.key);
-    if ( deltaX === 0 && deltaY === 0 ) return;
+    // Get the △X and △Y
+    const [ dX, dY ] = this.getPositionDelta(domNode, child.key);
 
     // TODO: Don't clobber existing properties!
     domNode.style.transition = '';
-    domNode.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+    domNode.style.transform = `translate(${dX}px, ${dY}px)`;
 
     // Sadly, this is the most browser-compatible way to do this I've found.
     // Essentially we need to set the initial styles outside of any request

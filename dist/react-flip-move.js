@@ -161,14 +161,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'childNeedsToBeAnimated',
 	    value: function childNeedsToBeAnimated(child) {
 	      // We only want to animate if:
-	      //  * The child has an associated key (stationary children are supported)
+	      //  * The child has an associated key (immovable children are supported)
 	      //  * The child still exists in the DOM.
 	      //  * The child isn't brand new.
-	      var isStationary = !child.key;
+	      //  * The child has moved
+	      var isImmovable = !child.key;
 	      var isBrandNew = !this.state[child.key];
 	      var isDestroyed = !this.refs[child.key];
 
-	      return !isStationary && !isBrandNew && !isDestroyed;
+	      var domNode = _reactDom2.default.findDOMNode(this.refs[child.key]);
+
+	      var _getPositionDelta = this.getPositionDelta(domNode, child.key);
+
+	      var _getPositionDelta2 = _slicedToArray(_getPositionDelta, 2);
+
+	      var dX = _getPositionDelta2[0];
+	      var dY = _getPositionDelta2[1];
+
+	      var isStationary = dX === 0 && dY === 0;
+
+	      return !isImmovable && !isBrandNew && !isDestroyed && !isStationary;
 	    }
 	  }, {
 	    key: 'getPositionDelta',
@@ -211,20 +223,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var domNode = _reactDom2.default.findDOMNode(this.refs[child.key]);
 
-	      // Get the △X and △Y, and return if the child hasn't budged.
+	      // Get the △X and △Y
 
-	      var _getPositionDelta = this.getPositionDelta(domNode, child.key);
+	      var _getPositionDelta3 = this.getPositionDelta(domNode, child.key);
 
-	      var _getPositionDelta2 = _slicedToArray(_getPositionDelta, 2);
+	      var _getPositionDelta4 = _slicedToArray(_getPositionDelta3, 2);
 
-	      var deltaX = _getPositionDelta2[0];
-	      var deltaY = _getPositionDelta2[1];
-
-	      if (deltaX === 0 && deltaY === 0) return;
+	      var dX = _getPositionDelta4[0];
+	      var dY = _getPositionDelta4[1];
 
 	      // TODO: Don't clobber existing properties!
+
 	      domNode.style.transition = '';
-	      domNode.style.transform = 'translate(' + deltaX + 'px, ' + deltaY + 'px)';
+	      domNode.style.transform = 'translate(' + dX + 'px, ' + dY + 'px)';
 
 	      // Sadly, this is the most browser-compatible way to do this I've found.
 	      // Essentially we need to set the initial styles outside of any request
