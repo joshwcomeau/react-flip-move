@@ -4,3 +4,4 @@ coverage
 *.log
 lib
 examples
+/dist
