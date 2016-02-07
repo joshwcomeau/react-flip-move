@@ -3,7 +3,7 @@ import ReactDOM, { render }             from 'react-dom';
 import { Link }                         from 'react-router';
 import classNames                       from 'classnames';
 
-import FlipMove from '../TEMP_flip-move';
+import FlipMove from 'react-flip-move';
 
 
 const HEADER_HEIGHT = 75;

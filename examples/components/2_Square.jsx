@@ -6,7 +6,7 @@ import { times }                        from 'lodash';
 import classNames                       from 'classnames';
 import throttle                         from '../helpers/throttle';
 
-import FlipMove from '../TEMP_flip-move';
+import FlipMove from 'react-flip-move';
 
 
 const SQUARES_WIDTH   = 9;

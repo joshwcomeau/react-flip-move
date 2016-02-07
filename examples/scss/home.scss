@@ -1,0 +1,62 @@
+#home {
+  width: 100%;
+  max-width: 550px;
+  margin: 2rem auto;
+  color: $white;
+
+  header {
+    text-align: center;
+  }
+
+  h2 {
+    position: relative;
+    display: inline-block;
+    font-size: 60px;
+    font-weight: 500;
+    text-shadow:
+      0.5px 0.5px 0 darken($aqua, 10%),
+      1px 1px 0 darken($aqua, 10%),
+      1.5px 1.5px 0 darken($aqua, 10%),
+      2px 2px 0 darken($aqua, 10%)
+    ;
+
+
+    &:before {
+      content: 'introducing';
+      position: absolute;
+      font-size: 16px;
+      text-shadow: none;
+      right: 5px;
+      top: 0;
+      text-shadow:
+        0.5px 0.5px 0 darken($aqua, 10%),
+        1px 1px 0 darken($aqua, 10%)
+      ;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      width: 40%;
+      height: 1px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      bottom: 2px;
+      background: rgba(255,255,255,0.2);
+    }
+  }
+
+  section {
+    font-size: 18px;
+    line-height: 1.5em;
+    margin: 3rem 0;
+    font-weight: 300;
+
+    a {
+      color: $lightgray;
+      font-weight: 500;
+      text-decoration: none;
+    }
+  }
+}
