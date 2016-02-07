@@ -83,9 +83,16 @@ class Shuffle extends Component {
   }
 
   renderArticles() {
-    return this.state.articles.map( article => (
-      <ListItem key={article.id} view={this.state.view} {...article} />
-    ));
+    return this.state.articles.map( (article, i) => {
+      return (
+        <ListItem
+          key={article.id}
+          view={this.state.view}
+          style={{ zIndex: i }}
+          {...article}
+        />
+      );
+    });
   }
 
   render() {
@@ -124,7 +131,7 @@ class Shuffle extends Component {
           </div>
         </header>
         <ul>
-          <FlipMove staggeredDuration="30" duration="350">
+          <FlipMove staggeredDuration="30">
             { this.renderArticles() }
           </FlipMove>
         </ul>
