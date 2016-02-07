@@ -4,9 +4,17 @@ React Flip Move
 [![build status](https://img.shields.io/travis/joshwcomeau/react-flip-move/master.svg?style=flat-square)](https://travis-ci.org/joshwcomeau/react-flip-move)
 [![npm version](https://img.shields.io/npm/v/react-flip-move.svg?style=flat-square)](https://www.npmjs.com/package/react-flip-move)
 
-Animations library for React that automagically handles animations when a DOM element gets reordered or moved.
+Animations library for React that automagically handles animations when a DOM node gets reordered or moved. Emphasis on smooth, 60+ FPS animations.
 
-< Insert GIF of what I'm talking about >
+[![demo](https://s3.amazonaws.com/githubdocs/demo-with-dev-tools.gif)](http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle)
+
+
+## Demos
+
+  * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle" target="_blank">__List/Grid Shuffle__</a>
+  * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/square" target="_blank">__Fuscia Square__</a>
+  * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/scrabble" target="_blank">__Scrabble__</a>
+
 
 The implementation couldn't be simpler. Just wrap the items you'd like to move in a `FlipMove`:
 
@@ -104,7 +112,7 @@ Now, the fun bit. We want to take the difference in their positions, so that the
 </ul>
 ```
 
-Do you see what that does? Even though their position in the DOM has changed, the user would see these two items in their _original_ position: with List Item 1 on top of List Item 2. This is our **invert** stage.
+Even though their position in the DOM has changed, the user would see these two items in their _original_ position: with List Item 1 on top of List Item 2. This is our **invert** stage.
 
 _**Note:** this transform is NOT animated. It happens instantly, and as far as the user is concerned, **nothing has happened yet**. The two list items are just sitting there, in their original positions._
 
