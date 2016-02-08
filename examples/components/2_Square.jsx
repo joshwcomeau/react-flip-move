@@ -14,7 +14,7 @@ const SQUARES_HEIGHT  = 5;
 const NUM_SQUARES     = SQUARES_WIDTH * SQUARES_HEIGHT;
 const RED_SQUARE      = Math.floor(NUM_SQUARES / 2);
 
-const FLIP_DURATION   = 425;
+const FLIP_DURATION   = 750;
 const [ LEFT, UP, RIGHT, DOWN ] = [37, 38, 39, 40];
 
 
