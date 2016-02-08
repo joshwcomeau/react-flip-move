@@ -94,7 +94,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * React Flip Move
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Automagically animate the transition when the DOM gets reordered.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * (c) 2016-present Joshua Comeau
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * How it works:
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * The basic idea with this component is pretty straightforward:
@@ -232,9 +232,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var dX = _getPositionDelta4[0];
 	      var dY = _getPositionDelta4[1];
 
-	      // TODO: Don't clobber existing properties!
-
-	      domNode.style.transition = '';
+	      domNode.style.transition = 'transform 0ms';
 	      domNode.style.transform = 'translate(' + dX + 'px, ' + dY + 'px)';
 
 	      // Sadly, this is the most browser-compatible way to do this I've found.
@@ -242,8 +240,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // callbacks to avoid batching them. Then, a frame needs to pass with
 	      // the styles above rendered. Then, on the second frame, we can apply
 	      // our final styles to perform the animation.
-	      requestAnimationFrame(function (t1) {
-	        requestAnimationFrame(function (t2) {
+	      requestAnimationFrame(function () {
+	        requestAnimationFrame(function () {
 	          domNode.style.transition = _this3.createTransitionString(n);
 	          domNode.style.transform = '';
 	        });

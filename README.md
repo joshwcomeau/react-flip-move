@@ -4,7 +4,11 @@ React Flip Move
 [![build status](https://img.shields.io/travis/joshwcomeau/react-flip-move/master.svg?style=flat-square)](https://travis-ci.org/joshwcomeau/react-flip-move)
 [![npm version](https://img.shields.io/npm/v/react-flip-move.svg?style=flat-square)](https://www.npmjs.com/package/react-flip-move)
 
-Animations library for React that automagically handles animations when a DOM node gets reordered or moved. Emphasis on smooth, 60+ FPS animations using the FLIP technique.
+This module was built to tackle the common but arduous problem of animating a list of items when the list's order changes.
+
+DOM nodes can't actually reorder themselves; brand new nodes are created instead. Because of this, simple CSS transitions don't work.
+
+Flip Move uses the [_FLIP technique_](https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md) to work out what such a transition would look like, and fakes it using 60+ FPS hardware-accelerated CSS transforms.
 
 [![demo](https://s3.amazonaws.com/githubdocs/demo-with-dev-tools.gif)](http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle)
 
@@ -41,13 +45,13 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
   * Ability to provide `onStart` / `onFinish` callbacks.
 
-  * Implementation based on the [_FLIP technique_](https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md), a beautiful-in-its-simplicity method of tackling this problem.
+  * Implementation based on the [_FLIP technique_](https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md), a beautiful-in-its-simplicity method of tackling this problem. UMD build, when minified and gzipped, is only 2kb! ⚡
 
 
 
 ## Quickstart
 
-The implementation couldn't be simpler. Just wrap the items you'd like to move in a `FlipMove`:
+The implementation couldn't be simpler. Just wrap the items you'd like to move in a `FlipMove`, with any [custom options](https://github.com/joshwcomeau/react-flip-move#options):
 
 ```js
 import FlipMove from 'react-flip-move';
@@ -60,7 +64,7 @@ class TopArticles extends Component {
   render() {
     return (
       <div className="top-articles">
-        <FlipMove duration={250} easing="ease-in-out">
+        <FlipMove easing="cubic-bezier(0, 0.7, 0.8, 0.1)">
           { this.renderTopArticles() }
         </FlipMove>
       </div>
@@ -226,7 +230,7 @@ Curious how this works, under the hood? [__Read the full article__](https://gith
 
 ## Contributions
 
-Contributors welcome! Please discuss new features with me ahead of time, and submit PRs for bug fixes with tests.
+Contributors welcome! Please discuss new features with me ahead of time, and submit PRs for bug fixes with tests (Testing stack is Mocha/Chai/Sinon, tested in-browser by Karma).
 
 
 
