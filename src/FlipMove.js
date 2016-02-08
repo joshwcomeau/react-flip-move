@@ -1,6 +1,6 @@
 /**
  * React Flip Move
- * Automagically animate the transition when the DOM gets reordered.
+ * (c) 2016-present Joshua Comeau
  *
  * How it works:
  * The basic idea with this component is pretty straightforward:
@@ -107,8 +107,7 @@ class FlipMove extends Component {
     // Get the △X and △Y
     const [ dX, dY ] = this.getPositionDelta(domNode, child.key);
 
-    // TODO: Don't clobber existing properties!
-    domNode.style.transition = '';
+    domNode.style.transition = 'transform 0ms';
     domNode.style.transform = `translate(${dX}px, ${dY}px)`;
 
     // Sadly, this is the most browser-compatible way to do this I've found.
@@ -116,8 +115,8 @@ class FlipMove extends Component {
     // callbacks to avoid batching them. Then, a frame needs to pass with
     // the styles above rendered. Then, on the second frame, we can apply
     // our final styles to perform the animation.
-    requestAnimationFrame( (t1) => {
-      requestAnimationFrame( (t2) => {
+    requestAnimationFrame( () => {
+      requestAnimationFrame( () => {
         domNode.style.transition = this.createTransitionString(n);
         domNode.style.transform  = '';
       });
