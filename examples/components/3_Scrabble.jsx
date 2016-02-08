@@ -86,7 +86,7 @@ class Scrabble extends Component {
       <div id="scrabble">
         <div className="board-border">
           <div className="board">
-            <FlipMove duration={200} staggerDelayBy={200}>
+            <FlipMove duration={200} staggerDelayBy={150}>
               { this.renderTiles() }
             </FlipMove>
             { this.renderBoardSquares() }
