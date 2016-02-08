@@ -23,10 +23,10 @@ const Home = () => (
 
 
     <div className="text-right">
-      <Link to='/shuffle' className="button-toggle large">
+      <a href='https://github.com/joshwcomeau/react-flip-move' className="button-toggle large">
         <i className="fa fa-fw fa-code" />
         View the Source
-      </Link>
+      </a>
 
       <Link to='/shuffle' className="button-toggle large active icon-right">
         <i className="fa fa-fw fa-angle-right" />
