@@ -189,11 +189,12 @@ Curious how this works, under the hood? [__Read the full article__](https://gith
       The callback is invoked with two arguments:
 
       <ul>
-        <li><code>childElement</code>: A reference to the <a href="https://facebook.github.io/react/blog/2015/12/18/react-components-elements-and-instances.html#elements-describe-the-tree">React Element</a> being animated.</li>
+        <li><code>childElement</code>: A reference to the React Element being animated.</li>
         <li><code>domNode</code>: A reference to the unadulterated DOM node being animated.</li>
       </ul>
 
-      In general, it is advisable to ignore the <code>domNode</code> argument and work with the <code>childElement</code>. The <code>domNode</code> is just an escape hatch for doing complex things not otherwise possible.
+      In general, it is advisable to ignore the <code>domNode</code> argument and work with the <code>childElement</code>.
+      The <code>domNode</code> is just an escape hatch for doing complex things not otherwise possible.
     </td>
   </tr>
   <tr>
@@ -206,11 +207,12 @@ Curious how this works, under the hood? [__Read the full article__](https://gith
       The callback is invoked with two arguments:
 
       <ul>
-      <li><code>childElement</code>: A reference to the <a href="https://facebook.github.io/react/blog/2014/10/14/introducing-react-elements.html">React Element</a> being animated.</li>
+      <li><code>childElement</code>: A reference to the React Element being animated.</li>
       <li><code>domNode</code>: A reference to the unadulterated DOM node being animated.</li>
       </ul>
 
-      In general, it is advisable to ignore the <code>domNode</code> argument and work with the <code>childElement</code>. The <code>domNode</code> is just an escape hatch for doing complex things not otherwise possible.
+      In general, it is advisable to ignore the <code>domNode</code> argument and work with the <code>childElement</code>.
+      The <code>domNode</code> is just an escape hatch for doing complex things not otherwise possible.
 
     </td>
   </tr>
@@ -219,6 +221,8 @@ Curious how this works, under the hood? [__Read the full article__](https://gith
 
 
 ## Gotchas
+
+  * Does not work with stateless functional component children. This is because FlipMove uses refs to identify and apply styles to children, and stateless functional components cannot be given refs.
 
   * All children **need a unique `key` property**. Even if FlipMove is only given a single child, it needs to have a unique `key` prop for FlipMove to track it.
 
