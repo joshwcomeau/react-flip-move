@@ -1,5 +1,14 @@
-export function convertToInt(...values) {
-  return values.map( val => typeof val === 'string' ? parseInt(val) : val );
+/**
+ * React Flip Move
+ * (c) 2016-present Joshua Comeau
+ */
+
+export function convertToInt(val) {
+  return typeof val === 'string' ? parseInt(val) : val
+}
+
+export function convertAllToInt(...values) {
+  return values.map(convertToInt);
 }
 
 // Modified from Modernizr
