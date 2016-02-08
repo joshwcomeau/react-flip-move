@@ -52,6 +52,8 @@ class Board extends Component {
   }
 
   move(event) {
+    event.preventDefault();
+
     const currentIndex = this.state.squares.findIndex( square => square.red );
     let newIndex;
 
