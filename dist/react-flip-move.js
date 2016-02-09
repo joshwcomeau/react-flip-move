@@ -323,14 +323,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// Modified from Modernizr
 	function whichTransitionEvent() {
-	  var el = document.createElement('fakeelement');
-
 	  var transitions = {
 	    'transition': 'transitionend',
 	    'OTransition': 'oTransitionEnd',
 	    'MozTransition': 'transitionend',
 	    'WebkitTransition': 'webkitTransitionEnd'
 	  };
+
+	  // If we're running in a browserless environment (eg. SSR), it doesn't apply.
+	  // Return a string so that it maintains the type that is expected.
+	  if (typeof document === 'undefined') return '';
+
+	  var el = document.createElement('fakeelement');
 
 	  for (var t in transitions) {
 	    if (el.style[t] !== undefined) return transitions[t];
