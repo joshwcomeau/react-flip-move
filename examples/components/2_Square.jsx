@@ -47,7 +47,14 @@ class Board extends Component {
         painted: square.painted
       });
 
-      return <div key={square.id} className={classes} {...square} />;
+      return (
+        <div
+          key={square.id}
+          className={classes}
+          onClick={this.move}
+          {...square}
+        />
+      );
     });
   }
 
@@ -71,8 +78,15 @@ class Board extends Component {
         newIndex = currentIndex + 1;
         break;
       default:
-        return;
+        // This could be a click event, not a keyboard arrow event.
+        newIndex = this.state.squares.findIndex( square => {
+          return square.id === parseInt(event.target.id);
+        });
+        break;
     }
+
+    // If it wasn't a click or an arrow key, do nothing.
+    if ( !newIndex ) return;
 
     this.setState({
       squares: this.state.squares.slice().swap(currentIndex, newIndex)
@@ -102,14 +116,32 @@ class Board extends Component {
 
   render() {
     return (
-      <div id="board">
-        <FlipMove
-          duration={FLIP_DURATION}
-          easing="cubic-bezier(.12,.36,.14,1.2)"
-          onStart={this.startMove.bind(this)}
-        >
-          { this.renderSquares() }
-        </FlipMove>
+      <div id="square">
+        <div className="board">
+          <FlipMove
+            duration={FLIP_DURATION}
+            easing="cubic-bezier(.12,.36,.14,1.2)"
+            onStart={this.startMove.bind(this)}
+          >
+            { this.renderSquares() }
+          </FlipMove>
+        </div>
+        <div className="controls">
+          <i className="fa fa-mouse-pointer" />
+          <span className="or">OR</span>
+          <span className="arrow-key">
+            <i className="fa fa-fw fa-arrow-left" />
+          </span>
+          <span className="arrow-key">
+            <i className="fa fa-fw fa-arrow-down" />
+          </span>
+          <span className="arrow-key">
+            <i className="fa fa-fw fa-arrow-up" />
+          </span>
+          <span className="arrow-key">
+            <i className="fa fa-fw fa-arrow-right" />
+          </span>
+        </div>
       </div>
     );
   }

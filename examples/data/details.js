@@ -6,7 +6,7 @@ const data = {
   },
   square: {
     title: 'Fuscia Square',
-    details: 'Use your arrow keys to move a square about.\nA silly experiment that makes use of a cubic-bezier easing and start/finish callbacks.',
+    details: 'Click, or use your arrow keys to move a square about.\nA silly experiment that makes use of a cubic-bezier easing and start/finish callbacks.',
     source: 'https://github.com/joshwcomeau/react-flip-move/blob/gh-pages/examples/components/2_Square.jsx'
   },
   scrabble: {
