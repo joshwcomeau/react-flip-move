@@ -5,46 +5,77 @@ $board-width: $square-size * $squares-width;
 $board-height: $square-size * $squares-height;
 $board-padding: 8px;
 
-#board {
-  position: relative;
-  width: $board-width + $board-padding * 2;
-  height: $board-height + $board-padding * 2;
-  background: rgba(0,0,0,0.1);
-  padding: $board-padding;
-  margin: 2rem auto;
-  border-radius: 8px;
-
-  .square {
+#square {
+  .board {
     position: relative;
-    z-index: 1;
-    float: left;
-    width: $square-size;
-    height: $square-size;
+    width: $board-width + $board-padding * 2;
+    height: $board-height + $board-padding * 2;
+    background: rgba(0,0,0,0.1);
+    padding: $board-padding;
+    margin: 2rem auto;
+    border-radius: 8px;
 
-    &:after {
-      content: '';
-      position: absolute;
+    .square {
+      position: relative;
       z-index: 1;
-      top: 2px;
-      left: 2px;
-      right: 2px;
-      bottom: 2px;
-      background: $white;
-      border-radius: 3px;
+      float: left;
+      width: $square-size;
+      height: $square-size;
+
+      &:after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 2px;
+        left: 2px;
+        right: 2px;
+        bottom: 2px;
+        background: $white;
+        border-radius: 3px;
+      }
+    }
+
+    .red {
+      z-index: 2;
+      &:after {
+        background: $fuscia;
+        border-radius: 6px;
+      }
+    }
+
+    .painted {
+      &:after {
+        background: $lightgray;
+      }
     }
   }
 
-  .red {
-    z-index: 2;
-    &:after {
-      background: $fuscia;
-      border-radius: 6px;
-    }
-  }
+  .controls {
+    font-size: 30px;
+    color: $lightgray;
+    opacity: 0.6;
+    text-align: center;
+    font-weight: 100;
+    line-height: 40px;
 
-  .painted {
-    &:after {
+    span {
+      display: inline-block;
+    }
+
+    .or {
+      padding: 0 2rem;
+    }
+
+    .arrow-key {
+      font-size: 20px;
+      width: 40px;
+      height: 40px;
+      margin: 0 2px;
+      color: $aqua;
       background: $lightgray;
+      text-align: center;
+      border-bottom: 2px solid darken($aqua, 10%);
+      border-right: 2px solid darken($aqua, 10%);
     }
   }
 }
