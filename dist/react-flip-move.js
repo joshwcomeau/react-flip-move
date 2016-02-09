@@ -165,10 +165,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      //  * The child still exists in the DOM.
 	      //  * The child isn't brand new.
 	      //  * The child has moved
+	      //
+	      // Tackle the first three first, since they're very easy to determine.
 	      var isImmovable = !child.key;
 	      var isBrandNew = !this.state[child.key];
 	      var isDestroyed = !this.refs[child.key];
+	      if (isImmovable || isBrandNew || isDestroyed) return;
 
+	      // Figuring out if the component has moved is a bit more work.
 	      var domNode = _reactDom2.default.findDOMNode(this.refs[child.key]);
 
 	      var _getPositionDelta = this.getPositionDelta(domNode, child.key);
@@ -180,7 +184,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var isStationary = dX === 0 && dY === 0;
 
-	      return !isImmovable && !isBrandNew && !isDestroyed && !isStationary;
+	      // If it hasn't budged, we don't have to animate it.
+	      return !isStationary;
 	    }
 	  }, {
 	    key: 'getPositionDelta',

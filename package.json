@@ -1,6 +1,6 @@
 {
   "name": "react-flip-move",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Effortless animation between DOM changes (eg. list reordering) using the FLIP technique.",
   "main": "lib/index.js",
   "files": [
@@ -22,7 +22,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/joshwcomeau/flip-mode.git"
+    "url": "https://github.com/joshwcomeau/react-flip-move.git"
   },
   "keywords": [
     "react",

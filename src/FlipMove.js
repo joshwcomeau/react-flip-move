@@ -66,15 +66,20 @@ class FlipMove extends Component {
     //  * The child still exists in the DOM.
     //  * The child isn't brand new.
     //  * The child has moved
+    //
+    // Tackle the first three first, since they're very easy to determine.
     const isImmovable   = !child.key;
     const isBrandNew    = !this.state[child.key];
     const isDestroyed   = !this.refs[child.key];
+    if ( isImmovable || isBrandNew || isDestroyed ) return;
 
+    // Figuring out if the component has moved is a bit more work.
     const domNode       = ReactDOM.findDOMNode( this.refs[child.key] );
     const [ dX, dY ]    = this.getPositionDelta( domNode, child.key );
     const isStationary  = dX === 0 && dY === 0;
 
-    return !isImmovable && !isBrandNew && !isDestroyed && !isStationary;
+    // If it hasn't budged, we don't have to animate it.
+    return !isStationary;
   }
 
   getPositionDelta(domNode, key) {
