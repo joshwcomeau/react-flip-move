@@ -129,11 +129,6 @@ class FlipMove extends Component {
   }
 
   childrenWithRefs () {
-    // Convert the children to an array, and map.
-    // Cannot use React.Children.map directly, because the #toArray method
-    // re-maps some of the keys ('1' -> '.$1'). We need this behaviour to
-    // be consistent, so we do this conversion upfront.
-    // See: https://github.com/facebook/react/pull/3650/files
     return this.props.children.map( child => {
       return React.cloneElement(child, { ref: child.key });
     });
