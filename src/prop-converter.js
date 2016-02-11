@@ -1,7 +1,13 @@
 /**
  * React Flip Move | propConverter
- * Abstracted away a bunch of the messy
  * (c) 2016-present Joshua Comeau
+ *
+ * Abstracted away a bunch of the messy business with props.
+ *   - propTypes and defaultProps
+ *   - Type conversion (We accept 'string' and 'number' values for duration,
+ *     delay, and other fields, but we actually need them to be ints.)
+ *   - Children conversion (we need the children to be an array. May not always
+ *     be, if a single child is passed in.)
  */
 
 import React, { Component, PropTypes } from 'react';
