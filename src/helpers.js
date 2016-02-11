@@ -3,8 +3,14 @@
  * (c) 2016-present Joshua Comeau
  */
 
-export function convertToInt(val) {
-  return typeof val === 'string' ? parseInt(val) : val
+export function convertToInt(val, propName) {
+  const int = typeof val === 'string' ? parseInt(val) : val;
+
+  if ( isNaN(int) ) {
+    console.error(`Invalid prop '${propName}' supplied to FlipMove. Expected a number, or a string that can easily be resolved to a number (eg. "100"). Instead, received '${val}'.`)
+  }
+
+  return int;
 }
 
 export function convertAllToInt(...values) {

@@ -25,7 +25,7 @@ function propConverter(ComposedComponent) {
       const timingPropNames = [ 'duration', 'delay', 'staggerDurationBy', 'staggerDelayBy' ];
 
       timingPropNames.forEach(
-        prop => workingProps[prop] = convertToInt(workingProps[prop])
+        prop => workingProps[prop] = convertToInt(workingProps[prop], prop)
       );
 
       // Convert the children to a React.Children array.
