@@ -226,7 +226,7 @@ Curious how this works, under the hood? [__Read the full article__](https://gith
 
   * All children **need a unique `key` property**. Even if FlipMove is only given a single child, it needs to have a unique `key` prop for FlipMove to track it.
 
-  * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, FlipMode does not take into account existing `transition` or `transform` CSS properties on its direct children.
+  * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, FlipMove does not take into account existing `transition` or `transform` CSS properties on its direct children.
 
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
