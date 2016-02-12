@@ -232,6 +232,20 @@ Curious how this works, under the hood? [__Read the full article__](https://gith
 
 
 
+## Note on 3D transforms and `will-change`
+
+Many articles I've seen claim that in order to force browsers to use hardware acceleration, you need to resort to hacky fixes like `transformZ(0)` or use the new `will-change` property.
+
+In my personal experimentations on modern versions of Chrome, Safari, Firefox and IE, these properties offer little to no gain (in Chrome's timeline I saw a savings of ~0.5ms on a 24-item shuffle).
+
+Applying `will-change` too willy-nilly can have an adverse effect on mobile browsers, so I have opted to not use it at all.
+
+YMMV: Feel free to experiment with the property in your CSS. FlipMove will respect the wishes of your stylesheet :)
+
+Further reading: [CSS will-change Property](https://dev.opera.com/articles/css-will-change-property/)
+
+
+
 ## Contributions
 
 Contributors welcome! Please discuss new features with me ahead of time, and submit PRs for bug fixes with tests (Testing stack is Mocha/Chai/Sinon, tested in-browser by Karma).
