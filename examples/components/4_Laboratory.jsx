@@ -4,6 +4,7 @@ import React, { Component, PropTypes }  from 'react';
 import moment                           from 'moment';
 import { times }                        from 'lodash';
 import classNames                       from 'classnames';
+import ReactSlider                      from 'react-slider';
 
 import FlipMove from 'react-flip-move';
 import Toggle from './Toggle.jsx';
@@ -36,7 +37,19 @@ class Laboratory extends Component {
 class Settings extends Component {
   render() {
     return (
-      <div className="settings"></div>
+      <div className="settings card">
+        <h2>Settings</h2>
+        <div className="row">
+          <div className="col">
+            <h5>Duration</h5>
+            <ReactSlider defaultValue={350} min={0} max={10000} />
+          </div>
+          <div className="col">
+            <h5>Delay</h5>
+            <ReactSlider defaultValue={0} min={0} max={10000} />
+          </div>
+        </div>
+      </div>
     )
   }
 }

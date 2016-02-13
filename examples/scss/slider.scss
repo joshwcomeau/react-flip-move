@@ -1,0 +1,28 @@
+.slider {
+  position: relative;
+  height: 16px;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0;
+    width: 100%;
+    margin: auto;
+    border-top: 2px dotted $mauve;
+  }
+
+  .handle {
+    position: absolute;
+    background: $fuscia;
+    border: 2px solid $white;
+    width: 25px;
+    height: 100%;
+    border-radius: 25px;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+  }
+
+}
