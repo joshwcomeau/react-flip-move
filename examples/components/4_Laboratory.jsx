@@ -13,16 +13,63 @@ import cats from '../data/cats.js';
 class Laboratory extends Component {
   constructor(props) {
     super(props);
-    this.state = { cats }
+    this.state = {
+      duration: 350,
+      delay: 0,
+      easing: 'ease-in',
+      staggerDurationBy: 0,
+      staggerDelayBy: 0,
+      cats
+    }
   }
 
   render() {
     return (
       <div id="laboratory">
+        <CatList {...this.state} />
+        <Settings {...this.state} />
       </div>
     );
   }
 };
 
+class Settings extends Component {
+  render() {
+    return (
+      <div className="settings"></div>
+    )
+  }
+}
+
+class CatList extends Component {
+  renderCats() {
+    return this.props.cats.map( cat => <Cat key={cat.id} {...cat} /> );
+  }
+  render() {
+    return (
+      <ul className="cat-list">
+        <FlipMove>
+          { this.renderCats() }
+        </FlipMove>
+      </ul>
+    )
+  }
+}
+
+class Cat extends Component {
+  render() {
+    const { name, origin, breed, catchphrase, img, url } = this.props;
+
+    return (
+      <li className="cat card">
+        <img src={img} className="cat-img" />
+        <h3 className="cat-name">{name}</h3>
+        <h5 className="cat-catchphrase">{catchphrase}</h5>
+        <h6 className="cat-origin">{origin}</h6>
+        <div className="clearfix" />
+      </li>
+    )
+  }
+}
 
 export default Laboratory;

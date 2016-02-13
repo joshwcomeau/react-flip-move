@@ -1,3 +1,55 @@
 #laboratory {
+  display: flex;
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  margin: 2rem auto 0;
 
+
+  .settings {
+    flex: 1;
+  }
+
+  .cat-list {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    .cat {
+      position: relative;
+      margin: 6px;
+      padding: 2px;
+
+      .clearfix {
+        clear: both;
+      }
+
+      .cat-img {
+        float: left;
+        margin-right: 8px;
+        width: 80px;
+        height: 80px;
+        border-radius: 2px 0 0 2px;
+      }
+
+      .cat-name {
+        font-weight: 700;
+        color: $fuscia;
+        font-size: 22px;
+      }
+
+      .cat-catchphrase {
+        font-weight: 300;
+        font-size: 16px;
+        color: lighten($darkgray, 25%);
+      }
+
+      .cat-origin {
+        margin-top: 14px;
+        font-size: 12px;
+        color: $darkgray;
+      }
+    }
+  }
 }
