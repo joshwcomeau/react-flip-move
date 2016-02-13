@@ -14,7 +14,11 @@ const data = {
     details: 'Flip move plays nice with React DnD.\nTry dropping tiles on each other to swap, or hit "reset" to revert to the original board.',
     source: 'https://github.com/joshwcomeau/react-flip-move/blob/gh-pages/examples/components/3_Scrabble.jsx'
   },
-
+  laboratory: {
+    title: 'Laboratory',
+    details: "Choose your own adventure, with all of FlipMove's controls available for tweaking. Presets are there for inspiration.",
+    source: 'https://github.com/joshwcomeau/react-flip-move/blob/gh-pages/examples/components/4_Laboratory.jsx'
+  }
 };
 
 export default data;
