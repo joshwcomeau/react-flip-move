@@ -3,6 +3,7 @@
 
 @import './header.scss';
 @import './footer.scss';
+@import './toggle.scss';
 
 @import './home.scss';
 @import './1_shuffle.scss';
@@ -62,54 +63,4 @@ h1, h2, h3, h4, h5, h6 {
 
 ul {
   padding: 0;
-}
-
-.button-toggle {
-  position: relative;
-  display: inline-block;
-  border: 0;
-  border-radius: 6px;
-  border-bottom: 3px solid rgba(0,0,0,0.3);
-  background: $mauve;
-  color: $white;
-  margin: 0 5px;
-  padding: 8px 20px 8px 43px;
-  font-size: 12px;
-  outline: none;
-  text-decoration: none;
-
-  i {
-    position: absolute;
-    left: 10px;
-    font-size: 16px;
-  }
-
-  &:active {
-    top: 2px;
-    border-bottom: 1px solid rgba(0,0,0,0.5);
-  }
-
-  &.active {
-    background: $fuscia;
-  }
-
-  &.large {
-    font-size: 14px;
-    padding: 12px 24px 12px 50px;
-
-    i { font-size: 18px; }
-  }
-
-  &.icon-right {
-    padding: 8px 43px 8px 20px;
-
-    &.large {
-      padding: 12px 50px 12px 24px;
-    }
-
-    i {
-      left: auto;
-      right: 10px;
-    }
-  }
 }
