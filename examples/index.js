@@ -8,6 +8,7 @@ import Home       from './components/Home.jsx';
 import Shuffle    from './components/1_Shuffle.jsx';
 import Square     from './components/2_Square.jsx';
 import Scrabble   from './components/3_Scrabble.jsx';
+import Laboratory from './components/4_Laboratory.jsx';
 import Footer     from './components/Footer.jsx';
 
 require('./scss/main.scss');
@@ -43,6 +44,7 @@ render((
       <Route path="shuffle" component={Shuffle} />
       <Route path="square" component={Square} />
       <Route path="scrabble" component={Scrabble} />
+      <Route path="laboratory" component={Laboratory} />
     </Route>
   </Router>
 ), document.getElementById('render-target'))
