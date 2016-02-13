@@ -3,13 +3,15 @@
 
 @import './header.scss';
 @import './footer.scss';
-@import './toggle.scss';
 
 @import './home.scss';
 @import './1_shuffle.scss';
 @import './2_square.scss';
 @import './3_scrabble.scss';
 @import './4_laboratory.scss';
+
+@import './toggle.scss';
+@import './slider.scss';
 
 
 *, *:before, *:after { box-sizing: border-box; }
@@ -69,4 +71,12 @@ h1, h2, h3, h4, h5, h6 {
 
 ul {
   padding: 0;
+}
+
+.row {
+  display: flex;
+}
+
+.col {
+  flex: 1;
 }

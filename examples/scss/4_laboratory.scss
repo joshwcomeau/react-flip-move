@@ -8,6 +8,12 @@
 
   .settings {
     flex: 1;
+    margin: 6px 0;
+    padding: 16px;
+
+    .col:first-of-type {
+      padding-right: 4px;
+    }
   }
 
   .cat-list {
