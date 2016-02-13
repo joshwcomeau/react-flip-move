@@ -11,7 +11,7 @@ import Toggle from './Toggle.jsx';
 
 class ListItem extends Component {
   render() {
-    const listClass = `list-item ${this.props.view}`;
+    const listClass = `list-item card ${this.props.view}`;
 
     return (
       <li id={this.props.id} className={listClass}>
