@@ -1,6 +1,7 @@
 @import './variables.scss';
 
 $header-height: 75px;
+$num-of-demos: 4;
 
 
 #header {
@@ -25,7 +26,7 @@ $header-height: 75px;
   nav {
     position: absolute;
     right: 16px;
-    width: $header-height * 3;
+    width: $header-height * $num-of-demos;
     height: $header-height;
     padding: 0;
 
