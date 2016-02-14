@@ -2,27 +2,52 @@
   position: relative;
   height: 16px;
 
-  &:after {
+  &:before, &:after {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
     bottom: 0;
-    height: 0;
-    width: 100%;
     margin: auto;
-    border-top: 2px dotted $mauve;
+    height: 6px;
+    width: 1px;
   }
 
+  &:before {
+    left: 0;
+    background: $fuscia
+  }
+
+  &:after {
+    right: 0;
+    background: $lightgray;
+  }
+
+  .bar {
+    top: 7px;
+    height: 2px;
+
+  }
+
+  .bar-0 {
+    background: $fuscia;
+  }
+
+  .bar-1 {
+    background: $lightgray;
+  }
   .handle {
     position: absolute;
     background: $fuscia;
-    border: 2px solid $white;
-    width: 25px;
-    height: 100%;
+    width: 16px;
+    height: 16px;
     border-radius: 25px;
     box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+    transition: transform 400ms;
+
+    &:active {
+      transition: transform 75ms;
+      transform: scale(1.2, 1.2);
+    }
   }
 
 }

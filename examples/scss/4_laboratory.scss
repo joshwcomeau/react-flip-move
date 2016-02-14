@@ -11,8 +11,33 @@
     margin: 6px 0;
     padding: 16px;
 
+    .input-area {
+      position: relative;
+      margin: 1rem 0;
+
+      .field-name {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .slider-value {
+        position: absolute;
+        top: 0;
+        right: 0;
+        line-height: 20px;
+        font-weight: 500;
+        color: lighten($darkgray, 25%);
+      }
+
+      .slider {
+        margin-top: 5px;
+      }
+    }
+
     .col:first-of-type {
-      padding-right: 4px;
+      margin-right: 6px;
+    }
+    .col:last-of-type {
+      margin-left: 6px;
     }
   }
 
