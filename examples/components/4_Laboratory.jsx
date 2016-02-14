@@ -18,7 +18,8 @@ class Laboratory extends Component {
     this.state = {
       duration: 800,
       delay: 0,
-      easing: { value: '0.42, 0.0, 0.58, 1.0', label: 'ease-in-out' },
+      easingPreset: { value: '0.42, 0.0, 0.58, 1.0', label: 'ease-in-out' },
+      easingValues: ['0.42', '0.0', '0.58', '1.0'],
       staggerDurationBy: 0,
       staggerDelayBy: 20,
       cats
@@ -43,7 +44,8 @@ class Laboratory extends Component {
 
   selectEasing(selected) {
     this.setState({
-      easing: selected
+      easingPreset: selected,
+      easingValues: selected.value.split(',')
     });
   }
 
@@ -107,12 +109,12 @@ class Settings extends Component {
           <Dropdown
             name="easing"
             options={[
-              { value: '0, 0, 1.0, 1.0',        label: 'linear' },
-              { value: '0.25, 0.1, 0.25, 1.0',  label: 'ease' },
-              { value: '0.42, 0.0, 1.0, 1.0',   label: 'ease-in' },
-              { value: '0.0, 0.0, 0.58, 1.0',   label: 'ease-out' },
-              { value: '0.42, 0.0, 0.58, 1.0',  label: 'ease-in-out' },
-              { value: '0.39, 0, 0.45, 1.4',    label: 'cubic-bezier', custom: true },
+              { value: '0,0,1.0,1.0',         label: 'linear' },
+              { value: '0.25,0.1,0.25,1.0',   label: 'ease' },
+              { value: '0.42,0.0,1.0,1.0',    label: 'ease-in' },
+              { value: '0.0,0.0,0.58,1.0',    label: 'ease-out' },
+              { value: '0.42,0.0,0.58,1.0',   label: 'ease-in-out' },
+              { value: '0.39,0,0.45,1.4',     label: 'custom (cubic bezier)', custom: true },
             ]}
             value={this.props.easing}
             onChange={this.props.selectEasing}
@@ -124,7 +126,7 @@ class Settings extends Component {
   }
 
   renderCubicBezier() {
-    if ( !this.props.easing.custom ) return;
+    if ( !this.props.easingPreset.custom ) return;
 
     return (
       <div className="col input-area">
@@ -209,13 +211,16 @@ class CatList extends Component {
   renderCats() {
     return this.props.cats.map( cat => <Cat key={cat.id} {...cat} /> );
   }
+  formatEasing() {
+    return `cubic-bezier(${ this.props.easingValues.join(',') })`;
+  }
   render() {
     return (
       <ul className="cat-list">
         <FlipMove
           duration={this.props.duration}
           delay={this.props.delay}
-          easing={`cubic-bezier(${this.props.easing.value})`}
+          easing={this.formatEasing()}
           staggerDurationBy={this.props.staggerDurationBy}
           staggerDelayBy={this.props.staggerDelayBy}
         >
