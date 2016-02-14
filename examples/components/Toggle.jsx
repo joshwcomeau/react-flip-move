@@ -4,8 +4,9 @@ import classNames                       from 'classnames';
 const Toggle = ({clickHandler, text, icon, active, large}) => {
   const buttonClass = classNames({
     'button-toggle': true,
+    'no-icon': !icon,
     active,
-    large
+    large,
   });
   const iconClass = `fa fa-fw fa-${icon}`;
 
