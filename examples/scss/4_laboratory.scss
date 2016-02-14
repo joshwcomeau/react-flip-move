@@ -62,6 +62,10 @@
       }
     }
 
+    .shuffle-spacer {
+      position: relative;
+      height: 3rem;
+    }
     .shuffle-container {
       position: absolute;
       left: 0;
@@ -121,6 +125,27 @@
         font-size: 12px;
         color: $darkgray;
       }
+    }
+  }
+}
+
+@media ( max-width: 800px ) {
+  #laboratory {
+    margin: 0;
+    width: 100%;
+    flex-direction: column;
+
+    .cat-list {
+      order: 2;
+
+      .cat {
+        margin: 6px 0;
+        border-radius: 0;
+      }
+    }
+    .settings {
+      order: 1;
+      border-radius: 0;
     }
   }
 }
