@@ -2,7 +2,7 @@ import '../helpers/array_helpers';
 
 import React, { Component, PropTypes }  from 'react';
 import moment                           from 'moment';
-import { times }                        from 'lodash';
+import { shuffle }                      from 'lodash';
 import classNames                       from 'classnames';
 import ReactSlider                      from 'react-slider';
 
@@ -21,14 +21,33 @@ class Laboratory extends Component {
       staggerDurationBy: 0,
       staggerDelayBy: 0,
       cats
-    }
+    };
+
+    this.handleSlide = this.handleSlide.bind(this);
+    this.shuffleCats = this.shuffleCats.bind(this);
+  }
+
+  handleSlide(field, val) {
+    this.setState({
+      [field]: val
+    });
+  }
+
+  shuffleCats() {
+    this.setState({
+      cats: shuffle(this.state.cats)
+    })
   }
 
   render() {
     return (
       <div id="laboratory">
         <CatList {...this.state} />
-        <Settings {...this.state} />
+        <Settings
+          {...this.state}
+          handleSlide={this.handleSlide}
+          shuffleCats={this.shuffleCats}
+        />
       </div>
     );
   }
@@ -40,14 +59,35 @@ class Settings extends Component {
       <div className="settings card">
         <h2>Settings</h2>
         <div className="row">
-          <div className="col">
-            <h5>Duration</h5>
-            <ReactSlider defaultValue={350} min={0} max={10000} />
+          <div className="col input-area">
+            <h6 className="slider-value">{this.props.duration}ms</h6>
+            <h5 className="field-name">Duration</h5>
+            <ReactSlider
+              defaultValue={350}
+              min={0}
+              max={1000}
+              withBars={true}
+              onChange={(val) => this.props.handleSlide('duration', val)}
+            />
           </div>
-          <div className="col">
+          <div className="col input-area">
             <h5>Delay</h5>
-            <ReactSlider defaultValue={0} min={0} max={10000} />
+            <ReactSlider
+              defaultValue={0}
+              min={0}
+              max={1000}
+              withBars={true}
+              onChange={(val) => this.props.handleSlide('delay', val)}
+            />
           </div>
+        </div>
+
+        <div className="shuffle-container">
+          <Toggle
+            clickHandler={this.props.shuffleCats}
+            text="Shuffle" icon="random"
+            active={true}
+          />
         </div>
       </div>
     )
@@ -61,7 +101,9 @@ class CatList extends Component {
   render() {
     return (
       <ul className="cat-list">
-        <FlipMove>
+        <FlipMove
+          duration={this.props.duration}
+        >
           { this.renderCats() }
         </FlipMove>
       </ul>
