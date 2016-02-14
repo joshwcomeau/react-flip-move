@@ -111,7 +111,7 @@ class Settings extends Component {
 
   renderEasing() {
     return (
-      <div className="col input-area">
+      <div className="col col-2 input-area">
         <h5 className="field-name">Easing</h5>
         <div className="input">
           <Dropdown
@@ -227,6 +227,7 @@ class Settings extends Component {
           { this.renderStaggeredDelay() }
         </div>
 
+        <div className="shuffle-spacer" />
         <div className="shuffle-container">
           <Toggle
             clickHandler={this.props.shuffleCats}
