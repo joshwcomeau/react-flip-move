@@ -4,6 +4,7 @@ import React, { Component, PropTypes }  from 'react';
 import moment                           from 'moment';
 import { shuffle }                      from 'lodash';
 import classNames                       from 'classnames';
+import Dropdown                         from 'react-dropdown';
 import ReactSlider                      from 'react-slider';
 
 import FlipMove from 'react-flip-move';
@@ -15,16 +16,17 @@ class Laboratory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      duration: 350,
+      duration: 800,
       delay: 0,
-      easing: 'ease-in',
+      easing: { value: '0.42, 0.0, 0.58, 1.0', label: 'ease-in-out' },
       staggerDurationBy: 0,
-      staggerDelayBy: 0,
+      staggerDelayBy: 20,
       cats
     };
 
     this.handleSlide = this.handleSlide.bind(this);
     this.shuffleCats = this.shuffleCats.bind(this);
+    this.selectEasing = this.selectEasing.bind(this);
   }
 
   handleSlide(field, val) {
@@ -39,6 +41,12 @@ class Laboratory extends Component {
     })
   }
 
+  selectEasing(selected) {
+    this.setState({
+      easing: selected
+    });
+  }
+
   render() {
     return (
       <div id="laboratory">
@@ -47,6 +55,7 @@ class Laboratory extends Component {
           {...this.state}
           handleSlide={this.handleSlide}
           shuffleCats={this.shuffleCats}
+          selectEasing={this.selectEasing}
         />
       </div>
     );
@@ -54,32 +63,134 @@ class Laboratory extends Component {
 };
 
 class Settings extends Component {
+  renderDuration() {
+    return (
+      <div className="col col-3 input-area">
+        <h6 className="slider-value">{this.props.duration}ms</h6>
+        <h5 className="field-name">Duration</h5>
+        <div className="input">
+          <ReactSlider
+            defaultValue={this.props.duration}
+            min={0}
+            max={2000}
+            withBars={true}
+            onChange={(val) => this.props.handleSlide('duration', val)}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  renderDelay() {
+    return (
+      <div className="col col-2 input-area">
+        <h6 className="slider-value">{this.props.delay}ms</h6>
+        <h5 className="field-name">Delay</h5>
+        <div className="input">
+          <ReactSlider
+            defaultValue={this.props.delay}
+            min={0}
+            max={1000}
+            withBars={true}
+            onChange={(val) => this.props.handleSlide('delay', val)}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  renderEasing() {
+    return (
+      <div className="col input-area">
+        <h5 className="field-name">Easing</h5>
+        <div className="input">
+          <Dropdown
+            name="easing"
+            options={[
+              { value: '0, 0, 1.0, 1.0',        label: 'linear' },
+              { value: '0.25, 0.1, 0.25, 1.0',  label: 'ease' },
+              { value: '0.42, 0.0, 1.0, 1.0',   label: 'ease-in' },
+              { value: '0.0, 0.0, 0.58, 1.0',   label: 'ease-out' },
+              { value: '0.42, 0.0, 0.58, 1.0',  label: 'ease-in-out' },
+              { value: '0.39, 0, 0.45, 1.4',    label: 'cubic-bezier', custom: true },
+            ]}
+            value={this.props.easing}
+            onChange={this.props.selectEasing}
+          />
+          <div className="dropdown-spacer" style={{height: 40}} />
+        </div>
+      </div>
+    );
+  }
+
+  renderCubicBezier() {
+    if ( !this.props.easing.custom ) return;
+
+    return (
+      <div className="col input-area">
+        <h5 className="field-name">Cubic Bezier</h5>
+        <div className="input">
+          <input type="text" />
+          <input type="text" />
+          <input type="text" />
+          <input type="text" />
+        </div>
+
+      </div>
+    )
+  }
+
+  renderStaggeredDuration() {
+    return (
+      <div className="col input-area">
+        <h6 className="slider-value">{this.props.staggerDurationBy}ms</h6>
+        <h5 className="field-name">Stagger Duration By</h5>
+        <div className="input">
+          <ReactSlider
+            defaultValue={this.props.staggerDurationBy}
+            min={0}
+            max={500}
+            withBars={true}
+            onChange={(val) => this.props.handleSlide('staggerDurationBy', val)}
+          />
+        </div>
+      </div>
+    );
+  }
+  renderStaggeredDelay() {
+    return (
+      <div className="col input-area">
+        <h6 className="slider-value">{this.props.staggerDelayBy}ms</h6>
+        <h5 className="field-name">Stagger Delay By</h5>
+        <div className="input">
+          <ReactSlider
+            defaultValue={this.props.staggerDelayBy}
+            min={0}
+            max={500}
+            withBars={true}
+            onChange={(val) => this.props.handleSlide('staggerDelayBy', val)}
+          />
+        </div>
+      </div>
+    );
+  }
   render() {
     return (
       <div className="settings card">
         <h2>Settings</h2>
         <div className="row">
-          <div className="col input-area">
-            <h6 className="slider-value">{this.props.duration}ms</h6>
-            <h5 className="field-name">Duration</h5>
-            <ReactSlider
-              defaultValue={350}
-              min={0}
-              max={1000}
-              withBars={true}
-              onChange={(val) => this.props.handleSlide('duration', val)}
-            />
-          </div>
-          <div className="col input-area">
-            <h5>Delay</h5>
-            <ReactSlider
-              defaultValue={0}
-              min={0}
-              max={1000}
-              withBars={true}
-              onChange={(val) => this.props.handleSlide('delay', val)}
-            />
-          </div>
+          { this.renderDuration() }
+          { this.renderDelay() }
+        </div>
+
+        <div className="row">
+          { this.renderEasing() }
+          { this.renderCubicBezier() }
+        </div>
+
+        <div className="row">
+          { this.renderStaggeredDuration() }
+          { this.renderStaggeredDelay() }
         </div>
 
         <div className="shuffle-container">
@@ -103,6 +214,10 @@ class CatList extends Component {
       <ul className="cat-list">
         <FlipMove
           duration={this.props.duration}
+          delay={this.props.delay}
+          easing={`cubic-bezier(${this.props.easing.value})`}
+          staggerDurationBy={this.props.staggerDurationBy}
+          staggerDelayBy={this.props.staggerDelayBy}
         >
           { this.renderCats() }
         </FlipMove>

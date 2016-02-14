@@ -8,9 +8,16 @@
 
   .settings {
     flex: 1;
+    position: relative;
     margin: 6px 0;
     padding: 16px;
 
+    .col:first-of-type {
+      margin-right: 6px;
+    }
+    .col:not(:first-of-type) {
+      margin-left: 6px;
+    }
     .input-area {
       position: relative;
       margin: 1rem 0;
@@ -28,16 +35,49 @@
         color: lighten($darkgray, 25%);
       }
 
-      .slider {
+      .input {
         margin-top: 5px;
+      }
+
+      input[type=text] {
+        background: #FFF;
+        border-top: 2px solid $fuscia;
+        border-bottom: 2px solid $fuscia;
+        border-left: 1px solid $fuscia;
+        border-right: 1px solid $fuscia;
+        padding: 0 8px;
+        width: 25%;
+        line-height: 34px;
+        font-size: 13px;
+        outline: none;
+
+        &:first-of-type {
+          border-radius: 3px 0 0 3px;
+          border-left: 2px solid $fuscia;
+        }
+        &:last-of-type {
+          border-radius: 0 3px 3px 0;
+          border-right: 2px solid $fuscia;
+        }
       }
     }
 
-    .col:first-of-type {
-      margin-right: 6px;
-    }
-    .col:last-of-type {
-      margin-left: 6px;
+    .shuffle-container {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 1rem;
+
+      .button-toggle {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+
+        &:active {
+          top: 0 !important;
+        }
+      }
     }
   }
 

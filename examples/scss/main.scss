@@ -73,10 +73,55 @@ ul {
   padding: 0;
 }
 
+.Dropdown {
+  position: absolute;
+  z-index: 3;
+  background: #FFF;
+  width: 100%;
+  border: 2px solid $fuscia;
+  border-radius: 3px;
+  padding: 0 4px;
+  line-height: 34px;
+  font-size: 13px;
+  cursor: pointer;
+
+  .placeholder {
+    padding: 0 4px;
+  }
+
+  .Dropdown-option, &.is-open .placeholder {
+    border-bottom: 1px solid $lightgray;
+    padding: 0 4px;
+
+    &:hover {
+      background: rgba(0,0,0,0.03);
+    }
+  }
+
+
+
+  .Dropdown-arrow {
+    position: absolute;
+    top: 0;
+    right: 8px;
+    font-family: 'FontAwesome';
+
+    &:before {
+      content: "\f107";
+    }
+  }
+}
+
 .row {
   display: flex;
 }
 
 .col {
   flex: 1;
+}
+
+@for $i from 1 through 12 {
+  .col-#{$i} {
+    flex: $i;
+  }
 }
