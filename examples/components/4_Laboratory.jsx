@@ -28,6 +28,7 @@ class Laboratory extends Component {
     this.handleSlide = this.handleSlide.bind(this);
     this.shuffleCats = this.shuffleCats.bind(this);
     this.selectEasing = this.selectEasing.bind(this);
+    this.changeCustomEasing = this.changeCustomEasing.bind(this);
   }
 
   handleSlide(field, val) {
@@ -49,6 +50,12 @@ class Laboratory extends Component {
     });
   }
 
+  changeCustomEasing(n, val) {
+    let easingValues = this.state.easingValues.slice()
+    easingValues.splice(n, 1, val);
+    this.setState({ easingValues });
+  }
+
   render() {
     return (
       <div id="laboratory">
@@ -58,6 +65,7 @@ class Laboratory extends Component {
           handleSlide={this.handleSlide}
           shuffleCats={this.shuffleCats}
           selectEasing={this.selectEasing}
+          changeCustomEasing={this.changeCustomEasing}
         />
       </div>
     );
@@ -114,9 +122,9 @@ class Settings extends Component {
               { value: '0.42,0.0,1.0,1.0',    label: 'ease-in' },
               { value: '0.0,0.0,0.58,1.0',    label: 'ease-out' },
               { value: '0.42,0.0,0.58,1.0',   label: 'ease-in-out' },
-              { value: '0.39,0,0.45,1.4',     label: 'custom (cubic bezier)', custom: true },
+              { value: '0.39,0,0.45,1.4',     label: 'cubic-bezier', custom: true },
             ]}
-            value={this.props.easing}
+            value={this.props.easingPreset}
             onChange={this.props.selectEasing}
           />
           <div className="dropdown-spacer" style={{height: 40}} />
@@ -129,13 +137,37 @@ class Settings extends Component {
     if ( !this.props.easingPreset.custom ) return;
 
     return (
-      <div className="col input-area">
+      <div className="col col-4 input-area">
         <h5 className="field-name">Cubic Bezier</h5>
         <div className="input">
-          <input type="text" />
-          <input type="text" />
-          <input type="text" />
-          <input type="text" />
+          <input
+            type="number"
+            min="-1"
+            max="1"
+            value={this.props.easingValues[0]}
+            onChange={ev => this.props.changeCustomEasing(0, ev.target.value)}
+          />
+          <input
+            type="number"
+            min="-1"
+            max="1"
+            value={this.props.easingValues[1]}
+            onChange={ev => this.props.changeCustomEasing(1, ev.target.value)}
+          />
+          <input
+            type="number"
+            min="-1"
+            max="1"
+            value={this.props.easingValues[2]}
+            onChange={ev => this.props.changeCustomEasing(2, ev.target.value)}
+          />
+          <input
+            type="number"
+            min="-1"
+            max="1"
+            value={this.props.easingValues[3]}
+            onChange={ev => this.props.changeCustomEasing(3, ev.target.value)}
+          />
         </div>
 
       </div>
