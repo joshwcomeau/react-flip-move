@@ -200,29 +200,29 @@ class Settings extends Component {
         <div className="input">
           <input
             type="number"
-            min="-1"
+            min="0"
             max="1"
             value={this.props.easingValues[0]}
             onChange={ev => this.props.changeCustomEasing(0, ev.target.value)}
           />
           <input
             type="number"
-            min="-1"
-            max="1"
+            min="-2"
+            max="2"
             value={this.props.easingValues[1]}
             onChange={ev => this.props.changeCustomEasing(1, ev.target.value)}
           />
           <input
             type="number"
-            min="-1"
+            min="0"
             max="1"
             value={this.props.easingValues[2]}
             onChange={ev => this.props.changeCustomEasing(2, ev.target.value)}
           />
           <input
             type="number"
-            min="-1"
-            max="1"
+            min="-2"
+            max="2"
             value={this.props.easingValues[3]}
             onChange={ev => this.props.changeCustomEasing(3, ev.target.value)}
           />
