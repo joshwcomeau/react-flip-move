@@ -44,7 +44,6 @@ render((
       <Route path="shuffle" component={Shuffle} />
       <Route path="square" component={Square} />
       <Route path="scrabble" component={Scrabble} />
-      <Route path="laboratory" component={Laboratory} />
     </Route>
   </Router>
 ), document.getElementById('render-target'))
