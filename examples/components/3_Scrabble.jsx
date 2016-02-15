@@ -146,7 +146,7 @@ class Tile extends Component {
     const styles = {
       left:     x * SQUARE_SIZE - TILE_OFFSET,
       top:      y * SQUARE_SIZE - TILE_OFFSET,
-      zIndex:   `${x}${y}`,
+      zIndex:   `${x+1}${y+1}`,
       opacity:  isDragging ? 0.5 : 1
     };
 
