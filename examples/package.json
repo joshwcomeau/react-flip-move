@@ -4,7 +4,7 @@
   "description": "Example of React Flip Move",
   "scripts": {
     "start": "node server.js",
-    "build": "NODE_ENV=production webpack index.js --config webpack.config.production.js"
+    "build": "cross-env NODE_ENV=production webpack index.js --config webpack.config.production.js"
   },
   "repository": {
     "type": "git",
@@ -48,6 +48,7 @@
     "babel-preset-react": "^6.3.13",
     "babel-preset-react-hmre": "^1.0.0",
     "babel-preset-stage-0": "^6.1.18",
+    "cross-env": "^1.0.7",
     "css-loader": "^0.23.0",
     "express": "^4.13.3",
     "extract-text-webpack-plugin": "^1.0.1",
