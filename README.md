@@ -19,7 +19,7 @@ Flip Move uses the [_FLIP technique_](https://github.com/joshwcomeau/react-flip-
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle" target="_blank">__List/Grid Shuffle__</a>
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/square" target="_blank">__Fuscia Square__</a>
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/scrabble" target="_blank">__Scrabble__</a>
-  * __Playground__ (coming soon)
+  * __Laboratory__ (coming soon)
 
 
 
@@ -85,7 +85,7 @@ class TopArticles extends Component {
 
 ## How It Works
 
-Curious how this works, under the hood? [__Read the full article__](https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md).
+Curious how this works, under the hood? [__Read the Medium post__](https://medium.com/@joshuawcomeau/animating-the-unanimatable-1346a5aab3cd).
 
 
 
