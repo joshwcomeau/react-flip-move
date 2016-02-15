@@ -62,6 +62,15 @@
       }
     }
 
+    .presets {
+      .field-name {
+        margin-bottom: 4px;
+      }
+      .button-toggle:first-of-type {
+        margin-left: 0;
+      }
+    }
+
     .shuffle-spacer {
       position: relative;
       height: 3rem;

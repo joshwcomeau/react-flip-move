@@ -248,7 +248,7 @@ class Settings extends Component {
 
   renderPresets() {
     return (
-      <div className="input-area">
+      <div className="input-area presets">
         <div className="field-name">Presets</div>
         <Toggle
           clickHandler={() => this.props.selectPreset(0)}
