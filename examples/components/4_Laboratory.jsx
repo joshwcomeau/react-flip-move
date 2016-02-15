@@ -16,12 +16,12 @@ class Laboratory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      duration: 800,
+      duration: 500,
       delay: 0,
-      easingPreset: { value: '0.42, 0.0, 0.58, 1.0', label: 'ease-in-out' },
-      easingValues: ['0.42', '0.0', '0.58', '1.0'],
+      easingPreset: { value: '0,0,1.0,1.0', label: 'linear' },
+      easingValues: ['0', '0', '1.0', '1.0'],
       staggerDurationBy: 0,
-      staggerDelayBy: 20,
+      staggerDelayBy: 0,
       cats
     };
 
@@ -29,6 +29,7 @@ class Laboratory extends Component {
     this.shuffleCats = this.shuffleCats.bind(this);
     this.selectEasing = this.selectEasing.bind(this);
     this.changeCustomEasing = this.changeCustomEasing.bind(this);
+    this.selectPreset = this.selectPreset.bind(this);
   }
 
   handleSlide(field, val) {
@@ -56,6 +57,41 @@ class Laboratory extends Component {
     this.setState({ easingValues });
   }
 
+  selectPreset(num) {
+    switch (num) {
+      case 0:
+        return this.setState({
+          duration: 700,
+          delay: 0,
+          easingPreset: { value: '0.25,0.1,0.25,1.0',   label: 'ease' },
+          easingValues: ['0.25','0.1','0.25','1.0'],
+          staggerDelayBy: 20,
+          staggerDurationBy: 15,
+          preset: 0
+        })
+      case 1:
+        return this.setState({
+          duration: 400,
+          delay: 0,
+          easingPreset: { value: '0.42, 0.0, 0.58, 1.0', label: 'ease-in-out' },
+          easingValues: ['0.42', '0.0', '0.58', '1.0'],
+          staggerDelayBy: 300,
+          staggerDurationBy: 0,
+          preset: 1
+        })
+      case 2:
+        return this.setState({
+          duration: 500,
+          delay: 0,
+          easingPreset: { value: '0.39,0,0.45,1.4',     label: 'cubic-bezier', custom: true },
+          easingValues: ['0.39','0','0.45','1.4'],
+          staggerDelayBy: 0,
+          staggerDurationBy: 22,
+          preset: 2
+        })
+    }
+  }
+
   render() {
     return (
       <div id="laboratory">
@@ -66,6 +102,7 @@ class Laboratory extends Component {
           shuffleCats={this.shuffleCats}
           selectEasing={this.selectEasing}
           changeCustomEasing={this.changeCustomEasing}
+          selectPreset={this.selectPreset}
         />
       </div>
     );
@@ -80,7 +117,7 @@ class Settings extends Component {
         <h5 className="field-name">Duration</h5>
         <div className="input">
           <ReactSlider
-            defaultValue={this.props.duration}
+            value={this.props.duration}
             min={0}
             max={2000}
             withBars={true}
@@ -98,7 +135,7 @@ class Settings extends Component {
         <h5 className="field-name">Delay</h5>
         <div className="input">
           <ReactSlider
-            defaultValue={this.props.delay}
+            value={this.props.delay}
             min={0}
             max={1000}
             withBars={true}
@@ -181,7 +218,7 @@ class Settings extends Component {
         <h5 className="field-name">Stagger Duration By</h5>
         <div className="input">
           <ReactSlider
-            defaultValue={this.props.staggerDurationBy}
+            value={this.props.staggerDurationBy}
             min={0}
             max={500}
             withBars={true}
@@ -198,7 +235,7 @@ class Settings extends Component {
         <h5 className="field-name">Stagger Delay By</h5>
         <div className="input">
           <ReactSlider
-            defaultValue={this.props.staggerDelayBy}
+            value={this.props.staggerDelayBy}
             min={0}
             max={500}
             withBars={true}
@@ -208,6 +245,30 @@ class Settings extends Component {
       </div>
     );
   }
+
+  renderPresets() {
+    return (
+      <div className="input-area">
+        <div className="field-name">Presets</div>
+        <Toggle
+          clickHandler={() => this.props.selectPreset(0)}
+          text="Organic"
+          active={this.props.preset === 0}
+        />
+        <Toggle
+          clickHandler={() => this.props.selectPreset(1)}
+          text="Turn-based"
+          active={this.props.preset === 1}
+        />
+        <Toggle
+          clickHandler={() => this.props.selectPreset(2)}
+          text="Bouncy"
+          active={this.props.preset === 2}
+        />
+      </div>
+    )
+  }
+
   render() {
     return (
       <div className="settings card">
@@ -227,12 +288,14 @@ class Settings extends Component {
           { this.renderStaggeredDelay() }
         </div>
 
+        { this.renderPresets() }
+
         <div className="shuffle-spacer" />
         <div className="shuffle-container">
           <Toggle
             clickHandler={this.props.shuffleCats}
             text="Shuffle" icon="random"
-            active={true}
+            active={true} large={true}
           />
         </div>
       </div>
