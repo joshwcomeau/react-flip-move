@@ -91,14 +91,25 @@ class Laboratory extends Component {
         })
       case 3:
         return this.setState({
+          duration: 600,
+          delay: 0,
+          easingPreset: { value: '0.5,1,0.5,0',     label: 'cubic-bezier', custom: true },
+          easingValues: ['0.5','1','0.5','0'],
+          staggerDelayBy: 0,
+          staggerDurationBy: 0,
+          preset: 3
+        })
+      case 4:
+        return this.setState({
           duration: 900,
           delay: 0,
           easingPreset: { value: '0.13,1.15,0.8,1.5',     label: 'cubic-bezier', custom: true },
           easingValues: ['0.13','1.15','0.8','1.5'],
           staggerDelayBy: 0,
           staggerDurationBy: 260,
-          preset: 3
+          preset: 4
         })
+
     }
   }
 
@@ -277,8 +288,13 @@ class Settings extends Component {
         />
         <Toggle
           clickHandler={() => this.props.selectPreset(3)}
-          text="Catnip"
+          text="2-Step"
           active={this.props.preset === 3}
+        />
+        <Toggle
+          clickHandler={() => this.props.selectPreset(4)}
+          text="Catnip"
+          active={this.props.preset === 4}
         />
       </div>
     )
