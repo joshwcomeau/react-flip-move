@@ -42,7 +42,10 @@
     height: 16px;
     border-radius: 25px;
     box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
-    transition: transform 400ms;
+    // I know, transitioning left is bad.
+    // Sadly, I don't have the time to update React-Slider to use
+    // transform instead of left.
+    transition: transform 400ms, left 200ms;
 
     &:active {
       transition: transform 75ms;

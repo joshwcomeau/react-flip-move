@@ -34,6 +34,7 @@ class Laboratory extends Component {
 
   handleSlide(field, val) {
     this.setState({
+      preset: null,
       [field]: val
     });
   }
@@ -46,6 +47,7 @@ class Laboratory extends Component {
 
   selectEasing(selected) {
     this.setState({
+      preset: null,
       easingPreset: selected,
       easingValues: selected.value.split(',')
     });
@@ -54,7 +56,10 @@ class Laboratory extends Component {
   changeCustomEasing(n, val) {
     let easingValues = this.state.easingValues.slice()
     easingValues.splice(n, 1, val);
-    this.setState({ easingValues });
+    this.setState({
+      preset: null,
+      easingValues
+    });
   }
 
   selectPreset(num) {
@@ -335,6 +340,10 @@ class Settings extends Component {
 }
 
 class CatList extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   renderCats() {
     return this.props.cats.map( cat => <Cat key={cat.id} {...cat} /> );
   }
