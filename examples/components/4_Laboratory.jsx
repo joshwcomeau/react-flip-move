@@ -89,6 +89,16 @@ class Laboratory extends Component {
           staggerDurationBy: 22,
           preset: 2
         })
+      case 3:
+        return this.setState({
+          duration: 900,
+          delay: 0,
+          easingPreset: { value: '0.13,1.15,0.8,1.5',     label: 'cubic-bezier', custom: true },
+          easingValues: ['0.13','1.15','0.8','1.5'],
+          staggerDelayBy: 0,
+          staggerDurationBy: 260,
+          preset: 3
+        })
     }
   }
 
@@ -264,6 +274,11 @@ class Settings extends Component {
           clickHandler={() => this.props.selectPreset(2)}
           text="Bouncy"
           active={this.props.preset === 2}
+        />
+        <Toggle
+          clickHandler={() => this.props.selectPreset(3)}
+          text="Catnip"
+          active={this.props.preset === 3}
         />
       </div>
     )
