@@ -66,8 +66,20 @@
       .field-name {
         margin-bottom: 4px;
       }
-      .button-toggle:first-of-type {
+      .button-toggle {
+        padding: 8px 15px;
         margin-left: 0;
+        margin-right: 0;
+        border-radius: 0;
+        border-right: 1px solid rgba(0,0,0,0.2);
+
+        &:first-of-type {
+          border-radius: 5px 0 0 5px;
+        }
+
+        &:last-of-type {
+          border-radius: 0 5px 5px 0;
+        }
       }
     }
 
@@ -138,7 +150,7 @@
   }
 }
 
-@media ( max-width: 800px ) {
+@media ( max-width: 900px ) {
   #laboratory {
     margin: 0;
     width: 100%;
