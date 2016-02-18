@@ -4,7 +4,11 @@ React Flip Move
 [![build status](https://img.shields.io/travis/joshwcomeau/react-flip-move/master.svg?style=flat-square)](https://travis-ci.org/joshwcomeau/react-flip-move)
 [![npm version](https://img.shields.io/npm/v/react-flip-move.svg?style=flat-square)](https://www.npmjs.com/package/react-flip-move)
 
-Animations library for React that automagically handles animations when a DOM node gets reordered or moved. Emphasis on smooth, 60+ FPS animations using the FLIP technique.
+This module was built to tackle the common but arduous problem of animating a list of items when the list's order changes.
+
+DOM nodes can't actually reorder themselves; brand new nodes are created instead. Because of this, simple CSS transitions don't work.
+
+Flip Move uses the [_FLIP technique_](https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md) to work out what such a transition would look like, and fakes it using 60+ FPS hardware-accelerated CSS transforms.
 
 [![demo](https://s3.amazonaws.com/githubdocs/demo-with-dev-tools.gif)](http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle)
 
@@ -15,7 +19,7 @@ Animations library for React that automagically handles animations when a DOM no
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle" target="_blank">__List/Grid Shuffle__</a>
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/square" target="_blank">__Fuscia Square__</a>
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/scrabble" target="_blank">__Scrabble__</a>
-  * __Playground__ (coming soon)
+  * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/laboratory" target="_blank">__Laboratory__</a>
 
 
 
@@ -41,13 +45,13 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
   * Ability to provide `onStart` / `onFinish` callbacks.
 
-  * Implementation based on the [_FLIP technique_](https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md), a beautiful-in-its-simplicity method of tackling this problem.
+  * Implementation based on the [_FLIP technique_](https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md), a beautiful-in-its-simplicity method of tackling this problem. UMD build, when minified and gzipped, is only 2kb! ⚡
 
 
 
 ## Quickstart
 
-The implementation couldn't be simpler. Just wrap the items you'd like to move in a `FlipMove`:
+The implementation couldn't be simpler. Just wrap the items you'd like to move in a `FlipMove`, with any [custom options](https://github.com/joshwcomeau/react-flip-move#options):
 
 ```js
 import FlipMove from 'react-flip-move';
@@ -60,7 +64,7 @@ class TopArticles extends Component {
   render() {
     return (
       <div className="top-articles">
-        <FlipMove duration={250} easing="ease-in-out">
+        <FlipMove easing="cubic-bezier(0, 0.7, 0.8, 0.1)">
           { this.renderTopArticles() }
         </FlipMove>
       </div>
@@ -81,7 +85,7 @@ class TopArticles extends Component {
 
 ## How It Works
 
-Curious how this works, under the hood? [__Read the full article__](https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md).
+Curious how this works, under the hood? [__Read the Medium post__](https://medium.com/@joshuawcomeau/animating-the-unanimatable-1346a5aab3cd).
 
 
 
@@ -185,11 +189,12 @@ Curious how this works, under the hood? [__Read the full article__](https://gith
       The callback is invoked with two arguments:
 
       <ul>
-        <li><code>childElement</code>: A reference to the <a href="https://facebook.github.io/react/blog/2015/12/18/react-components-elements-and-instances.html#elements-describe-the-tree">React Element</a> being animated.</li>
+        <li><code>childElement</code>: A reference to the React Element being animated.</li>
         <li><code>domNode</code>: A reference to the unadulterated DOM node being animated.</li>
       </ul>
 
-      In general, it is advisable to ignore the <code>domNode</code> argument and work with the <code>childElement</code>. The <code>domNode</code> is just an escape hatch for doing complex things not otherwise possible.
+      In general, it is advisable to ignore the <code>domNode</code> argument and work with the <code>childElement</code>.
+      The <code>domNode</code> is just an escape hatch for doing complex things not otherwise possible.
     </td>
   </tr>
   <tr>
@@ -202,11 +207,12 @@ Curious how this works, under the hood? [__Read the full article__](https://gith
       The callback is invoked with two arguments:
 
       <ul>
-      <li><code>childElement</code>: A reference to the <a href="https://facebook.github.io/react/blog/2014/10/14/introducing-react-elements.html">React Element</a> being animated.</li>
+      <li><code>childElement</code>: A reference to the React Element being animated.</li>
       <li><code>domNode</code>: A reference to the unadulterated DOM node being animated.</li>
       </ul>
 
-      In general, it is advisable to ignore the <code>domNode</code> argument and work with the <code>childElement</code>. The <code>domNode</code> is just an escape hatch for doing complex things not otherwise possible.
+      In general, it is advisable to ignore the <code>domNode</code> argument and work with the <code>childElement</code>.
+      The <code>domNode</code> is just an escape hatch for doing complex things not otherwise possible.
 
     </td>
   </tr>
@@ -216,17 +222,33 @@ Curious how this works, under the hood? [__Read the full article__](https://gith
 
 ## Gotchas
 
+  * Does not work with stateless functional component children. This is because FlipMove uses refs to identify and apply styles to children, and stateless functional components cannot be given refs.
+
   * All children **need a unique `key` property**. Even if FlipMove is only given a single child, it needs to have a unique `key` prop for FlipMove to track it.
 
-  * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, FlipMode does not take into account existing `transition` or `transform` CSS properties on its direct children.
+  * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, FlipMove does not take into account existing `transition` or `transform` CSS properties on its direct children.
 
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
 
 
+## Note on 3D transforms and `will-change`
+
+Many articles I've seen claim that in order to force browsers to use hardware acceleration, you need to resort to hacky fixes like `transformZ(0)` or use the new `will-change` property.
+
+In my personal experimentations on modern versions of Chrome, Safari, Firefox and IE, these properties offer little to no gain (in Chrome's timeline I saw a savings of ~0.5ms on a 24-item shuffle).
+
+Applying `will-change` too willy-nilly can have an adverse effect on mobile browsers, so I have opted to not use it at all.
+
+YMMV: Feel free to experiment with the property in your CSS. FlipMove will respect the wishes of your stylesheet :)
+
+Further reading: [CSS will-change Property](https://dev.opera.com/articles/css-will-change-property/)
+
+
+
 ## Contributions
 
-Contributors welcome! Please discuss new features with me ahead of time, and submit PRs for bug fixes with tests.
+Contributors welcome! Please discuss new features with me ahead of time, and submit PRs for bug fixes with tests (Testing stack is Mocha/Chai/Sinon, tested in-browser by Karma).
 
 
 

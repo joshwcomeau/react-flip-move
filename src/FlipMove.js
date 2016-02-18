@@ -1,6 +1,6 @@
 /**
  * React Flip Move
- * Automagically animate the transition when the DOM gets reordered.
+ * (c) 2016-present Joshua Comeau
  *
  * How it works:
  * The basic idea with this component is pretty straightforward:
@@ -17,19 +17,18 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
-import { convertToInt, whichTransitionEvent } from './helpers.js';
+import { whichTransitionEvent } from './helpers.js';
+import propConverter            from './prop-converter';
 
 const transitionEnd = whichTransitionEvent();
 
 
+@propConverter
 class FlipMove extends Component {
   componentWillReceiveProps() {
-    // Ensure we're dealing with an array, and not an only child.
-    const children = React.Children.toArray(this.props.children);
-
     // Get the bounding boxes of all currently-rendered, keyed children.
     // Store it in this.state.
-    const newState = children.reduce( (state, child) => {
+    const newState = this.props.children.reduce( (state, child) => {
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
       if ( !child.key ) return state;
@@ -54,22 +53,31 @@ class FlipMove extends Component {
     // the first render; we only animate transitions between state changes =)
     if ( !this.state ) return;
 
-    React.Children
-      .toArray(previousProps.children)
+    previousProps.children
       .filter(this.childNeedsToBeAnimated.bind(this))
       .forEach(this.animateTransform.bind(this));
   }
 
   childNeedsToBeAnimated(child) {
     // We only want to animate if:
-    //  * The child has an associated key (stationary children are supported)
+    //  * The child has an associated key (immovable children are supported)
     //  * The child still exists in the DOM.
     //  * The child isn't brand new.
-    const isStationary = !child.key;
-    const isBrandNew   = !this.state[child.key];
-    const isDestroyed  = !this.refs[child.key];
+    //  * The child has moved
+    //
+    // Tackle the first three first, since they're very easy to determine.
+    const isImmovable   = !child.key;
+    const isBrandNew    = !this.state[child.key];
+    const isDestroyed   = !this.refs[child.key];
+    if ( isImmovable || isBrandNew || isDestroyed ) return;
 
-    return !isStationary && !isBrandNew && !isDestroyed;
+    // Figuring out if the component has moved is a bit more work.
+    const domNode       = ReactDOM.findDOMNode( this.refs[child.key] );
+    const [ dX, dY ]    = this.getPositionDelta( domNode, child.key );
+    const isStationary  = dX === 0 && dY === 0;
+
+    // If it hasn't budged, we don't have to animate it.
+    return !isStationary;
   }
 
   getPositionDelta(domNode, key) {
@@ -85,11 +93,6 @@ class FlipMove extends Component {
   createTransitionString(n) {
     let { duration, staggerDurationBy, delay, staggerDelayBy, easing } = this.props;
 
-    // There has to be a nicer way to do this...
-    [ duration, delay, staggerDurationBy, staggerDelayBy ] = convertToInt(
-      duration, delay, staggerDurationBy, staggerDelayBy
-    );
-
     delay     += n * staggerDelayBy;
     duration  += n * staggerDurationBy;
 
@@ -99,21 +102,19 @@ class FlipMove extends Component {
   animateTransform(child, n) {
     let domNode = ReactDOM.findDOMNode( this.refs[child.key] );
 
-    // Get the △X and △Y, and return if the child hasn't budged.
-    const [ deltaX, deltaY ] = this.getPositionDelta(domNode, child.key);
-    if ( deltaX === 0 && deltaY === 0 ) return;
+    // Get the △X and △Y
+    const [ dX, dY ] = this.getPositionDelta(domNode, child.key);
 
-    // TODO: Don't clobber existing properties!
-    domNode.style.transition = '';
-    domNode.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+    domNode.style.transition = 'transform 0ms';
+    domNode.style.transform = `translate(${dX}px, ${dY}px)`;
 
     // Sadly, this is the most browser-compatible way to do this I've found.
     // Essentially we need to set the initial styles outside of any request
     // callbacks to avoid batching them. Then, a frame needs to pass with
     // the styles above rendered. Then, on the second frame, we can apply
     // our final styles to perform the animation.
-    requestAnimationFrame( (t1) => {
-      requestAnimationFrame( (t2) => {
+    requestAnimationFrame( () => {
+      requestAnimationFrame( () => {
         domNode.style.transition = this.createTransitionString(n);
         domNode.style.transform  = '';
       });
@@ -128,12 +129,7 @@ class FlipMove extends Component {
   }
 
   childrenWithRefs () {
-    // Convert the children to an array, and map.
-    // Cannot use React.Children.map directly, because the #toArray method
-    // re-maps some of the keys ('1' -> '.$1'). We need this behaviour to
-    // be consistent, so we do this conversion upfront.
-    // See: https://github.com/facebook/react/pull/3650/files
-    return React.Children.toArray(this.props.children).map( child => {
+    return this.props.children.map( child => {
       return React.cloneElement(child, { ref: child.key });
     });
   }
@@ -145,40 +141,6 @@ class FlipMove extends Component {
       </div>
     );
   }
-
-  static propTypes = {
-    children:           PropTypes.oneOfType([
-                          PropTypes.array,
-                          PropTypes.object
-                        ]).isRequired,
-    easing:             PropTypes.string,
-    duration:           PropTypes.oneOfType([
-                          PropTypes.string,
-                          PropTypes.number
-                        ]),
-    delay:              PropTypes.oneOfType([
-                          PropTypes.string,
-                          PropTypes.number
-                        ]),
-    staggerDurationBy:  PropTypes.oneOfType([
-                          PropTypes.string,
-                          PropTypes.number
-                        ]),
-    staggerDelayBy:     PropTypes.oneOfType([
-                          PropTypes.string,
-                          PropTypes.number
-                        ]),
-    onStart:            PropTypes.func,
-    onFinish:           PropTypes.func
-  };
-
-  static defaultProps = {
-    easing:             'ease-in-out',
-    duration:           350,
-    delay:              0,
-    staggerDurationBy:  0,
-    staggerDelayBy:     0
-  };
 }
 
 

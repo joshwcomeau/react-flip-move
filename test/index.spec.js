@@ -6,6 +6,12 @@ import FlipMove             from '../src/FlipMove';
 
 
 describe('FlipMove', () => {
+  let consoleStub;
+
+  before(     () => consoleStub = sinon.stub(console, 'error') );
+  afterEach(  () => consoleStub.reset() );
+  after(      () => consoleStub.restore() );
+
   describe('functionality', () => {
     // To test this, here is our setup:
     // We're making a simple list of news articles, with the ability to
@@ -29,7 +35,12 @@ describe('FlipMove', () => {
     const ListParent = class ListParent extends Component {
       constructor(props) {
         super(props);
-        this.state = { articles };
+        this.state = {
+          duration: 500,
+          staggerDelayBy: 0,
+          staggerDurationBy: 0,
+          articles
+        };
       }
 
       renderArticles() {
@@ -41,7 +52,11 @@ describe('FlipMove', () => {
       render() {
         return (
           <ul>
-            <FlipMove duration={500}>
+            <FlipMove
+              duration={this.state.duration}
+              staggerDelayBy={this.state.staggerDelayBy}
+              staggerDurationBy={this.state.staggerDurationBy}
+            >
               { this.renderArticles() }
             </FlipMove>
           </ul>
@@ -88,9 +103,10 @@ describe('FlipMove', () => {
           a: outputTags[0].getBoundingClientRect(),
           b: outputTags[1].getBoundingClientRect(),
           c: outputTags[2].getBoundingClientRect(),
-        }
+        };
 
         renderedComponent.setState({ articles: articles.reverse() });
+
       });
 
       it('has rearranged the components and DOM nodes', () => {
@@ -114,7 +130,7 @@ describe('FlipMove', () => {
         // The animation has not started yet.
         // While the DOM nodes might have changed places, their on-screen
         // positions should be consistent with where they started.
-        const newPositions = getNewPositions(renderedComponent)
+        const newPositions = getTagPositions(renderedComponent)
 
         // Even though, in terms of the DOM, tag C is at the top,
         // its bounding box should still be the lowest
@@ -126,7 +142,7 @@ describe('FlipMove', () => {
         // Three items are being re-arranged; top and bottom changing places.
         // Therefore, if we wait 250ms, all 3 items should be stacked.
         setTimeout(() => {
-          const newPositions = getNewPositions(renderedComponent)
+          const newPositions = getTagPositions(renderedComponent)
 
           // B should not move at all
           expect(newPositions.b).to.deep.equal(originalPositions.b);
@@ -147,7 +163,7 @@ describe('FlipMove', () => {
         // Waiting 500ms, for a total of 750ms. Giving a buffer because
         // Travis is slowwww
         setTimeout(() => {
-          const newPositions = getNewPositions(renderedComponent)
+          const newPositions = getTagPositions(renderedComponent)
 
           // B should still be in the same place.
           expect(newPositions.b).to.deep.equal(originalPositions.b);
@@ -158,13 +174,45 @@ describe('FlipMove', () => {
 
           done();
         }, 500)
-      })
+      });
     });
 
+
+    describe('duration propType', () => {
+      let originalPositions;
+
+
+      before( () => {
+        const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
+          renderedComponent, 'li'
+        );
+
+        originalPositions = {
+          a: outputTags[0].getBoundingClientRect(),
+          b: outputTags[1].getBoundingClientRect(),
+          c: outputTags[2].getBoundingClientRect(),
+        };
+      });
+
+      it('applies a string that can be converted to an int', () => {
+        renderedComponent.setState({ duration: '10' });
+        expect(consoleStub).to.not.have.been.called;
+      });
+
+      it('applies a bogus string', () => {
+        renderedComponent.setState({ duration: 'hi' });
+        expect(consoleStub).to.have.been.calledOnce;
+      });
+
+      it('applies an array prop and throws', () => {
+        renderedComponent.setState({ duration: [10] });
+        expect(consoleStub).to.have.been.calledOnce;
+      });
+    });
   });
 });
 
-function getNewPositions(renderedComponent) {
+function getTagPositions(renderedComponent) {
   const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
     renderedComponent, 'li'
   );
