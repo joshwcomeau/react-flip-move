@@ -88,6 +88,14 @@ class TopArticles extends Component {
 Curious how this works, under the hood? [__Read the Medium post__](https://medium.com/@joshuawcomeau/animating-the-unanimatable-1346a5aab3cd).
 
 
+## Enter/Leave animations
+
+When items are created or removed, the original items will animate as you'd expect; they'll move out of the way when a new element is added, and slide to fill in the space when one is removed.
+
+I have some pretty neat ideas for custom enter/exit animations, but I have not yet found the time to test and implement them.
+
+In the meantime, you should be able to easily add enter/exit transitions with [`ReactCSSTransitionGroup`](https://facebook.github.io/react/docs/animation.html). I haven't personally tested it, but the two should play very nicely together, allowing you to combine custom enter/exit animations with Flip Move.
+
 
 ## Options
 
@@ -222,11 +230,11 @@ Curious how this works, under the hood? [__Read the Medium post__](https://mediu
 
 ## Gotchas
 
-  * Does not work with stateless functional component children. This is because FlipMove uses refs to identify and apply styles to children, and stateless functional components cannot be given refs.
+  * Does not work with stateless functional component children. This is because Flip Move uses refs to identify and apply styles to children, and stateless functional components cannot be given refs.
 
-  * All children **need a unique `key` property**. Even if FlipMove is only given a single child, it needs to have a unique `key` prop for FlipMove to track it.
+  * All children **need a unique `key` property**. Even if Flip Move is only given a single child, it needs to have a unique `key` prop for Flip Move to track it.
 
-  * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, FlipMove does not take into account existing `transition` or `transform` CSS properties on its direct children.
+  * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, Flip Move does not take into account existing `transition` or `transform` CSS properties on its direct children.
 
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
@@ -240,7 +248,7 @@ In my personal experimentations on modern versions of Chrome, Safari, Firefox an
 
 Applying `will-change` too willy-nilly can have an adverse effect on mobile browsers, so I have opted to not use it at all.
 
-YMMV: Feel free to experiment with the property in your CSS. FlipMove will respect the wishes of your stylesheet :)
+YMMV: Feel free to experiment with the property in your CSS. Flip Move will respect the wishes of your stylesheet :)
 
 Further reading: [CSS will-change Property](https://dev.opera.com/articles/css-will-change-property/)
 
