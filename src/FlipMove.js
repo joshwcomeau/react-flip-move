@@ -135,10 +135,10 @@ class FlipMove extends Component {
   }
 
   render() {
-    return (
-      <div>
-        {this.childrenWithRefs()}
-      </div>
+    return React.createElement(
+      this.props.typeName,
+      { className: this.props.className },
+      this.childrenWithRefs()
     );
   }
 }

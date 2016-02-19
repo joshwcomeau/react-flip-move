@@ -319,11 +319,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'childrenWithRefs',
 	    value: function childrenWithRefs() {
-	      // Convert the children to an array, and map.
-	      // Cannot use React.Children.map directly, because the #toArray method
-	      // re-maps some of the keys ('1' -> '.$1'). We need this behaviour to
-	      // be consistent, so we do this conversion upfront.
-	      // See: https://github.com/facebook/react/pull/3650/files
 	      return this.props.children.map(function (child) {
 	        return _react2.default.cloneElement(child, { ref: child.key });
 	      });
@@ -331,11 +326,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        this.childrenWithRefs()
-	      );
+	      return _react2.default.createElement(this.props.typeName, { className: this.props.className }, this.childrenWithRefs());
 	    }
 	  }]);
 
@@ -432,13 +423,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    staggerDurationBy: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]),
 	    staggerDelayBy: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]),
 	    onStart: _react.PropTypes.func,
-	    onFinish: _react.PropTypes.func
+	    onFinish: _react.PropTypes.func,
+	    className: _react.PropTypes.string,
+	    typeName: _react.PropTypes.string
 	  }, _class.defaultProps = {
 	    easing: 'ease-in-out',
 	    duration: 350,
 	    delay: 0,
 	    staggerDurationBy: 0,
-	    staggerDelayBy: 0
+	    staggerDelayBy: 0,
+	    typeName: 'div'
 	  }, _temp;
 	}
 

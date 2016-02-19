@@ -66,7 +66,9 @@ function propConverter(ComposedComponent) {
                             PropTypes.number
                           ]),
       onStart:            PropTypes.func,
-      onFinish:           PropTypes.func
+      onFinish:           PropTypes.func,
+      className:          PropTypes.string,
+      typeName:           PropTypes.string
     };
 
     static defaultProps = {
@@ -74,7 +76,8 @@ function propConverter(ComposedComponent) {
       duration:           350,
       delay:              0,
       staggerDurationBy:  0,
-      staggerDelayBy:     0
+      staggerDelayBy:     0,
+      typeName:           'div'
     };
   }
 }
