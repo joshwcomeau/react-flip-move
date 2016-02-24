@@ -187,21 +187,22 @@ describe('FlipMove', () => {
     });
 
     describe('callbacks', () => {
-      before(()=>{
+      before(() => {
         renderedComponent.setState({
-          articles:articles.reverse()});
+          articles: articles.reverse()
+        });
       });
 
-      it('onStart callback should set count to 0',()=>{
+      it('should fire the onStart handler immediately', () => {
         expect(renderedComponent.count).to.equal(-2);
       });
 
-      it('onFinish callback should set count to 2', (done)=>{
+      it('should fire onFinish after the animation', done => {
         setTimeout(() => {
           expect(renderedComponent.count).to.equal(0);
           done();
         }, 750)
-      })
+      });
     });
 
     describe('duration propType', () => {

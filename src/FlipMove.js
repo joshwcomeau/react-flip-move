@@ -120,13 +120,22 @@ class FlipMove extends Component {
       });
     });
 
+    // Trigger the onStart callback immediately.
     if ( this.props.onStart ) this.props.onStart(child, domNode);
-    let onFinishHandler = () =>{
+
+    // The onFinish callback needs to be bound to the transitionEnd event.
+    // We also need to unbind it when the transition completes, so this ugly
+    // inline function is required (we need it here so it closes over
+    // dependent variables `child` and `domNode`)
+    const transitionEndHandler = () => {
+      // Remove the 'transition' inline style we added. This is cleanup.
       domNode.style.transition = '';
+
       if ( this.props.onFinish ) this.props.onFinish(child, domNode);
-      domNode.removeEventListener(transitionEnd, onFinishHandler)
+
+      domNode.removeEventListener(transitionEnd, transitionEndHandler)
     };
-    domNode.addEventListener(transitionEnd, onFinishHandler);
+    domNode.addEventListener(transitionEnd, transitionEndHandler);
   }
 
   childrenWithRefs () {
