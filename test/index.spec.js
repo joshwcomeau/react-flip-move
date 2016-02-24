@@ -41,8 +41,15 @@ describe('FlipMove', () => {
           staggerDurationBy: 0,
           articles
         };
+        this.count = 0;
       }
 
+      onFinishHandler(){
+        this.count++;
+      }
+      onStartHandler(){
+        this.count--;
+      }
       renderArticles() {
         return this.state.articles.map( article => (
           <ListItem key={article.id} id={article.id} name={article.name} />
@@ -56,6 +63,8 @@ describe('FlipMove', () => {
               duration={this.state.duration}
               staggerDelayBy={this.state.staggerDelayBy}
               staggerDurationBy={this.state.staggerDurationBy}
+              onFinish={::this.onFinishHandler}
+              onStart={::this.onStartHandler}
             >
               { this.renderArticles() }
             </FlipMove>
@@ -177,6 +186,23 @@ describe('FlipMove', () => {
       });
     });
 
+    describe('callbacks', () => {
+      before(()=>{
+        renderedComponent.setState({
+          articles:articles.reverse()});
+      });
+
+      it('onStart callback should set count to 0',()=>{
+        expect(renderedComponent.count).to.equal(-2);
+      });
+
+      it('onFinish callback should set count to 2', (done)=>{
+        setTimeout(() => {
+          expect(renderedComponent.count).to.equal(0);
+          done();
+        }, 750)
+      })
+    });
 
     describe('duration propType', () => {
       let originalPositions;
