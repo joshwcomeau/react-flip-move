@@ -94,8 +94,6 @@ When items are created or removed, the original items will animate as you'd expe
 
 I have some pretty neat ideas for custom enter/exit animations, but I have not yet found the time to test and implement them.
 
-In the meantime, you should be able to easily add enter/exit transitions with [`ReactCSSTransitionGroup`](https://facebook.github.io/react/docs/animation.html). I haven't personally tested it, but the two should play very nicely together, allowing you to combine custom enter/exit animations with Flip Move.
-
 
 ## Options
 
