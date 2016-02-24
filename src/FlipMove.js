@@ -121,11 +121,12 @@ class FlipMove extends Component {
     });
 
     if ( this.props.onStart ) this.props.onStart(child, domNode);
-
-    domNode.addEventListener(transitionEnd, () => {
+    let onFinishHandler = () =>{
       domNode.style.transition = '';
       if ( this.props.onFinish ) this.props.onFinish(child, domNode);
-    });
+      domNode.removeEventListener(transitionEnd, onFinishHandler)
+    };
+    domNode.addEventListener(transitionEnd, onFinishHandler);
   }
 
   childrenWithRefs () {
