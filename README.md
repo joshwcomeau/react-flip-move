@@ -1,8 +1,8 @@
 React Flip Move
 =========
 
-[![build status](https://img.shields.io/travis/joshwcomeau/react-flip-move/master.svg?style=flat-square)](https://travis-ci.org/joshwcomeau/react-flip-move)
-[![npm version](https://img.shields.io/npm/v/react-flip-move.svg?style=flat-square)](https://www.npmjs.com/package/react-flip-move)
+[![build status](https://travis-ci.org/joshwcomeau/react-flip-move.svg)](https://travis-ci.org/joshwcomeau/react-flip-move)
+[![npm version](https://img.shields.io/npm/v/react-flip-move.svg)](https://www.npmjs.com/package/react-flip-move)
 
 This module was built to tackle the common but arduous problem of animating a list of items when the list's order changes.
 
