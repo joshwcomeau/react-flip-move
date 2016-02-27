@@ -234,6 +234,8 @@ I have some pretty neat ideas for custom enter/exit animations, but I have not y
 
   * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, Flip Move does not take into account existing `transition` or `transform` CSS properties on its direct children.
 
+  * Flip Move components **cannot be nested**. I'm working on a solution for this :)
+
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
 
