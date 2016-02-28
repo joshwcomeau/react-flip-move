@@ -104,8 +104,8 @@ class FlipMove extends Component {
     };
 
     return [
-      Math.abs(oldBox.left) - Math.abs(relativeBox.left),
-      Math.abs(oldBox.top)  - Math.abs(relativeBox.top)
+      oldBox.left - relativeBox.left,
+      oldBox.top  - relativeBox.top
     ];
   }
 
