@@ -92,7 +92,7 @@ Curious how this works, under the hood? [__Read the Medium post__](https://mediu
 
 When items are created or removed, the original items will animate as you'd expect; they'll move out of the way when a new element is added, and slide to fill in the space when one is removed.
 
-I have some pretty neat ideas for custom enter/exit animations, but I have not yet found the time to test and implement them.
+Adding proper enter/leave animations is a non-trivial task, so it is likely not going to be added in the near future. Contributors welcome! :)
 
 
 ## Options
@@ -233,8 +233,6 @@ I have some pretty neat ideas for custom enter/exit animations, but I have not y
   * All children **need a unique `key` property**. Even if Flip Move is only given a single child, it needs to have a unique `key` prop for Flip Move to track it.
 
   * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, Flip Move does not take into account existing `transition` or `transform` CSS properties on its direct children.
-
-  * Flip Move components **cannot be nested**. I'm working on a solution for this :)
 
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
