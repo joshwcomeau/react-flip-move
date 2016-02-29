@@ -6,7 +6,7 @@
 	else if(typeof exports === 'object')
 		exports["FlipMove"] = factory(require("react"), require("react-dom"));
 	else
-		root["FlipMove"] = factory(root["React"], root["ReactDOM"]);
+		root["FlipMove"] = factory(root["react"], root["react-dom"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_5__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -129,6 +129,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -150,10 +154,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	             *   - If the two have moved, we use the FLIP technique to animate the
 	             *     transition between their positions.
 	             */
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
 
 	var _react = __webpack_require__(2);
 
@@ -180,6 +180,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var transitionEnd = (0, _helpers.whichTransitionEvent)();
+	var arraysEqual = function arraysEqual(a1, a2) {
+	  return JSON.stringify(a1) == JSON.stringify(a2);
+	};
 
 	var FlipMove = (0, _propConverter2.default)(_class = function (_Component) {
 	  _inherits(FlipMove, _Component);
@@ -209,6 +212,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }, {});
 
 	      this.setState(newState);
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps) {
+	      var nextChild = this.nextProps.children.map(function (child) {
+	        return child.key;
+	      });
+	      var prevChild = this.props.children.map(function (child) {
+	        return child.key;
+	      });
+	      return !arraysEqual(nextChild, prevChild);
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
@@ -273,6 +287,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var staggerDelayBy = _props.staggerDelayBy;
 	      var easing = _props.easing;
 
+
 	      delay += n * staggerDelayBy;
 	      duration += n * staggerDurationBy;
 
@@ -294,6 +309,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var dX = _getPositionDelta4[0];
 	      var dY = _getPositionDelta4[1];
 
+
 	      domNode.style.transition = 'transform 0ms';
 	      domNode.style.transform = 'translate(' + dX + 'px, ' + dY + 'px)';
 
@@ -309,22 +325,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	      });
 
-	      // Trigger the onStart callback immediately.
 	      if (this.props.onStart) this.props.onStart(child, domNode);
-
-	      // The onFinish callback needs to be bound to the transitionEnd event.
-	      // We also need to unbind it when the transition completes, so this ugly
-	      // inline function is required (we need it here so it closes over
-	      // dependent variables `child` and `domNode`)
-	      var transitionEndHandler = function transitionEndHandler() {
-	        // Remove the 'transition' inline style we added. This is cleanup.
+	      var onFinishHandler = function onFinishHandler() {
 	        domNode.style.transition = '';
-
 	        if (_this3.props.onFinish) _this3.props.onFinish(child, domNode);
-
-	        domNode.removeEventListener(transitionEnd, transitionEndHandler);
+	        domNode.removeEventListener(transitionEnd, onFinishHandler);
 	      };
-	      domNode.addEventListener(transitionEnd, transitionEndHandler);
+	      domNode.addEventListener(transitionEnd, onFinishHandler);
 	    }
 	  }, {
 	    key: 'childrenWithRefs',
@@ -352,13 +359,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 

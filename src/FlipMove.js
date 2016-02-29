@@ -25,9 +25,20 @@ const transitionEnd = whichTransitionEvent();
 
 @propConverter
 class FlipMove extends Component {
+  constructor(props){
+    super(props);
+    this.parentElement = null;
+    this.parentBox = null;
+  }
+
+  componentDidMount(){
+    this.parentElement = ReactDOM.findDOMNode(this);
+  }
+
   componentWillReceiveProps() {
     // Get the bounding boxes of all currently-rendered, keyed children.
     // Store it in this.state.
+    const parentBox = this.parentElement.getBoundingClientRect();
     const newState = this.props.children.reduce( (state, child) => {
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
@@ -35,8 +46,12 @@ class FlipMove extends Component {
 
       const domNode     = ReactDOM.findDOMNode( this.refs[child.key] );
       const boundingBox = domNode.getBoundingClientRect();
+      const relativeBox ={
+        'top':boundingBox['top'] - parentBox['top'],
+        'left':boundingBox['left'] - parentBox['left']
+      };
 
-      return { ...state, [child.key]: boundingBox };
+      return { ...state, [child.key]: relativeBox };
     }, {});
 
     this.setState(newState);
@@ -52,7 +67,7 @@ class FlipMove extends Component {
     // That's alright, though, because there is no possible transition on
     // the first render; we only animate transitions between state changes =)
     if ( !this.state ) return;
-
+    this.parentBox = this.parentElement.getBoundingClientRect();
     previousProps.children
       .filter(this.childNeedsToBeAnimated.bind(this))
       .forEach(this.animateTransform.bind(this));
@@ -83,10 +98,14 @@ class FlipMove extends Component {
   getPositionDelta(domNode, key) {
     const newBox  = domNode.getBoundingClientRect();
     const oldBox  = this.state[key];
+    const relativeBox = {
+      'top':newBox.top - this.parentBox.top,
+      'left':newBox.left - this.parentBox.left
+    };
 
     return [
-      oldBox.left - newBox.left,
-      oldBox.top  - newBox.top
+      oldBox.left - relativeBox.left,
+      oldBox.top  - relativeBox.top
     ];
   }
 
