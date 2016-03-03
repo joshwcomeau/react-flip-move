@@ -6,9 +6,12 @@ import FlipMove             from '../src/FlipMove';
 
 
 describe('FlipMove', () => {
-  let consoleStub;
+  let consoleStub, finishAllStub;
 
-  before(     () => consoleStub = sinon.stub(console, 'error') );
+  before(     () => {
+    consoleStub   = sinon.stub(console, 'error');
+    finishAllStub = sinon.stub();
+  });
   afterEach(  () => consoleStub.reset() );
   after(      () => consoleStub.restore() );
 
@@ -63,8 +66,9 @@ describe('FlipMove', () => {
               duration={this.state.duration}
               staggerDelayBy={this.state.staggerDelayBy}
               staggerDurationBy={this.state.staggerDurationBy}
-              onFinish={::this.onFinishHandler}
               onStart={::this.onStartHandler}
+              onFinish={::this.onFinishHandler}
+              onFinishAll={finishAllStub}
             >
               { this.renderArticles() }
             </FlipMove>
@@ -188,6 +192,7 @@ describe('FlipMove', () => {
 
     describe('callbacks', () => {
       before(() => {
+        finishAllStub.reset();
         renderedComponent.setState({
           articles: articles.reverse()
         });
@@ -203,6 +208,11 @@ describe('FlipMove', () => {
           done();
         }, 750)
       });
+
+      it('should have fired the onFinishAll stub only once', () => {
+        expect(finishAllStub).to.have.been.calledOnce;
+        finishAllStub.reset();
+      })
     });
 
     describe('duration propType', () => {
