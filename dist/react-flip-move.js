@@ -191,6 +191,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _this.parentElement = null;
 	    _this.parentBox = null;
+
+	    // If we've supplied an `onFinishAll` callback, we need to keep track of
+	    // how many animations are triggering (so that we know when to fire it),
+	    // as well as the elements and domNodes being triggered on.
+	    if (props.onFinishAll) {
+	      _this.remainingAnimations = 0;
+	      _this.childrenToAnimate = {
+	        elements: [],
+	        domNodes: []
+	      };
+	    }
 	    return _this;
 	  }
 
@@ -204,19 +215,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function componentWillReceiveProps() {
 	      var _this2 = this;
 
+	      // Calculate the parentBox. This is used to find childBoxes relative
+	      // to the parent container, not the viewport.
+	      var parentBox = this.parentElement.getBoundingClientRect();
+
 	      // Get the bounding boxes of all currently-rendered, keyed children.
 	      // Store it in this.state.
-	      var parentBox = this.parentElement.getBoundingClientRect();
 	      var newState = this.props.children.reduce(function (state, child) {
 	        // It is possible that a child does not have a `key` property;
 	        // Ignore these children, they don't need to be moved.
 	        if (!child.key) return state;
 
 	        var domNode = _reactDom2.default.findDOMNode(_this2.refs[child.key]);
-	        var boundingBox = domNode.getBoundingClientRect();
+	        var childBox = domNode.getBoundingClientRect();
 	        var relativeBox = {
-	          'top': boundingBox['top'] - parentBox['top'],
-	          'left': boundingBox['left'] - parentBox['left']
+	          'top': childBox['top'] - parentBox['top'],
+	          'left': childBox['left'] - parentBox['left']
 	        };
 
 	        return _extends({}, state, _defineProperty({}, child.key, relativeBox));
@@ -236,7 +250,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // That's alright, though, because there is no possible transition on
 	      // the first render; we only animate transitions between state changes =)
 	      if (!this.state) return;
+
 	      this.parentBox = this.parentElement.getBoundingClientRect();
+
 	      previousProps.children.filter(this.childNeedsToBeAnimated.bind(this)).forEach(this.animateTransform.bind(this));
 	    }
 	  }, {
@@ -266,8 +282,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var isStationary = dX === 0 && dY === 0;
 
-	      // If it hasn't budged, we don't have to animate it.
-	      return !isStationary;
+	      // Stationary children don't need to be animated!
+	      if (isStationary) return;
+
+	      if (this.props.onFinishAll) {
+	        this.remainingAnimations++;
+	        this.childrenToAnimate.elements.push(child);
+	        this.childrenToAnimate.domNodes.push(domNode);
+	      }
+
+	      return true;
 	    }
 	  }, {
 	    key: 'getPositionDelta',
@@ -275,8 +299,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var newBox = domNode.getBoundingClientRect();
 	      var oldBox = this.state[key];
 	      var relativeBox = {
-	        'top': newBox.top - this.parentBox.top,
-	        'left': newBox.left - this.parentBox.left
+	        top: newBox.top - this.parentBox.top,
+	        left: newBox.left - this.parentBox.left
 	      };
 
 	      return [oldBox.left - relativeBox.left, oldBox.top - relativeBox.top];
@@ -338,11 +362,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Remove the 'transition' inline style we added. This is cleanup.
 	        domNode.style.transition = '';
 
-	        if (_this3.props.onFinish) _this3.props.onFinish(child, domNode);
+	        // Trigger any applicable onFinish/onFinishAll hooks
+	        _this3.triggerFinishHooks(child, domNode);
 
 	        domNode.removeEventListener(transitionEnd, transitionEndHandler);
 	      };
 	      domNode.addEventListener(transitionEnd, transitionEndHandler);
+	    }
+	  }, {
+	    key: 'triggerFinishHooks',
+	    value: function triggerFinishHooks(child, domNode) {
+	      if (this.props.onFinish) this.props.onFinish(child, domNode);
+
+	      if (this.props.onFinishAll) {
+	        // Reduce the number of children we need to animate by 1,
+	        // so that we can tell when all children have finished.
+	        this.remainingAnimations--;
+
+	        if (this.remainingAnimations === 0) {
+	          try {
+	            this.props.onFinishAll(this.childrenToAnimate.elements, this.childrenToAnimate.domNodes);
+	          } finally {
+	            // Reset our variables for the next iteration
+	            this.childrenToAnimate.elements = [];
+	            this.childrenToAnimate.domNodes = [];
+	          }
+	        }
+	      }
 	    }
 	  }, {
 	    key: 'childrenWithRefs',
@@ -452,6 +498,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    staggerDelayBy: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]),
 	    onStart: _react.PropTypes.func,
 	    onFinish: _react.PropTypes.func,
+	    onFinishAll: _react.PropTypes.func,
 	    className: _react.PropTypes.string,
 	    typeName: _react.PropTypes.string
 	  }, _class.defaultProps = {
