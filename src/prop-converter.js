@@ -67,6 +67,7 @@ function propConverter(ComposedComponent) {
                           ]),
       onStart:            PropTypes.func,
       onFinish:           PropTypes.func,
+      onFinishAll:        PropTypes.func,
       className:          PropTypes.string,
       typeName:           PropTypes.string
     };

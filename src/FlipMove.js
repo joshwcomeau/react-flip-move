@@ -25,30 +25,44 @@ const transitionEnd = whichTransitionEvent();
 
 @propConverter
 class FlipMove extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.parentElement = null;
-    this.parentBox = null;
+    this.parentElement  = null;
+    this.parentBox      = null;
+
+    // If we've supplied an `onFinishAll` callback, we need to keep track of
+    // how many animations are triggering (so that we know when to fire it),
+    // as well as the elements and domNodes being triggered on.
+    if ( props.onFinishAll ) {
+      this.remainingAnimations = 0;
+      this.childrenToAnimate   = {
+        elements: [],
+        domNodes: []
+      };
+    }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.parentElement = ReactDOM.findDOMNode(this);
   }
 
   componentWillReceiveProps() {
+    // Calculate the parentBox. This is used to find childBoxes relative
+    // to the parent container, not the viewport.
+    const parentBox = this.parentElement.getBoundingClientRect();
+
     // Get the bounding boxes of all currently-rendered, keyed children.
     // Store it in this.state.
-    const parentBox = this.parentElement.getBoundingClientRect();
-    const newState = this.props.children.reduce( (state, child) => {
+    const newState  = this.props.children.reduce( (state, child) => {
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
       if ( !child.key ) return state;
 
       const domNode     = ReactDOM.findDOMNode( this.refs[child.key] );
-      const boundingBox = domNode.getBoundingClientRect();
-      const relativeBox ={
-        'top':boundingBox['top'] - parentBox['top'],
-        'left':boundingBox['left'] - parentBox['left']
+      const childBox    = domNode.getBoundingClientRect();
+      const relativeBox = {
+        'top':  childBox['top'] - parentBox['top'],
+        'left': childBox['left'] - parentBox['left']
       };
 
       return { ...state, [child.key]: relativeBox };
@@ -67,7 +81,9 @@ class FlipMove extends Component {
     // That's alright, though, because there is no possible transition on
     // the first render; we only animate transitions between state changes =)
     if ( !this.state ) return;
+
     this.parentBox = this.parentElement.getBoundingClientRect();
+
     previousProps.children
       .filter(this.childNeedsToBeAnimated.bind(this))
       .forEach(this.animateTransform.bind(this));
@@ -91,16 +107,24 @@ class FlipMove extends Component {
     const [ dX, dY ]    = this.getPositionDelta( domNode, child.key );
     const isStationary  = dX === 0 && dY === 0;
 
-    // If it hasn't budged, we don't have to animate it.
-    return !isStationary;
+    // Stationary children don't need to be animated!
+    if ( isStationary ) return;
+
+    if ( this.props.onFinishAll ) {
+      this.remainingAnimations++;
+      this.childrenToAnimate.elements.push(child);
+      this.childrenToAnimate.domNodes.push(domNode);
+    }
+
+    return true;
   }
 
   getPositionDelta(domNode, key) {
     const newBox  = domNode.getBoundingClientRect();
     const oldBox  = this.state[key];
     const relativeBox = {
-      'top':newBox.top - this.parentBox.top,
-      'left':newBox.left - this.parentBox.left
+      top:  newBox.top - this.parentBox.top,
+      left: newBox.left - this.parentBox.left
     };
 
     return [
@@ -124,8 +148,8 @@ class FlipMove extends Component {
     // Get the △X and △Y
     const [ dX, dY ] = this.getPositionDelta(domNode, child.key);
 
-    domNode.style.transition = 'transform 0ms';
-    domNode.style.transform = `translate(${dX}px, ${dY}px)`;
+    domNode.style.transition  = 'transform 0ms';
+    domNode.style.transform   = `translate(${dX}px, ${dY}px)`;
 
     // Sadly, this is the most browser-compatible way to do this I've found.
     // Essentially we need to set the initial styles outside of any request
@@ -150,14 +174,37 @@ class FlipMove extends Component {
       // Remove the 'transition' inline style we added. This is cleanup.
       domNode.style.transition = '';
 
-      if ( this.props.onFinish ) this.props.onFinish(child, domNode);
+      // Trigger any applicable onFinish/onFinishAll hooks
+      this.triggerFinishHooks(child, domNode);
 
       domNode.removeEventListener(transitionEnd, transitionEndHandler)
     };
     domNode.addEventListener(transitionEnd, transitionEndHandler);
   }
 
-  childrenWithRefs () {
+  triggerFinishHooks(child, domNode) {
+    if ( this.props.onFinish ) this.props.onFinish(child, domNode);
+
+    if ( this.props.onFinishAll ) {
+      // Reduce the number of children we need to animate by 1,
+      // so that we can tell when all children have finished.
+      this.remainingAnimations--;
+
+      if ( this.remainingAnimations === 0 ) {
+        try {
+          this.props.onFinishAll(
+            this.childrenToAnimate.elements, this.childrenToAnimate.domNodes
+          );
+        } finally {
+          // Reset our variables for the next iteration
+          this.childrenToAnimate.elements = [];
+          this.childrenToAnimate.domNodes = [];
+        }
+      }
+    }
+  }
+
+  childrenWithRefs() {
     return this.props.children.map( child => {
       return React.cloneElement(child, { ref: child.key });
     });
