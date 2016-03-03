@@ -222,6 +222,28 @@ Adding proper enter/leave animations is a non-trivial task, so it is likely not 
 
     </td>
   </tr>
+  <tr>
+    <td valign="top"><code>onFinishAll</code></td>
+    <td valign="top"><code>Function</code></td>
+    <td valign="top"></td>
+    <td valign="top">
+      A callback to be invoked <strong>once per group</strong> at the end of the animation.
+      <br><br>
+      The callback is invoked with two arguments:
+
+      <ul>
+      <li><code>childElements</code>: An array of the references to the React Element(s) being animated.</li>
+      <li><code>domNodes</code>: An array of the references to the unadulterated DOM node(s) being animated.</li>
+      </ul>
+
+      These arguments are similar to the ones provided for <code>onFinish</code>, except we provide an <i>array</i> of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.
+
+      In general, it is advisable to ignore the <code>domNodes</code> argument and work with the <code>childElements</code>.
+      The <code>domNodes</code> are just an escape hatch for doing complex things not otherwise possible.
+
+    </td>
+  </tr>
+
 </table>
 
 
