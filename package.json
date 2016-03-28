@@ -35,8 +35,8 @@
     "web-animations"
   ],
   "peerDependencies": {
-    "react": "^0.14.3",
-    "react-dom": "^0.14.3"
+    "react": "0.14.x || ^15.0.0-beta.1",
+    "react-dom": "0.14.x || ^15.0.0-beta.1"
   },
   "devDependencies": {
     "babel": "^6.1.18",
