@@ -82,6 +82,9 @@ class FlipMove extends Component {
     // the first render; we only animate transitions between state changes =)
     if ( !this.state ) return;
 
+    // If we've decided to disable animations, we don't want to run any of this!
+    if ( this.props.disableAnimations ) return;
+
     this.parentBox = this.parentElement.getBoundingClientRect();
 
     previousProps.children
