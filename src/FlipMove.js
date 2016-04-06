@@ -82,11 +82,28 @@ class FlipMove extends Component {
     // the first render; we only animate transitions between state changes =)
     if ( !this.state ) return;
 
+    // If we've decided to disable animations, we don't want to run any of this!
+    if ( this.animationNotRequired() ) return;
+
     this.parentBox = this.parentElement.getBoundingClientRect();
 
     previousProps.children
       .filter(this.childNeedsToBeAnimated.bind(this))
       .forEach(this.animateTransform.bind(this));
+  }
+
+  animationNotRequired() {
+    // If the component is explicitly passed a `disableAnimations` flag,
+    // we can skip this whole process. Similarly, if all of the numbers have
+    // been set to 0, there is no point in trying to animate; doing so would
+    // only cause a flicker (and the intent is probably to disable animations)
+    return (
+      this.props.disableAnimations ||
+      this.props.duration === 0 &&
+      this.props.delay === 0 &&
+      this.props.staggerDurationBy === 0 &&
+      this.props.staggerDelayBy === 0
+    )
   }
 
   childNeedsToBeAnimated(child) {

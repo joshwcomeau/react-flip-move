@@ -69,7 +69,8 @@ function propConverter(ComposedComponent) {
       onFinish:           PropTypes.func,
       onFinishAll:        PropTypes.func,
       className:          PropTypes.string,
-      typeName:           PropTypes.string
+      typeName:           PropTypes.string,
+      disableAnimations:  PropTypes.bool
     };
 
     static defaultProps = {

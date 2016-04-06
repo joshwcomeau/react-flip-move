@@ -6,9 +6,12 @@ import sampleSize from 'lodash/sampleSize';
 import FlipMove from '../src/FlipMove.js';
 
 storiesOf('FlipMove', module)
-  .add('with 3 items', () => (
-    <Controls />
-  ));
+  .add('when animation is disabled', () => (
+    <Controls disableAnimations={true} />
+  ))
+  .add('when adding/removing items', () => (
+    <Controls subset={true} />
+  ))
 
 
 
@@ -41,16 +44,24 @@ class Controls extends Component {
   }
 
   shuffle() {
-    this.setState({ items: sampleSize(shuffle(items), 4) });
+    // We may want to also add/remove some nodes at random, to test the
+    // enter/exit animations. If so, we want to sample a subset.
+    let numToDisplay;
+    if ( this.props.subset ) {
+      numToDisplay = Math.ceil(Math.random() * items.length);
+    } else {
+      numToDisplay = items.length
+    }
+    this.setState({ items: sampleSize(shuffle(items), numToDisplay) });
   }
 
   render() {
     return (
       <div>
-        <FlipMove>
+        <button onClick={::this.shuffle}>Shuffle</button>
+        <FlipMove {...this.props}>
           { this.renderItems() }
         </FlipMove>
-        <button onClick={::this.shuffle}>Shuffle</button>
       </div>
     );
   }

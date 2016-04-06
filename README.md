@@ -243,6 +243,14 @@ Adding proper enter/leave animations is a non-trivial task, so it is likely not 
 
     </td>
   </tr>
+  <tr>
+    <td valign="top"><code>disableAnimations</code></td>
+    <td valign="top"><code>Boolean</code></td>
+    <td valign="top"></td>
+    <td valign="top">
+      Sometimes, you may wish to temporarily disable the animations and have the normal behaviour resumed. Setting this flag to <code>true</code> skips all animations.
+    </td>
+  </tr>
 
 </table>
 
