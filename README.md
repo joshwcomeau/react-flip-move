@@ -13,7 +13,7 @@ DOM nodes can't actually reorder themselves; brand new nodes are created instead
 
 Flip Move uses the [_FLIP technique_](https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md) to work out what such a transition would look like, and fakes it using 60+ FPS hardware-accelerated CSS transforms.
 
-[![demo](https://s3.amazonaws.com/githubdocs/demo-with-dev-tools.gif)](http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle)
+[![demo](https://s3.amazonaws.com/githubdocs/fm-main-demo.gif)](http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle)
 
 
 
@@ -23,6 +23,20 @@ Flip Move uses the [_FLIP technique_](https://github.com/joshwcomeau/react-flip-
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/square" target="_blank">__Fuscia Square__</a>
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/scrabble" target="_blank">__Scrabble__</a>
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/laboratory" target="_blank">__Laboratory__</a>
+
+
+
+## Version 2.0
+
+This release's big feature is **Enter/Leave Animations**. It's been requested a ton, and I'm happy with how it's come out.
+
+For more information on its implementation, see the documentation below.
+
+#### Breaking Changes
+
+* Items entering or leaving will now have an animation applied to them (the default is a preset called `elevator`, a combination of fading and scaling). If you want to retain the original behaviour, set `enterAnimation` and `leaveAnimation` to `false`, in the <FlipMove> props.
+
+* Renamed `disableAnimations` to `disableAllAnimations`, since there are now multiple animation types and this boolean disables them all.
 
 
 
@@ -44,11 +58,13 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
   * Exclusive use of hardware-accelerated CSS properties (`transform: translate`) instead of positioning properties (`top`, `left`). <a href="https://aerotwist.com/blog/pixels-are-expensive/" target="_blank">_Read why this matters_</a>.
 
+  * Full support for enter/exit animations, including some spiffy presets, that all leverage hardware-accelerated CSS properties.
+
   * Ability to 'humanize' transitions by staggering the delay and/or duration of subsequent elements.
 
   * Ability to provide `onStart` / `onFinish` callbacks.
 
-  * Implementation based on the [_FLIP technique_](https://medium.com/developers-writing/animating-the-unanimatable-1346a5aab3cd), a beautiful-in-its-simplicity method of tackling this problem. UMD build, when minified and gzipped, is only 2kb! ⚡
+  * Implementation based on the [_FLIP technique_](https://medium.com/developers-writing/animating-the-unanimatable-1346a5aab3cd), a beautiful-in-its-simplicity method of tackling this problem. UMD build, when minified and gzipped, is only 4kb! ⚡
 
 
 
@@ -91,11 +107,72 @@ class TopArticles extends Component {
 Curious how this works, under the hood? [__Read the Medium post__](https://medium.com/@joshuawcomeau/animating-the-unanimatable-1346a5aab3cd).
 
 
-## Enter/Leave animations
 
-When items are created or removed, the original items will animate as you'd expect; they'll move out of the way when a new element is added, and slide to fill in the space when one is removed.
+## Enter/Leave Animations
 
-Adding proper enter/leave animations is a non-trivial task, so it is likely not going to be added in the near future. Contributors welcome! :)
+v2.0 introduces Enter/Leave animations. For convenience, several presets are provided:
+
+
+#### Elevator (default)
+
+![Elevator](https://s3.amazonaws.com/githubdocs/fm-elevator.gif)
+
+```js
+<FlipMove enterAnimation="elevator" leaveAnimation="elevator" />
+```
+
+#### Fade
+
+![Fade](https://s3.amazonaws.com/githubdocs/fm-fade.gif)
+
+```js
+<FlipMove enterAnimation="fade" leaveAnimation="fade" />
+```
+
+#### Accordian (Vertical)
+
+![Accordian (Vertical)](https://s3.amazonaws.com/githubdocs/fm-accordian-vertical.gif)
+
+```js
+<FlipMove enterAnimation="accordianVertical" leaveAnimation="accordianVertical" />
+```
+
+#### Accordian (Horizontal)
+
+![Accordian (Horizontal)](https://s3.amazonaws.com/githubdocs/fm-accordian-horizontal.gif)
+
+```js
+<FlipMove enterAnimation="accordianHorizontal" leaveAnimation="accordianHorizontal" />
+```
+
+#### Custom
+
+You can supply your own CSS-based transitions to customize the behaviour. Both `enterAnimation` and `leaveAnimation` take an object with `from` and `to` properties. You can then provide any valid CSS properties to this object, although for performance reasons it is recommended that you stick to `transform` and `opacity`.
+
+![Custom](https://s3.amazonaws.com/githubdocs/fm-custom-rotate-x.gif)
+
+```js
+<FlipMove
+  staggerDelayBy={50}
+  enterAnimation={{
+    from: {
+      transform: 'rotateX(135deg)'
+    },
+    to: {
+      transform: ''
+    }
+  }}
+  leaveAnimation={{
+    from: {
+      transform: ''
+    },
+    to: {
+      transform: 'rotateX(-120deg)',
+      opacity: 0.6
+    }
+  }}
+/>
+```
 
 
 ## Options
@@ -189,6 +266,94 @@ Adding proper enter/leave animations is a non-trivial task, so it is likely not 
     </td>
   </tr>
   <tr>
+    <td valign="top"><code>enterAnimation</code></td>
+    <td valign="top">
+      <code>String</code>
+      <code>Boolean</code>
+      <code>Object</code>
+    </td>
+    <td valign="top">'elevator'</td>
+    <td valign="top">
+      Control the onEnter animation that runs when new items are added to the DOM.
+      <br><br>
+      For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move#enterleave-animations">feature description above</a></strong>
+
+      <br><br>
+      Accepts several types:
+      <br><br>
+
+      <ul>
+        <li>
+          <strong>String: </strong> You can enter one of the following presets to select that as your enter animation:
+          <ul>
+            <li><code>elevator</code> (default)</li>
+            <li><code>fade</code></li>
+            <li><code>accordianVertical</code></li>
+            <li><code>accordianHorizontal</code></li>
+            <li><code>none</code></li>
+          </ul>
+
+          <br><a href="https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js">View the CSS implementation of these presets.</a>
+          <br><br>
+        </li>
+        <li>
+          <strong>Boolean: </strong> You can enter <code>false</code> to disable the enter animation, or <code>true</code> to select the default enter animation (<code>elevator</code>).
+          <br><br>
+        </li>
+        <li>
+          <strong>Object: </strong> For fully granular control, you can pass in an object that contains the styles you'd like to animate.
+          <br><br>
+          It requires two keys: <code>from</code> and <code>to</code>. Each key holds an object of CSS properties. You can supply any valid camelCase CSS properties, and flip-move will transition between the two, over the course of the specified <code>duration</code>.
+          <br><br>
+          It is recommended that you stick to hardware-accelerated CSS properties for optimal performance: <code>transform</code> and <code>opacity</code>.
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><code>leaveAnimation</code></td>
+    <td valign="top">
+      <code>String</code>
+      <code>Boolean</code>
+      <code>Object</code>
+    </td>
+    <td valign="top">'elevator'</td>
+    <td valign="top">
+      Control the onLeave animation that runs when items are removed from the DOM.
+      <br><br>
+      For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move#enterleave-animations">feature description above</a></strong>
+      <br><br>
+      Accepts several types:
+      <br><br>
+      <ul>
+        <li>
+          <strong>String: </strong> You can enter one of the following presets to select that as your leave animation:
+          <ul>
+            <li><code>elevator</code> (default)</li>
+            <li><code>fade</code></li>
+            <li><code>accordianVertical</code></li>
+            <li><code>accordianHorizontal</code></li>
+            <li><code>none</code></li>
+          </ul>
+
+          <br><a href="https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js">View the CSS implementation of these presets.</a>
+          <br><br>
+        </li>
+        <li>
+          <strong>Boolean: </strong> You can enter <code>false</code> to disable the leave animation, or <code>true</code> to select the default leave animation (<code>elevator</code>).
+          <br>
+        </li>
+        <li>
+          <strong>Object: </strong> For fully granular control, you can pass in an object that contains the styles you'd like to animate.
+          <br><br>
+          It requires two keys: <code>from</code> and <code>to</code>. Each key holds an object of CSS properties. You can supply any valid camelCase CSS properties, and flip-move will transition between the two, over the course of the specified <code>duration</code>.
+          <br><br>
+          It is recommended that you stick to hardware-accelerated CSS properties for optimal performance: <code>transform</code> and <code>opacity</code>.
+        </li>
+      </ul>
+    </td>
+  </tr>  
+  <tr>
     <td valign="top"><code>onStart</code></td>
     <td valign="top"><code>Function</code></td>
     <td valign="top"></td>
@@ -249,7 +414,7 @@ Adding proper enter/leave animations is a non-trivial task, so it is likely not 
   <tr>
     <td valign="top"><code>disableAnimations</code></td>
     <td valign="top"><code>Boolean</code></td>
-    <td valign="top"></td>
+    <td valign="top">false</td>
     <td valign="top">
       Sometimes, you may wish to temporarily disable the animations and have the normal behaviour resumed. Setting this flag to <code>true</code> skips all animations.
     </td>
@@ -270,6 +435,11 @@ Adding proper enter/leave animations is a non-trivial task, so it is likely not 
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
 
+## Changelog
+
+See the [GitHub releases](https://github.com/joshwcomeau/react-flip-move/releases) for version changes.
+
+
 
 ## Note on 3D transforms and `will-change`
 
@@ -288,6 +458,13 @@ Further reading: [CSS will-change Property](https://dev.opera.com/articles/css-w
 ## Contributions
 
 Contributors welcome! Please discuss new features with me ahead of time, and submit PRs for bug fixes with tests (Testing stack is Mocha/Chai/Sinon, tested in-browser by Karma).
+
+
+## Development
+
+This project uses [React Storybook](https://github.com/kadirahq/react-storybook) in development. The developer experience is absolutely lovely, and it makes testing new features like enter/leave presets super straightforward.
+
+After installing dependencies, launch the Storybook dev server with `npm run storybook`.
 
 
 

@@ -41,7 +41,7 @@ describe('FlipMove', () => {
         duration: 500,
         staggerDelayBy: 0,
         staggerDurationBy: 0,
-        disableAnimations: false,
+        disableAllAnimations: false,
         articles
       };
       this.count = 0;
@@ -66,7 +66,7 @@ describe('FlipMove', () => {
             duration={this.state.duration}
             staggerDelayBy={this.state.staggerDelayBy}
             staggerDurationBy={this.state.staggerDurationBy}
-            disableAnimations={this.state.disableAnimations}
+            disableAllAnimations={this.state.disableAllAnimations}
             onStart={::this.onStartHandler}
             onFinish={::this.onFinishHandler}
             onFinishAll={finishAllStub}
@@ -261,13 +261,13 @@ describe('FlipMove', () => {
         c: outputTags[2].getBoundingClientRect(),
       };
 
-      renderedComponent.setState({ disableAnimations: true }, () => {
+      renderedComponent.setState({ disableAllAnimations: true }, () => {
         renderedComponent.setState({ articles: articles.reverse() });
       });
     });
 
     after(() => {
-      renderedComponent.setState({ disableAnimations: false });
+      renderedComponent.setState({ disableAllAnimations: false });
     });
 
     it('should transition immediately', () => {

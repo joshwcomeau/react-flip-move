@@ -1,6 +1,6 @@
 {
   "name": "react-flip-move",
-  "version": "1.4.2",
+  "version": "2.0.1",
   "description": "Effortless animation between DOM changes (eg. list reordering) using the FLIP technique.",
   "main": "lib/index.js",
   "files": [
@@ -40,6 +40,7 @@
     "react-dom": "0.13.x || 0.14.x || 15.x.x"
   },
   "devDependencies": {
+    "@kadira/storybook": "^1.7.0",
     "babel": "^6.1.18",
     "babel-cli": "^6.2.0",
     "babel-core": "^6.2.1",
