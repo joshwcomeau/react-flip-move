@@ -6,11 +6,14 @@ import sampleSize from 'lodash/sampleSize';
 import FlipMove from '../src/FlipMove.js';
 
 storiesOf('FlipMove', module)
+  .add('simple transition', () => (
+    <Controls />
+  ))
   .add('when animation is disabled', () => (
     <Controls disableAnimations={true} />
   ))
   .add('when adding/removing items', () => (
-    <Controls subset={true} />
+    <Controls mode='add-and-remove' duration={5000} />
   ))
 
 
@@ -33,32 +36,39 @@ class Controls extends Component {
 
   renderItems() {
     const styles = {
-      padding: '1rem',
-      background: '#FFF',
+      padding: '0.5rem',
+      margin: '0.5rem',
+      background: '#F00',
       fontFamily: 'sans-serif',
-      listStyleType: 'none'
+      listStyleType: 'none',
+      width: '200px'
     }
     return this.state.items.map( item => (
       <li style={styles} key={item.name}>{item.name}</li>
     ))
   }
 
-  shuffle() {
-    // We may want to also add/remove some nodes at random, to test the
-    // enter/exit animations. If so, we want to sample a subset.
-    let numToDisplay;
-    if ( this.props.subset ) {
-      numToDisplay = Math.ceil(Math.random() * items.length);
-    } else {
-      numToDisplay = items.length
+  clickHandler() {
+    let newItems;
+
+    switch ( this.props.mode ) {
+      case 'add-and-remove':
+        // let numToDisplay = Math.ceil(Math.random() * items.length);
+        // newItems = sampleSize(items, numToDisplay);
+        newItems = items.slice(1)
+        break;
+      default:
+        newItems = shuffle(items);
+        break;
     }
-    this.setState({ items: sampleSize(shuffle(items), numToDisplay) });
+
+    this.setState({ items: newItems });
   }
 
   render() {
     return (
       <div>
-        <button onClick={::this.shuffle}>Shuffle</button>
+        <button onClick={::this.clickHandler}>Shuffle</button>
         <FlipMove {...this.props}>
           { this.renderItems() }
         </FlipMove>

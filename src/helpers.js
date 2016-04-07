@@ -17,6 +17,13 @@ export function convertAllToInt(...values) {
   return values.map(convertToInt);
 }
 
+export function filterNewItems(group1, group2, idProp = 'key') {
+  // We want to find all items in group2 that are NOT in group1.
+  return group2.filter( g2Item => {
+    return !group1.find( g1Item => g1Item[idProp] === g2Item[idProp] );
+  });
+}
+
 // Modified from Modernizr
 export function whichTransitionEvent() {
   const transitions = {
