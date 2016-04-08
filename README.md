@@ -40,7 +40,7 @@ UMD builds are also available, in `/dist`.
 
 Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ryanflorence/react-magic-move" target="_blank">_Magic Move_</a>, and offers:
 
-  * Full compatibility with React 0.14+. Will be maintained.
+  * Full compatibility with React 0.13, 0.14, and 15-rc2. Will be maintained.
 
   * Exclusive use of hardware-accelerated CSS properties (`transform: translate`) instead of positioning properties (`top`, `left`). <a href="https://aerotwist.com/blog/pixels-are-expensive/" target="_blank">_Read why this matters_</a>.
 
