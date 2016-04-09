@@ -36,8 +36,8 @@
     "web-animations"
   ],
   "peerDependencies": {
-    "react": "0.13.x || 0.14.x || ^15.0.0-beta.1",
-    "react-dom": "0.13.x || 0.14.x || ^15.0.0-beta.1"
+    "react": "0.13.x || 0.14.x || 15.x.x",
+    "react-dom": "0.13.x || 0.14.x || 15.x.x"
   },
   "devDependencies": {
     "babel": "^6.1.18",
@@ -64,9 +64,9 @@
     "karma-webpack": "^1.7.0",
     "lodash": "^4.3.0",
     "mocha": "^2.4.5",
-    "react": "^0.14.3",
-    "react-addons-test-utils": "^0.14.7",
-    "react-dom": "^0.14.3",
+    "react": "^15.0.0",
+    "react-addons-test-utils": "^15.0.0",
+    "react-dom": "^15.0.0",
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0",
     "webpack": "^1.12.11"
