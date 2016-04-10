@@ -12,11 +12,15 @@ import Toggle from './Toggle.jsx';
 class ListItem extends Component {
   render() {
     const listClass = `list-item card ${this.props.view}`;
+    const style = { zIndex: 100 - this.props.index };
 
     return (
-      <li id={this.props.id} className={listClass}>
+      <li id={this.props.id} className={listClass} style={style}>
         <h3>{this.props.name}</h3>
         <h5>{moment(this.props.timestamp).format('MMM Do, YYYY')}</h5>
+        <button onClick={this.props.clickHandler}>
+          <i className="fa fa-close" />
+        </button>
       </li>
     );
   }
@@ -31,27 +35,29 @@ class Shuffle extends Component {
       view: 'list',
       order: 'asc',
       sortingMethod: 'chronological',
+      enterLeaveAnimation: 'accordianVertical',
+      inProgress: false,
       articles
     };
 
-    this.toggleList   = this.toggleList.bind(this);
-    this.toggleGrid   = this.toggleGrid.bind(this);
-    this.toggleSort   = this.toggleSort.bind(this);
-    this.sortShuffle  = this.sortShuffle.bind(this);
-    this.sortRotate   = this.sortRotate.bind(this);
-    this.addItem      = this.addItem.bind(this);
-    this.removeItem   = this.removeItem.bind(this);
+    this.toggleList       = this.toggleList.bind(this);
+    this.toggleGrid       = this.toggleGrid.bind(this);
+    this.toggleSort       = this.toggleSort.bind(this);
+    this.sortShuffle      = this.sortShuffle.bind(this);
+    this.sortRotate       = this.sortRotate.bind(this);
   }
 
   toggleList() {
     this.setState({
-      view: 'list'
+      view: 'list',
+      enterLeaveAnimation: 'accordianVertical'
     });
   }
 
   toggleGrid() {
     this.setState({
-      view: 'grid'
+      view: 'grid',
+      enterLeaveAnimation: 'accordianHorizontal'
     });
   }
 
@@ -75,19 +81,21 @@ class Shuffle extends Component {
     });
   }
 
-  addItem(index=0) {
+  moveArticle(source, dest, index=0) {
+    if ( this.state.inProgress ) return;
 
-  }
+    let sourceArticles = this.state[source].slice();
+    let destArticles = this.state[dest].slice();
 
-  removeItem(index=0) {
-    console.log("Clicked removeItem")
-    let articles = this.state.articles.slice();
-    let removedArticles = this.state.removedArticles.slice();
+    if ( !sourceArticles.length ) return;
 
-    removedArticles = removedArticles.concat( articles.splice(index, 1) );
-    console.log("Removed articles", removedArticles)
+    destArticles = [].concat( sourceArticles.splice(index, 1), destArticles );
 
-    this.setState({ articles, removedArticles });
+    this.setState({
+      [source]: sourceArticles,
+      [dest]:   destArticles,
+      inProgress: true
+    });
   }
 
   sortRotate() {
@@ -106,7 +114,8 @@ class Shuffle extends Component {
         <ListItem
           key={article.id}
           view={this.state.view}
-          style={{ zIndex: i }}
+          index={i}
+          clickHandler={() => this.moveArticle('articles', 'removedArticles', i)}
           {...article}
         />
       );
@@ -114,7 +123,6 @@ class Shuffle extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div id="shuffle" className={this.state.view}>
         <header>
@@ -153,25 +161,35 @@ class Shuffle extends Component {
           <FlipMove
             staggerDurationBy="30"
             duration={500}
-            enterLeaveAnimation='accordianVertical'
+            enterLeaveAnimation={this.state.enterLeaveAnimation}
+            onFinishAll={() => {
+              console.log("All done!");
+              this.setState({ inProgress: false });
+            }}
           >
             { this.renderArticles() }
+            <footer key="foot">
+              <div className="abs-right">
+                <Toggle
+                  clickHandler={() => (
+                    this.moveArticle('removedArticles', 'articles')
+                  )}
+                  text="Add Item"
+                  icon="plus"
+                  active={this.state.removedArticles.length > 0}
+                />
+                <Toggle
+                  clickHandler={() => (
+                    this.moveArticle('articles', 'removedArticles')
+                  )}
+                  text="Remove Item"
+                  icon="close"
+                  active={this.state.articles.length > 0}
+                />
+              </div>
+            </footer>
           </FlipMove>
         </ul>
-        <footer>
-          <div className="abs-right">
-            <Toggle
-              clickHandler={this.addItem}
-              text="Add Item" icon="plus"
-              active={this.state.removedArticles.length > 0}
-            />
-            <Toggle
-              clickHandler={this.removeItem}
-              text="Remove Item" icon="close"
-              active={this.state.articles.length > 0}
-            />
-          </div>
-        </footer>
       </div>
     );
   }
