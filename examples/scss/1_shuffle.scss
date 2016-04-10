@@ -15,15 +15,36 @@
 
   }
   .list-item {
+    position: relative;
     margin: 6px;
     padding: 16px;
     list-style-type: none;
+
+    &:hover button {
+      display:block;
+    }
 
     &.list {
       display: block;
     }
     &.grid {
       display: inline-block;
+    }
+
+    button {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 10px;
+      bottom: 0;
+      margin: auto;
+      width: 52px;
+      height: 52px;
+      background: $fuscia;
+      border: 0;
+      border-radius: 4px;
+      color: $white;
+      font-size: 20px;
     }
   }
 }
