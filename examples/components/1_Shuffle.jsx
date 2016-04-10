@@ -27,6 +27,7 @@ class Shuffle extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      removedArticles: [],
       view: 'list',
       order: 'asc',
       sortingMethod: 'chronological',
@@ -38,6 +39,8 @@ class Shuffle extends Component {
     this.toggleSort   = this.toggleSort.bind(this);
     this.sortShuffle  = this.sortShuffle.bind(this);
     this.sortRotate   = this.sortRotate.bind(this);
+    this.addItem      = this.addItem.bind(this);
+    this.removeItem   = this.removeItem.bind(this);
   }
 
   toggleList() {
@@ -72,6 +75,21 @@ class Shuffle extends Component {
     });
   }
 
+  addItem(index=0) {
+
+  }
+
+  removeItem(index=0) {
+    console.log("Clicked removeItem")
+    let articles = this.state.articles.slice();
+    let removedArticles = this.state.removedArticles.slice();
+
+    removedArticles = removedArticles.concat( articles.splice(index, 1) );
+    console.log("Removed articles", removedArticles)
+
+    this.setState({ articles, removedArticles });
+  }
+
   sortRotate() {
     let articles = this.state.articles.slice();
     articles.unshift(articles.pop())
@@ -96,6 +114,7 @@ class Shuffle extends Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div id="shuffle" className={this.state.view}>
         <header>
@@ -131,10 +150,28 @@ class Shuffle extends Component {
           </div>
         </header>
         <ul>
-          <FlipMove staggerDurationBy="30" duration={500}>
+          <FlipMove
+            staggerDurationBy="30"
+            duration={500}
+            enterLeaveAnimation='accordianVertical'
+          >
             { this.renderArticles() }
           </FlipMove>
         </ul>
+        <footer>
+          <div className="abs-right">
+            <Toggle
+              clickHandler={this.addItem}
+              text="Add Item" icon="plus"
+              active={this.state.removedArticles.length > 0}
+            />
+            <Toggle
+              clickHandler={this.removeItem}
+              text="Remove Item" icon="close"
+              active={this.state.articles.length > 0}
+            />
+          </div>
+        </footer>
       </div>
     );
   }
