@@ -16,35 +16,48 @@
   }
   .list-item {
     position: relative;
-    margin: 6px;
+    margin: 0 6px 12px 6px;
     padding: 16px;
     list-style-type: none;
 
     &:hover button {
-      display:block;
+      display: block;
     }
 
     &.list {
       display: block;
+
+      button {
+        top: 0;
+        right: 10px;
+        bottom: 0;
+        margin: auto;
+        width: 52px;
+        height: 52px;
+        background: $fuscia;
+        border: 0;
+        border-radius: 4px;
+        color: $white;
+        font-size: 20px;
+      }
     }
+
     &.grid {
       display: inline-block;
+
+      button {
+        top: 0;
+        right: 0;
+        font-size: 14px;
+        background: transparent;
+        border: 0;
+        color: $fuscia;
+      }
     }
 
     button {
       display: none;
       position: absolute;
-      top: 0;
-      right: 10px;
-      bottom: 0;
-      margin: auto;
-      width: 52px;
-      height: 52px;
-      background: $fuscia;
-      border: 0;
-      border-radius: 4px;
-      color: $white;
-      font-size: 20px;
     }
   }
 }

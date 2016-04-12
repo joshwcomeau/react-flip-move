@@ -161,10 +161,11 @@ class Shuffle extends Component {
           <FlipMove
             staggerDurationBy="30"
             duration={500}
-            enterLeaveAnimation={this.state.enterLeaveAnimation}
+            enterAnimation={this.state.enterLeaveAnimation}
+            leaveAnimation={this.state.enterLeaveAnimation}
             onFinishAll={() => {
-              console.log("All done!");
-              this.setState({ inProgress: false });
+              // TODO: Remove the setTimeout, when the bug is fixed.
+              setTimeout(() => this.setState({ inProgress: false }), 1);
             }}
           >
             { this.renderArticles() }
