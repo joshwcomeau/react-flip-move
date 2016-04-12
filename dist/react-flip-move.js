@@ -254,20 +254,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate(previousProps) {
-	      var childKeys = this.props.children.map(function (c) {
-	        return c.key;
-	      }).join('');
-	      var prevChildKeys = previousProps.children.map(function (c) {
-	        return c.key;
-	      }).join('');
-
-	      // If the children have been re-arranged or added/removed, trigger the
-	      // main FLIP animation.
+	      // If the children have been re-arranged, moved, or added/removed,
+	      // trigger the main FLIP animation.
 	      //
 	      // This check is required so that we don't trigger a re-animation when the
 	      // `onFinishAll` handler is called, at the end of the animation, to remove
 	      // exited nodes.
-	      if (childKeys !== prevChildKeys) {
+	      if (this.props.children !== previousProps.children) {
 	        this.calculateAndAnimateChildren();
 	      }
 	    }

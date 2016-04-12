@@ -70,16 +70,13 @@ class FlipMove extends Component {
 
 
   componentDidUpdate(previousProps) {
-    const childKeys     = this.props.children.map( c => c.key).join('');
-    const prevChildKeys = previousProps.children.map( c => c.key).join('');
-
-    // If the children have been re-arranged or added/removed, trigger the
-    // main FLIP animation.
+    // If the children have been re-arranged, moved, or added/removed,
+    // trigger the main FLIP animation.
     //
     // This check is required so that we don't trigger a re-animation when the
     // `onFinishAll` handler is called, at the end of the animation, to remove
     // exited nodes.
-    if ( childKeys !== prevChildKeys ) {
+    if ( this.props.children !== previousProps.children ) {
       this.calculateAndAnimateChildren();
     }
   }

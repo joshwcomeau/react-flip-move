@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { storiesOf, action } from '@kadira/storybook';
 import shuffle from 'lodash/shuffle';
 import sampleSize from 'lodash/sampleSize';
+import range from 'lodash/range';
 
 import FlipMove from '../src/FlipMove.js';
 
@@ -62,20 +63,12 @@ storiesOf('FlipMove', module)
     <Controls
       mode='remove'
       enterAnimation={{
-        from: {
-          transform: 'translateY(-100px) rotate(90deg) scale(0)'
-        },
-        to: {
-          transform: '',
-        }
+        from: { transform: 'translateY(-100px) rotate(90deg) scale(0)' },
+        to: { transform: '' }
       }}
       leaveAnimation={{
-        from: {
-          transform: '',
-        },
-        to: {
-          transform: 'translateY(100px) rotate(-90deg) scale(0)'
-        }
+        from: { transform: '' },
+        to: { transform: 'translateY(100px) rotate(-90deg) scale(0)' }
       }}
     />
   ))
@@ -83,23 +76,17 @@ storiesOf('FlipMove', module)
     <Controls
       mode='remove'
       enterAnimation={{
-        from: {
-          transform: 'rotateX(135deg)'
-        },
-        to: {
-          transform: '',
-        }
+        from: { transform: 'rotateX(135deg)' },
+        to: { transform: '' }
       }}
       leaveAnimation={{
-        from: {
-          transform: '',
-        },
-        to: {
-          transform: 'rotateX(-120deg)',
-          opacity: 0.6
-        }
+        from: { transform: '' },
+        to: { transform: 'rotateX(-120deg)',   opacity: 0.6 }
       }}
     />
+  ))
+  .add('when prop keys do not change, but items rearrange', () => (
+    <StaticItems />
   ))
 
 // Controlling component
@@ -200,6 +187,43 @@ class Controls extends Component {
 	      <script>
           { this.loadFonts() }
         </script>
+      </div>
+    );
+  }
+}
+
+class StaticItems extends Component {
+  renderItems() {
+    return range(4).map( i => {
+      let left = Math.floor(Math.random() * 100) + 'px';
+      let top  = Math.floor(Math.random() * 100) + 'px';
+
+      return (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            padding: '1rem',
+            background: '#F00',
+            left,
+            top
+          }}
+        >
+          Item!
+        </div>
+      );
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={() => this.forceUpdate.call(this, null)}>
+          UPDATE
+        </button>
+        <FlipMove>
+          { this.renderItems() }
+        </FlipMove>
       </div>
     );
   }
