@@ -103,8 +103,8 @@ class FlipMove extends Component {
       const relativeBox = {
         'top':    childBox['top']  - parentBox['top'],
         'left':   childBox['left'] - parentBox['left'],
-        'right':  childBox['right'] - parentBox['right'],
-        'bottom': childBox['bottom'] - parentBox['bottom']
+        'right':  parentBox['right'] - childBox['right'],
+        'bottom': parentBox['bottom'] - childBox['bottom']
       };
 
       return { ...boxes, [child.key]: relativeBox };
@@ -220,7 +220,7 @@ class FlipMove extends Component {
         domNode.style.position  = 'absolute';
         domNode.style.top   = leavingBoundingBox.top - computed.marginTop + 'px';
         domNode.style.left  = leavingBoundingBox.left - computed.marginLeft + 'px';
-        domNode.style.right = leavingBoundingBox.right + computed.marginRight + 'px';
+        domNode.style.right = leavingBoundingBox.right - computed.marginRight + 'px';
       });
     }
 
