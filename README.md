@@ -11,7 +11,7 @@ This module was built to tackle the common but arduous problem of animating a li
 
 DOM nodes can't actually reorder themselves; brand new nodes are created instead. Because of this, simple CSS transitions don't work.
 
-Flip Move uses the [_FLIP technique_](https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md) to work out what such a transition would look like, and fakes it using 60+ FPS hardware-accelerated CSS transforms.
+Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-animations/#the-general-approach) to work out what such a transition would look like, and fakes it using 60+ FPS hardware-accelerated CSS transforms.
 
 [![demo](https://s3.amazonaws.com/githubdocs/fm-main-demo.gif)](http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle)
 
@@ -97,7 +97,7 @@ class TopArticles extends Component {
 ## Compatibility
 
 Tested in Chrome and Firefox. Will test and ensure compatibility with IE 10+ and Safari very shortly.
-
+''
 
 
 ## How It Works
