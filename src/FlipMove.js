@@ -163,7 +163,7 @@ class FlipMove extends Component {
     this.state.children.forEach( (child, index) => {
       const isLeaving = !nextChildren.find( ({key}) => key === child.key );
 
-      if ( !isLeaving ) return;
+      if ( !isLeaving || !this.props.leaveAnimation ) return;
 
       let nextChild = { ...child, leaving: true };
       let nextChildIndex = index + numOfChildrenLeaving;

@@ -354,7 +354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return key === child.key;
 	        });
 
-	        if (!isLeaving) return;
+	        if (!isLeaving || !_this3.props.leaveAnimation) return;
 
 	        var nextChild = _extends({}, child, { leaving: true });
 	        var nextChildIndex = index + numOfChildrenLeaving;
