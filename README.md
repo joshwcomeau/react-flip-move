@@ -129,20 +129,20 @@ v2.0 introduces Enter/Leave animations. For convenience, several presets are pro
 <FlipMove enterAnimation="fade" leaveAnimation="fade" />
 ```
 
-#### Accordian (Vertical)
+#### Accordion (Vertical)
 
-![Accordian (Vertical)](https://s3.amazonaws.com/githubdocs/fm-accordian-vertical.gif)
+![Accordion (Vertical)](https://s3.amazonaws.com/githubdocs/fm-accordian-vertical.gif)
 
 ```js
-<FlipMove enterAnimation="accordianVertical" leaveAnimation="accordianVertical" />
+<FlipMove enterAnimation="accordionVertical" leaveAnimation="accordionVertical" />
 ```
 
-#### Accordian (Horizontal)
+#### Accordion (Horizontal)
 
-![Accordian (Horizontal)](https://s3.amazonaws.com/githubdocs/fm-accordian-horizontal.gif)
+![Accordion (Horizontal)](https://s3.amazonaws.com/githubdocs/fm-accordian-horizontal.gif)
 
 ```js
-<FlipMove enterAnimation="accordianHorizontal" leaveAnimation="accordianHorizontal" />
+<FlipMove enterAnimation="accordionHorizontal" leaveAnimation="accordionHorizontal" />
 ```
 
 #### Custom
@@ -288,8 +288,8 @@ You can supply your own CSS-based transitions to customize the behaviour. Both `
           <ul>
             <li><code>elevator</code> (default)</li>
             <li><code>fade</code></li>
-            <li><code>accordianVertical</code></li>
-            <li><code>accordianHorizontal</code></li>
+            <li><code>accordionVertical</code></li>
+            <li><code>accordionHorizontal</code></li>
             <li><code>none</code></li>
           </ul>
 
@@ -331,8 +331,8 @@ You can supply your own CSS-based transitions to customize the behaviour. Both `
           <ul>
             <li><code>elevator</code> (default)</li>
             <li><code>fade</code></li>
-            <li><code>accordianVertical</code></li>
-            <li><code>accordianHorizontal</code></li>
+            <li><code>accordionVertical</code></li>
+            <li><code>accordionHorizontal</code></li>
             <li><code>none</code></li>
           </ul>
 

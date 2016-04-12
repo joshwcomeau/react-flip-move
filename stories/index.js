@@ -25,18 +25,18 @@ storiesOf('FlipMove', module)
       leaveAnimation="fade"
     />
   ))
-  .add('when removing items - accordianVertical', () => (
+  .add('when removing items - accordionVertical', () => (
     <Controls
       mode='remove'
-      enterAnimation="accordianVertical"
-      leaveAnimation="accordianVertical"
+      enterAnimation="accordionVertical"
+      leaveAnimation="accordionVertical"
     />
   ))
-  .add('when removing items - accordianHorizontal', () => (
+  .add('when removing items - accordionHorizontal', () => (
     <Controls
       mode='remove'
-      enterAnimation="accordianHorizontal"
-      leaveAnimation="accordianHorizontal"
+      enterAnimation="accordionHorizontal"
+      leaveAnimation="accordionHorizontal"
     />
   ))
   .add('when removing items - none', () => (

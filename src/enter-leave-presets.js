@@ -15,17 +15,18 @@
      from: { opacity: 0 },
      to:   { opacity: '' }
    },
-   'accordianVertical': {
+   'accordionVertical': {
      from: { transform: 'scaleY(0)', transformOrigin: 'center top' },
      to:   { transform: '', transformOrigin: 'center top' }
    },
-   'accordianHorizontal': {
+   'accordionHorizontal': {
      from: { transform: 'scaleX(0)', transformOrigin: 'left center' },
      to:   { transform: '', transformOrigin: 'left center' }
    },
    'none': false
  };
-
+enterPresets.accordianVertical = enterPresets.accordionVertical;
+enterPresets.accordianHorizontal = enterPresets.accordionHorizontal;
 
 export const leavePresets = {
   'elevator': {
@@ -36,16 +37,18 @@ export const leavePresets = {
     from: { opacity: 1 },
     to:   { opacity: 0 }
   },
-  'accordianVertical': {
+  'accordionVertical': {
     from: { transform: 'scaleY(1)', transformOrigin: 'center top' },
     to:   { transform: 'scaleY(0)', transformOrigin: 'center top' }
   },
-  'accordianHorizontal': {
+  'accordionHorizontal': {
     from: { transform: 'scaleX(1)', transformOrigin: 'left center' },
     to:   { transform: 'scaleX(0)', transformOrigin: 'left center' }
   },
   'none': false
 };
+leavePresets.accordianVertical = leavePresets.accordionVertical;
+leavePresets.accordianHorizontal = leavePresets.accordionHorizontal;
 
 export const defaultPreset = 'elevator';
 export const disablePreset = 'none';
