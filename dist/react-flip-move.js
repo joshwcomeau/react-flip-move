@@ -150,6 +150,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -171,10 +175,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	             *   - If the two have moved, we use the FLIP technique to animate the
 	             *     transition between their positions.
 	             */
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
 
 	var _react = __webpack_require__(2);
 
@@ -407,16 +407,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	          };
 
 	          // For this to work, we have to offset any given `margin`.
-	          var computed = _extends({}, window.getComputedStyle(domNode));
+	          var computed = window.getComputedStyle(domNode);
+	          var cleanedComputed = {};
 
-	          ['marginTop', 'marginLeft', 'marginRight'].forEach(function (margin) {
-	            computed[margin] = Number(computed[margin].replace('px', ''));
+	          // Clean up the properties (remove 'px', convert to Number).
+	          ['margin-top', 'margin-left', 'margin-right'].forEach(function (margin) {
+	            var propertyVal = computed.getPropertyValue(margin);
+	            cleanedComputed[margin] = Number(propertyVal.replace('px', ''));
 	          });
 
 	          domNode.style.position = 'absolute';
-	          domNode.style.top = leavingBoundingBox.top - computed.marginTop + 'px';
-	          domNode.style.left = leavingBoundingBox.left - computed.marginLeft + 'px';
-	          domNode.style.right = leavingBoundingBox.right - computed.marginRight + 'px';
+	          domNode.style.top = leavingBoundingBox.top - cleanedComputed['margin-top'] + 'px';
+	          domNode.style.left = leavingBoundingBox.left - cleanedComputed['margin-left'] + 'px';
+	          domNode.style.right = leavingBoundingBox.right - cleanedComputed['margin-right'] + 'px';
 	        });
 	      }
 
@@ -495,6 +498,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var dX = _getPositionDelta4[0];
 	      var dY = _getPositionDelta4[1];
+
 
 	      return dX !== 0 || dY !== 0;
 	    }
@@ -594,6 +598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var delay = _props.delay;
 	      var staggerDelayBy = _props.staggerDelayBy;
 	      var easing = _props.easing;
+
 
 	      delay += n * staggerDelayBy;
 	      duration += n * staggerDurationBy;
@@ -759,15 +764,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
 
 	var _react = __webpack_require__(2);
 
@@ -843,7 +848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	      key: 'convertAnimationProp',
 	      value: function convertAnimationProp(animation, presets) {
-	        var newAnimation = undefined;
+	        var newAnimation = void 0;
 
 	        switch (typeof animation === 'undefined' ? 'undefined' : _typeof(animation)) {
 	          case 'boolean':

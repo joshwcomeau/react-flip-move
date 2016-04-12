@@ -211,16 +211,19 @@ class FlipMove extends Component {
         };
 
         // For this to work, we have to offset any given `margin`.
-        let computed = { ...window.getComputedStyle(domNode) };
+        let computed = window.getComputedStyle(domNode);
+        let cleanedComputed = {};
 
-        ['marginTop', 'marginLeft', 'marginRight'].forEach( margin => {
-          computed[margin] = Number( computed[margin].replace('px', '') )
+        // Clean up the properties (remove 'px', convert to Number).
+        ['margin-top', 'margin-left', 'margin-right'].forEach( margin => {
+          const propertyVal = computed.getPropertyValue(margin);
+          cleanedComputed[margin] = Number( propertyVal.replace('px', '') );
         });
 
         domNode.style.position  = 'absolute';
-        domNode.style.top   = leavingBoundingBox.top - computed.marginTop + 'px';
-        domNode.style.left  = leavingBoundingBox.left - computed.marginLeft + 'px';
-        domNode.style.right = leavingBoundingBox.right - computed.marginRight + 'px';
+        domNode.style.top   = leavingBoundingBox.top - cleanedComputed['margin-top'] + 'px';
+        domNode.style.left  = leavingBoundingBox.left - cleanedComputed['margin-left'] + 'px';
+        domNode.style.right = leavingBoundingBox.right - cleanedComputed['margin-right'] + 'px';
       });
     }
 
