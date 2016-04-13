@@ -96,8 +96,10 @@ class TopArticles extends Component {
 
 ## Compatibility
 
-Tested in Chrome and Firefox. Will test and ensure compatibility with IE 10+ and Safari very shortly.
-''
+|           | Chrome | Firefox | Safari |   IE  | Edge | iOS Safari/Chrome | Android Chrome |
+|-----------|:------:|:-------:|:------:|:-----:|:----:|:-----------------:|:--------------:|
+| Supported |  ✔ 10+ |   ✔ 4+  | ✔ 6.1+ | ✔ 10+ |   ✔  |       ✔ 6.1+      |        ✔       |
+
 
 
 ## How It Works

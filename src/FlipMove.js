@@ -45,7 +45,7 @@ class FlipMove extends Component {
     // We want to keep the item rendered for a little while, until its animation
     // can complete. Because we cannot mutate props, we make `state` the source
     // of truth.
-    this.state = { children: this.props.children };
+    this.state = { children: props.children };
 
     // Keep track of remaining animations so we know when to fire the
     // all-finished callback, and clean up after ourselves.
