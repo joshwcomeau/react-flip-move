@@ -466,7 +466,10 @@ class FlipMove extends Component {
       this.props.typeName,
       {
         className: this.props.className,
-        style: { position: 'relative' }
+        style: {
+          position: 'relative',
+          ...this.props.style
+        }
       },
       this.childrenWithRefs()
     );

@@ -134,6 +134,7 @@ function propConverter(ComposedComponent) {
       onFinishAll:          PropTypes.func,
       className:            PropTypes.string,
       typeName:             PropTypes.string,
+      style:                PropTypes.object,
       disableAllAnimations: PropTypes.bool,
       enterAnimation:       PropTypes.oneOfType([
                               PropTypes.string,
@@ -155,6 +156,7 @@ function propConverter(ComposedComponent) {
       staggerDurationBy:  0,
       staggerDelayBy:     0,
       typeName:           'div',
+      style:              {},
       enterAnimation:     defaultPreset,
       leaveAnimation:     defaultPreset,
     };
