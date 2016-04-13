@@ -85,6 +85,9 @@ storiesOf('FlipMove', module)
       }}
     />
   ))
+  .add('with custom styles', () => (
+    <Controls style={{display: 'flex', justifyContent: 'center'}} />
+  ))
   .add('when prop keys do not change, but items rearrange', () => (
     <StaticItems />
   ))

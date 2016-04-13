@@ -653,7 +653,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      return _react2.default.createElement(this.props.typeName, {
 	        className: this.props.className,
-	        style: { position: 'relative' }
+	        style: _extends({
+	          position: 'relative'
+	        }, this.props.style)
 	      }, this.childrenWithRefs());
 	    }
 	  }]);
@@ -905,6 +907,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    onFinishAll: _react.PropTypes.func,
 	    className: _react.PropTypes.string,
 	    typeName: _react.PropTypes.string,
+	    style: _react.PropTypes.object,
 	    disableAllAnimations: _react.PropTypes.bool,
 	    enterAnimation: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.bool, _react.PropTypes.object]),
 	    leaveAnimation: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.bool, _react.PropTypes.object])
@@ -915,6 +918,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    staggerDurationBy: 0,
 	    staggerDelayBy: 0,
 	    typeName: 'div',
+	    style: {},
 	    enterAnimation: _enterLeavePresets.defaultPreset,
 	    leaveAnimation: _enterLeavePresets.defaultPreset
 	  }, _temp;
