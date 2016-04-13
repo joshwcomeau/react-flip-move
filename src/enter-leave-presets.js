@@ -25,8 +25,6 @@
    },
    'none': false
  };
-enterPresets.accordianVertical = enterPresets.accordionVertical;
-enterPresets.accordianHorizontal = enterPresets.accordionHorizontal;
 
 export const leavePresets = {
   'elevator': {
@@ -47,8 +45,16 @@ export const leavePresets = {
   },
   'none': false
 };
-leavePresets.accordianVertical = leavePresets.accordionVertical;
-leavePresets.accordianHorizontal = leavePresets.accordionHorizontal;
+
+// Embarrassingly enough, v2.0 launched with typo'ed preset names.
+// To avoid penning a new major version over something so inconsequential,
+// we're supporting both spellings. In a future version, these alternatives
+// may be deprecated.
+enterPresets.accordianVertical    = enterPresets.accordionVertical;
+enterPresets.accordianHorizontal  = enterPresets.accordionHorizontal;
+leavePresets.accordianVertical    = leavePresets.accordionVertical;
+leavePresets.accordianHorizontal  = leavePresets.accordionHorizontal;
+
 
 export const defaultPreset = 'elevator';
 export const disablePreset = 'none';
