@@ -168,10 +168,6 @@ class Controls extends Component {
     ))
   }
 
-  loadFonts() {
-    try{Typekit.load({ async: true });}catch(e){}
-  }
-
   render() {
     return (
       <div style={{
@@ -181,15 +177,11 @@ class Controls extends Component {
       }}>
         <div style={{marginBottom: '50px'}}>
           <button onClick={::this.buttonClickHandler}>Remove</button>
-          <button onClick={::this.restore}>add</button>
+          <button onClick={::this.restore}>Restore</button>
         </div>
         <FlipMove {...this.props}>
           { this.renderItems() }
         </FlipMove>
-        <script src="https://use.typekit.net/dvn6lri.js"></script>
-	      <script>
-          { this.loadFonts() }
-        </script>
       </div>
     );
   }

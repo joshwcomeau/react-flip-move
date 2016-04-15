@@ -2,7 +2,7 @@ import { configure } from '@kadira/storybook';
 
 function loadStories() {
   require('../stories/index.js');
-  // require as many as stories you need.
+  require('../stories/github-issues.js');
 }
 
 configure(loadStories, module);
