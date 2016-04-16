@@ -404,13 +404,42 @@ You can supply your own CSS-based transitions to customize the behaviour. Both `
       <li><code>domNodes</code>: An array of the references to the unadulterated DOM node(s) being animated.</li>
       </ul>
 
-      These arguments are similar to the ones provided for <code>onFinish</code>, except we provide an <i>array</i> of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.
+      These arguments are similar to the ones provided for <code>onFinish</code>, except we provide an <i>array</i> of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.<br><br>
 
       In general, it is advisable to ignore the <code>domNodes</code> argument and work with the <code>childElements</code>.
       The <code>domNodes</code> are just an escape hatch for doing complex things not otherwise possible.
 
     </td>
   </tr>
+  <tr>
+    <td valign="top"><code>className</code></td>
+    <td valign="top"><code>String</code></td>
+    <td valign="top"></td>
+    <td valign="top">
+      Flip Move wraps your children in a container element. You may wish to apply a custom class to that wrapping element (for example, for bootstrap-style grids).
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><code>style</code></td>
+    <td valign="top"><code>Object</code></td>
+    <td valign="top"></td>
+    <td valign="top">
+      Flip Move wraps your children in a container element. You may wish to apply custom styles to the wrapping element.<br><br>
+
+      This property is simply passed on to the created container element, so any valid React <code>style</code> object will work.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><code>typeName</code></td>
+    <td valign="top"><code>string</code></td>
+    <td valign="top">'div'</td>
+    <td valign="top">
+      Flip Move wraps your children in a container element. By default, this element is a <code>div</code>, but you may wish to provide a custom HTML element (for example, if your children are list items, you may wish to set this to <code>ul</code>).<br><br>
+
+      Any valid HTML element type is accepted, but peculiar things may happen if you use an unconventional element.
+    </td>
+  </tr>
+
   <tr>
     <td valign="top"><code>disableAnimations</code></td>
     <td valign="top"><code>Boolean</code></td>
