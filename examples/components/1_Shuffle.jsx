@@ -157,12 +157,13 @@ class Shuffle extends Component {
             />
           </div>
         </header>
-        <ul>
+        <div>
           <FlipMove
             staggerDurationBy="30"
             duration={500}
             enterAnimation={this.state.enterLeaveAnimation}
             leaveAnimation={this.state.enterLeaveAnimation}
+            typeName="ul"
             onFinishAll={() => {
               // TODO: Remove the setTimeout, when the bug is fixed.
               setTimeout(() => this.setState({ inProgress: false }), 1);
@@ -190,7 +191,7 @@ class Shuffle extends Component {
               </div>
             </footer>
           </FlipMove>
-        </ul>
+        </div>
       </div>
     );
   }

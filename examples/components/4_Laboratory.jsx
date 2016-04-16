@@ -352,17 +352,18 @@ class CatList extends Component {
   }
   render() {
     return (
-      <ul className="cat-list">
+      <div className="cat-list">
         <FlipMove
           duration={this.props.duration}
           delay={this.props.delay}
           easing={this.formatEasing()}
           staggerDurationBy={this.props.staggerDurationBy}
           staggerDelayBy={this.props.staggerDelayBy}
+          typeName="ul"
         >
           { this.renderCats() }
         </FlipMove>
-      </ul>
+      </div>
     )
   }
 }
