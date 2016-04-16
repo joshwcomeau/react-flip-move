@@ -9,7 +9,7 @@ React Flip Move
 
 This module was built to tackle the common but arduous problem of animating a list of items when the list's order changes.
 
-DOM nodes can't actually reorder themselves; brand new nodes are created instead. Because of this, simple CSS transitions don't work.
+CSS transitions only work for CSS properties. If your list is shuffled, the items have rearranged themselves, but without the use of CSS. The DOM nodes don't know that their on-screen location has changed; they've just been removed and inserted elsewhere in the document.
 
 Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-animations/#the-general-approach) to work out what such a transition would look like, and fakes it using 60+ FPS hardware-accelerated CSS transforms.
 
@@ -129,20 +129,20 @@ v2.0 introduces Enter/Leave animations. For convenience, several presets are pro
 <FlipMove enterAnimation="fade" leaveAnimation="fade" />
 ```
 
-#### Accordion (Vertical)
+#### Accordian (Vertical)
 
-![Accordion (Vertical)](https://s3.amazonaws.com/githubdocs/fm-accordian-vertical.gif)
+![Accordian (Vertical)](https://s3.amazonaws.com/githubdocs/fm-accordian-vertical.gif)
 
 ```js
-<FlipMove enterAnimation="accordionVertical" leaveAnimation="accordionVertical" />
+<FlipMove enterAnimation="accordianVertical" leaveAnimation="accordianVertical" />
 ```
 
-#### Accordion (Horizontal)
+#### Accordian (Horizontal)
 
-![Accordion (Horizontal)](https://s3.amazonaws.com/githubdocs/fm-accordian-horizontal.gif)
+![Accordian (Horizontal)](https://s3.amazonaws.com/githubdocs/fm-accordian-horizontal.gif)
 
 ```js
-<FlipMove enterAnimation="accordionHorizontal" leaveAnimation="accordionHorizontal" />
+<FlipMove enterAnimation="accordianHorizontal" leaveAnimation="accordianHorizontal" />
 ```
 
 #### Custom
@@ -288,8 +288,8 @@ You can supply your own CSS-based transitions to customize the behaviour. Both `
           <ul>
             <li><code>elevator</code> (default)</li>
             <li><code>fade</code></li>
-            <li><code>accordionVertical</code></li>
-            <li><code>accordionHorizontal</code></li>
+            <li><code>accordianVertical</code></li>
+            <li><code>accordianHorizontal</code></li>
             <li><code>none</code></li>
           </ul>
 
@@ -331,8 +331,8 @@ You can supply your own CSS-based transitions to customize the behaviour. Both `
           <ul>
             <li><code>elevator</code> (default)</li>
             <li><code>fade</code></li>
-            <li><code>accordionVertical</code></li>
-            <li><code>accordionHorizontal</code></li>
+            <li><code>accordianVertical</code></li>
+            <li><code>accordianHorizontal</code></li>
             <li><code>none</code></li>
           </ul>
 
