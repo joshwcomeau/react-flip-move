@@ -608,6 +608,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'triggerFinishHooks',
 	    value: function triggerFinishHooks(child, domNode) {
+	      var _this6 = this;
+
 	      if (this.props.onFinish) this.props.onFinish(child, domNode);
 
 	      // Reduce the number of children we need to animate by 1,
@@ -615,28 +617,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.remainingAnimations--;
 
 	      if (this.remainingAnimations === 0) {
-	        try {
-	          if (typeof this.props.onFinishAll === 'function') {
-	            this.props.onFinishAll(this.childrenToAnimate.elements, this.childrenToAnimate.domNodes);
+	        // Reset our variables for the next iteration
+	        this.childrenToAnimate.elements = [];
+	        this.childrenToAnimate.domNodes = [];
+
+	        // Remove any items from the DOM that have left, and reset `entering`.
+	        var nextChildren = this.state.children.filter(function (_ref4) {
+	          var leaving = _ref4.leaving;
+	          return !leaving;
+	        }).map(function (item) {
+	          item.entering = false;
+	          return item;
+	        });
+
+	        this.originalDomStyles = {};
+
+	        this.setState({ children: nextChildren }, function () {
+	          if (typeof _this6.props.onFinishAll === 'function') {
+	            _this6.props.onFinishAll(_this6.childrenToAnimate.elements, _this6.childrenToAnimate.domNodes);
 	          }
-	        } finally {
-	          // Reset our variables for the next iteration
-	          this.childrenToAnimate.elements = [];
-	          this.childrenToAnimate.domNodes = [];
-
-	          // Remove any items from the DOM that have left, and reset `entering`.
-	          var nextChildren = this.state.children.filter(function (_ref4) {
-	            var leaving = _ref4.leaving;
-	            return !leaving;
-	          }).map(function (item) {
-	            item.entering = false;
-	            return item;
-	          });
-
-	          this.originalDomStyles = {};
-
-	          this.setState({ children: nextChildren });
-	        }
+	        });
 	      }
 	    }
 	  }, {

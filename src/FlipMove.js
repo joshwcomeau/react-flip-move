@@ -427,29 +427,27 @@ class FlipMove extends Component {
     this.remainingAnimations--;
 
     if ( this.remainingAnimations === 0 ) {
-      try {
+      // Reset our variables for the next iteration
+      this.childrenToAnimate.elements = [];
+      this.childrenToAnimate.domNodes = [];
+
+      // Remove any items from the DOM that have left, and reset `entering`.
+      const nextChildren = this.state.children
+        .filter( ({leaving}) => !leaving )
+        .map( item => {
+          item.entering = false;
+          return item;
+        });
+
+      this.originalDomStyles = {}
+
+      this.setState({ children: nextChildren }, () => {
         if ( typeof this.props.onFinishAll === 'function' ) {
           this.props.onFinishAll(
             this.childrenToAnimate.elements, this.childrenToAnimate.domNodes
           );
         }
-      } finally {
-        // Reset our variables for the next iteration
-        this.childrenToAnimate.elements = [];
-        this.childrenToAnimate.domNodes = [];
-
-        // Remove any items from the DOM that have left, and reset `entering`.
-        const nextChildren = this.state.children
-          .filter( ({leaving}) => !leaving )
-          .map( item => {
-            item.entering = false;
-            return item;
-          });
-
-        this.originalDomStyles = {}
-
-        this.setState({ children: nextChildren });
-      }
+      });
     }
   }
 
