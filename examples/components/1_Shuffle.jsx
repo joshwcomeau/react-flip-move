@@ -165,8 +165,7 @@ class Shuffle extends Component {
             leaveAnimation={this.state.enterLeaveAnimation}
             typeName="ul"
             onFinishAll={() => {
-              // TODO: Remove the setTimeout, when the bug is fixed.
-              setTimeout(() => this.setState({ inProgress: false }), 1);
+              this.setState({ inProgress: false });
             }}
           >
             { this.renderArticles() }
