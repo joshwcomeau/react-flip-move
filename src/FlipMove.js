@@ -380,7 +380,11 @@ class FlipMove extends Component {
     // We also need to unbind it when the transition completes, so this ugly
     // inline function is required (we need it here so it closes over
     // dependent variables `child` and `domNode`)
-    const transitionEndHandler = () => {
+    const transitionEndHandler = (ev) => {
+      // It's possible that this handler is fired not on our primary transition,
+      // but on a nested transition (eg. a hover effect). Ignore these cases.
+      if ( ev.srcElement !== domNode ) return;
+
       // Remove the 'transition' inline style we added. This is cleanup.
       domNode.style.transition = '';
 
