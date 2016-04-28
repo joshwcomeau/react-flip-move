@@ -565,7 +565,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // We also need to unbind it when the transition completes, so this ugly
 	      // inline function is required (we need it here so it closes over
 	      // dependent variables `child` and `domNode`)
-	      var transitionEndHandler = function transitionEndHandler() {
+	      var transitionEndHandler = function transitionEndHandler(ev) {
+	        // It's possible that this handler is fired not on our primary transition,
+	        // but on a nested transition (eg. a hover effect). Ignore these cases.
+	        if (ev.srcElement !== domNode) return;
+
 	        // Remove the 'transition' inline style we added. This is cleanup.
 	        domNode.style.transition = '';
 
