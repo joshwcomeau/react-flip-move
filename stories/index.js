@@ -85,8 +85,17 @@ storiesOf('FlipMove', module)
       }}
     />
   ))
-  .add('with custom styles', () => (
+  .add('with centered flex content', () => (
     <Controls style={{display: 'flex', justifyContent: 'center'}} />
+  ))
+  .add('with transition on child', () => (
+    <Controls
+      styleFirstChild={true}
+      firstChildInnerStyles={{
+        transition: '100ms',
+        backgroundColor: '#F00'
+      }}
+    />
   ))
   .add('when prop keys do not change, but items rearrange', () => (
     <StaticItems />
@@ -101,6 +110,11 @@ const items = [
 
 ]
 class Controls extends Component {
+  static defaultProps = {
+    firstChildOuterStyles: {},
+    firstChildInnerStyles: {}
+  };
+
   constructor() {
     super();
     this.state = { items: items.slice() }
@@ -123,7 +137,7 @@ class Controls extends Component {
         break;
 
       default:
-        newItems = shuffle(items);
+        newItems = shuffle(this.state.items);
         break;
     }
 
@@ -157,15 +171,32 @@ class Controls extends Component {
       fontFamily: 'sans-serif',
       borderRadius: '4px'
     }
-    return this.state.items.map( item => (
-      <li
-        style={stylesOuter}
+
+    return this.state.items.map( (item, i) => {
+      // Make a working copy of styles
+      let stylesOuterCopy = { ...stylesOuter };
+      let stylesInnerCopy = { ...stylesInner };
+
+      if ( this.props.styleFirstChild && item.name === 'Potent Potables' ) {
+        stylesOuterCopy = {
+          ...stylesOuterCopy,
+          ...this.props.firstChildOuterStyles
+        };
+
+        stylesInnerCopy = {
+          ...stylesInnerCopy,
+          ...this.props.firstChildInnerStyles
+        };
+      }
+
+      return <li
         key={item.name}
+        style={stylesOuterCopy}
         onClick={() => this.listItemClickHandler(item)}
       >
-        <div style={stylesInner}>{item.name}</div>
+        <div style={stylesInnerCopy}><button style={{transition: '0.1s background-color'}}>{item.name}</button></div>
       </li>
-    ))
+    });
   }
 
   render() {

@@ -354,6 +354,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return key === child.key;
 	        });
 
+	        // If the child isn't leaving (or, if there is no leave animation),
+	        // we don't need to add it into the state children.
 	        if (!isLeaving || !_this3.props.leaveAnimation) return;
 
 	        var nextChild = _extends({}, child, { leaving: true });

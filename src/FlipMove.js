@@ -163,6 +163,8 @@ class FlipMove extends Component {
     this.state.children.forEach( (child, index) => {
       const isLeaving = !nextChildren.find( ({key}) => key === child.key );
 
+      // If the child isn't leaving (or, if there is no leave animation),
+      // we don't need to add it into the state children.
       if ( !isLeaving || !this.props.leaveAnimation ) return;
 
       let nextChild = { ...child, leaving: true };
