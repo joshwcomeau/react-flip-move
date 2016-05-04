@@ -46,8 +46,9 @@ For more information on its implementation, see the documentation below.
 npm i -S react-flip-move
 ```
 
-UMD builds are also available, in `/dist`.
-
+UMD builds are also available via CDN:
+* [react-flip-move.js](https://npmcdn.com/react-flip-move@2.1.2/dist/react-flip-move.js)
+* [react-flip-move.min.js](https://npmcdn.com/react-flip-move@2.1.2/dist/react-flip-move.min.js)
 
 
 ## Features
