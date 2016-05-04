@@ -183,8 +183,14 @@ class FlipMove extends Component {
     // Compare to the bounding boxes stored in state.
     // Animate as required =)
 
-    // If we've decided to disable animations, we don't want to run any of this!
-    if ( this.isAnimationDisabled() ) return;
+    // There are two situations in which we want to skip all animations.
+    //   - Developer has specifically disabled animations
+    //   - User is running in a browser without CSS transition support
+    //
+    // In either case, simply set the children to their new values.
+    if ( this.isAnimationDisabled() || !transitionEnd ) {
+      return this.setState({ children: this.props.children });
+    }
 
     this.parentBox = this.parentElement.getBoundingClientRect();
 
