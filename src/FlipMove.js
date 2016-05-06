@@ -389,7 +389,7 @@ class FlipMove extends Component {
     const transitionEndHandler = (ev) => {
       // It's possible that this handler is fired not on our primary transition,
       // but on a nested transition (eg. a hover effect). Ignore these cases.
-      if ( ev.srcElement !== domNode ) return;
+      if ( ev.target !== domNode ) return;
 
       // Remove the 'transition' inline style we added. This is cleanup.
       domNode.style.transition = '';
