@@ -252,6 +252,14 @@ class FlipMove extends Component {
       this.addChildToAnimationsList(child);
       this.runAnimation(child, index);
     });
+
+    // Trigger the onStartAll callback, if provided.
+    if ( this.props.onStartAll ) {
+      this.props.onStartAll(
+        this.childrenToAnimate.elements,
+        this.childrenToAnimate.domNodes
+      );
+    }
   }
 
 

@@ -97,6 +97,11 @@ storiesOf('FlipMove', module)
       }}
     />
   ))
+  .add('with onStartAll callback', () => (
+    <Controls
+      onStartAll={(elements, nodes) => console.log("Started with", elements, nodes)}
+    />
+  ))
   .add('when prop keys do not change, but items rearrange', () => (
     <StaticItems />
   ))
