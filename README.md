@@ -494,7 +494,7 @@ Any valid HTML element type is accepted, but peculiar things may happen if you u
 
 ---
 
-### `disableAnimations`
+### `disableAllAnimations`
 
 | **Accepted Types:** | **Default Value** |
 |---------------------|-------------------|
