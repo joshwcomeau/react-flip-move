@@ -25,7 +25,6 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/laboratory" target="_blank">__Laboratory__</a>
 
 
-
 ## Version 2.0
 
 This release's big feature is **Enter/Leave Animations**. It's been requested a ton, and I'm happy with how it's come out.
@@ -178,302 +177,302 @@ You can supply your own CSS-based transitions to customize the behaviour. Both `
 
 ## Options
 
-<table>
-  <tr>
-    <th valign="bottom">Option</th>
-    <th valign="bottom">Accepted<br>Type(s)</th>
-    <th valign="bottom">Default</th>
-    <th valign="bottom">Details</th>
-  </tr>
-  <tr>
-    <td valign="top"><code>children</code></td>
-    <td valign="top">
-      <code>Array</code>
-      <code>Object</code>
-    </td>
-    <td valign="top"></td>
-    <td valign="top">
-      The children passed to FlipMove are the component(s) or DOM element(s) that will be moved about. Accepts either a single child (as long as it has a unique <code>key</code> property) or an array of children.
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><code>duration</code></td>
-    <td valign="top">
-      <code>Integer</code>
-      <code>String</code>
-    </td>
-    <td valign="top">350</td>
-    <td valign="top">The length, in milliseconds, that the transition ought to take.</td>
-  </tr>
-  <tr>
-    <td valign="top"><code>easing</code></td>
-    <td valign="top"><code>String</code></td>
-    <td valign="top">"ease-in-out"</td>
-    <td valign="top">Any valid CSS3 timing function (eg. "linear", "ease-in", "cubic-bezier(1, 0, 0, 1)").</td>
-  </tr>
-  <tr>
-    <td valign="top"><code>delay</code></td>
-    <td valign="top">
-      <code>Integer</code>
-      <code>String</code>
-    </td>
-    <td valign="top">0</td>
-    <td valign="top">The length, in milliseconds, to wait before the animation begins.</td>
-  </tr>
-  <tr>
-    <td valign="top"><code>staggerDurationBy</code></td>
-    <td valign="top">
-      <code>Integer</code>
-      <code>String</code>
-    </td>
-    <td valign="top">0</td>
-    <td valign="top">
-      The length, in milliseconds, to be added to the duration of each subsequent element.
-      <br><br>
-      For example, if you are animating 4 elements with a <code>duration</code> of 200 and a <code>staggerDurationBy</code> of 20:
-      <br>
-      <ul>
-        <li>The first element will take 200ms to transition.</li>
-        <li>The second element will take 220ms to transition.</li>
-        <li>The third element will take 240ms to transition.</li>
-        <li>The fourth element will take 260ms to transition.</li>
-      </ul>
+### `children`
 
-      This effect is great for "humanizing" transitions and making them feel less robotic.
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><code>staggerDelayBy</code></td>
-    <td valign="top">
-      <code>Integer</code>
-      <code>String</code>
-    </td>
-    <td valign="top">0</td>
-    <td valign="top">
-      The length, in milliseconds, to be added to the delay of each subsequent element.
-      <br><br>
-      For example, if you are animating 4 elements with a <code>delay</code> of 0 and a <code>staggerDelayBy</code> of 20:
-      <br>
-      <ul>
-        <li>The first element will start transitioning immediately.</li>
-        <li>The second element will start transitioning after 20ms.</li>
-        <li>The third element will start transitioning after 40ms.</li>
-        <li>The fourth element will start transitioning after 60ms.</li>
-      </ul>
-
-      Similarly to <code>staggerDurationBy</code>, This effect is great for "humanizing" transitions and making them feel less robotic.
-      <br><br>
-      <strong>Protip:</strong> You can make elements animate one at a time by using an identical <code>duration</code> and <code>staggerDelayBy</code>.
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><code>enterAnimation</code></td>
-    <td valign="top">
-      <code>String</code>
-      <code>Boolean</code>
-      <code>Object</code>
-    </td>
-    <td valign="top">'elevator'</td>
-    <td valign="top">
-      Control the onEnter animation that runs when new items are added to the DOM.
-      <br><br>
-      For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move#enterleave-animations">feature description above</a></strong>
-
-      <br><br>
-      Accepts several types:
-      <br><br>
-
-      <ul>
-        <li>
-          <strong>String: </strong> You can enter one of the following presets to select that as your enter animation:
-          <ul>
-            <li><code>elevator</code> (default)</li>
-            <li><code>fade</code></li>
-            <li><code>accordianVertical</code></li>
-            <li><code>accordianHorizontal</code></li>
-            <li><code>none</code></li>
-          </ul>
-
-          <br><a href="https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js">View the CSS implementation of these presets.</a>
-          <br><br>
-        </li>
-        <li>
-          <strong>Boolean: </strong> You can enter <code>false</code> to disable the enter animation, or <code>true</code> to select the default enter animation (<code>elevator</code>).
-          <br><br>
-        </li>
-        <li>
-          <strong>Object: </strong> For fully granular control, you can pass in an object that contains the styles you'd like to animate.
-          <br><br>
-          It requires two keys: <code>from</code> and <code>to</code>. Each key holds an object of CSS properties. You can supply any valid camelCase CSS properties, and flip-move will transition between the two, over the course of the specified <code>duration</code>.
-          <br><br>
-          It is recommended that you stick to hardware-accelerated CSS properties for optimal performance: <code>transform</code> and <code>opacity</code>.
-        </li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><code>leaveAnimation</code></td>
-    <td valign="top">
-      <code>String</code>
-      <code>Boolean</code>
-      <code>Object</code>
-    </td>
-    <td valign="top">'elevator'</td>
-    <td valign="top">
-      Control the onLeave animation that runs when items are removed from the DOM.
-      <br><br>
-      For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move#enterleave-animations">feature description above</a></strong>
-      <br><br>
-      Accepts several types:
-      <br><br>
-      <ul>
-        <li>
-          <strong>String: </strong> You can enter one of the following presets to select that as your leave animation:
-          <ul>
-            <li><code>elevator</code> (default)</li>
-            <li><code>fade</code></li>
-            <li><code>accordianVertical</code></li>
-            <li><code>accordianHorizontal</code></li>
-            <li><code>none</code></li>
-          </ul>
-
-          <br><a href="https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js">View the CSS implementation of these presets.</a>
-          <br><br>
-        </li>
-        <li>
-          <strong>Boolean: </strong> You can enter <code>false</code> to disable the leave animation, or <code>true</code> to select the default leave animation (<code>elevator</code>).
-          <br>
-        </li>
-        <li>
-          <strong>Object: </strong> For fully granular control, you can pass in an object that contains the styles you'd like to animate.
-          <br><br>
-          It requires two keys: <code>from</code> and <code>to</code>. Each key holds an object of CSS properties. You can supply any valid camelCase CSS properties, and flip-move will transition between the two, over the course of the specified <code>duration</code>.
-          <br><br>
-          It is recommended that you stick to hardware-accelerated CSS properties for optimal performance: <code>transform</code> and <code>opacity</code>.
-        </li>
-      </ul>
-    </td>
-  </tr>  
-  <tr>
-    <td valign="top"><code>onStart</code></td>
-    <td valign="top"><code>Function</code></td>
-    <td valign="top"></td>
-    <td valign="top">
-      A callback to be invoked <strong>once per child element</strong> at the start of the animation.
-      <br><br>
-      The callback is invoked with two arguments:
-
-      <ul>
-        <li><code>childElement</code>: A reference to the React Element being animated.</li>
-        <li><code>domNode</code>: A reference to the unadulterated DOM node being animated.</li>
-      </ul>
-
-      In general, it is advisable to ignore the <code>domNode</code> argument and work with the <code>childElement</code>.
-      The <code>domNode</code> is just an escape hatch for doing complex things not otherwise possible.
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><code>onFinish</code></td>
-    <td valign="top"><code>Function</code></td>
-    <td valign="top"></td>
-    <td valign="top">
-      A callback to be invoked <strong>once per child element</strong> at the end of the animation.
-      <br><br>
-      The callback is invoked with two arguments:
-
-      <ul>
-      <li><code>childElement</code>: A reference to the React Element being animated.</li>
-      <li><code>domNode</code>: A reference to the unadulterated DOM node being animated.</li>
-      </ul>
-
-      In general, it is advisable to ignore the <code>domNode</code> argument and work with the <code>childElement</code>.
-      The <code>domNode</code> is just an escape hatch for doing complex things not otherwise possible.
-
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><code>onStartAll</code></td>
-    <td valign="top"><code>Function</code></td>
-    <td valign="top"></td>
-    <td valign="top">
-      A callback to be invoked <strong>once per group</strong> at the start of the animation.
-      <br><br>
-      The callback is invoked with two arguments:
-
-      <ul>
-      <li><code>childElements</code>: An array of the references to the React Element(s) being animated.</li>
-      <li><code>domNodes</code>: An array of the references to the unadulterated DOM node(s) being animated.</li>
-      </ul>
-
-      These arguments are similar to the ones provided for <code>onStart</code>, except we provide an <i>array</i> of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.<br><br>
-
-      In general, it is advisable to ignore the <code>domNodes</code> argument and work with the <code>childElements</code>.
-      The <code>domNodes</code> are just an escape hatch for doing complex things not otherwise possible.
-
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><code>onFinishAll</code></td>
-    <td valign="top"><code>Function</code></td>
-    <td valign="top"></td>
-    <td valign="top">
-      A callback to be invoked <strong>once per group</strong> at the end of the animation.
-      <br><br>
-      The callback is invoked with two arguments:
-
-      <ul>
-      <li><code>childElements</code>: An array of the references to the React Element(s) being animated.</li>
-      <li><code>domNodes</code>: An array of the references to the unadulterated DOM node(s) being animated.</li>
-      </ul>
-
-      These arguments are similar to the ones provided for <code>onFinish</code>, except we provide an <i>array</i> of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.<br><br>
-
-      In general, it is advisable to ignore the <code>domNodes</code> argument and work with the <code>childElements</code>.
-      The <code>domNodes</code> are just an escape hatch for doing complex things not otherwise possible.
-
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><code>className</code></td>
-    <td valign="top"><code>String</code></td>
-    <td valign="top"></td>
-    <td valign="top">
-      Flip Move wraps your children in a container element. You may wish to apply a custom class to that wrapping element (for example, for bootstrap-style grids).
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><code>style</code></td>
-    <td valign="top"><code>Object</code></td>
-    <td valign="top"></td>
-    <td valign="top">
-      Flip Move wraps your children in a container element. You may wish to apply custom styles to the wrapping element.<br><br>
-
-      This property is simply passed on to the created container element, so any valid React <code>style</code> object will work.
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><code>typeName</code></td>
-    <td valign="top"><code>string</code></td>
-    <td valign="top">'div'</td>
-    <td valign="top">
-      Flip Move wraps your children in a container element. By default, this element is a <code>div</code>, but you may wish to provide a custom HTML element (for example, if your children are list items, you may wish to set this to <code>ul</code>).<br><br>
-
-      Any valid HTML element type is accepted, but peculiar things may happen if you use an unconventional element.
-    </td>
-  </tr>
-
-  <tr>
-    <td valign="top"><code>disableAnimations</code></td>
-    <td valign="top"><code>Boolean</code></td>
-    <td valign="top">false</td>
-    <td valign="top">
-      Sometimes, you may wish to temporarily disable the animations and have the normal behaviour resumed. Setting this flag to <code>true</code> skips all animations.
-    </td>
-  </tr>
-
-</table>
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Array`, `Object` | `undefined` |
 
 
+The children passed to FlipMove are the component(s) or DOM element(s) that will be moved about. Accepts either a single child (as long as it has a unique `key` property) or an array of children.
+
+---
+
+### `easing`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `String` | "ease-in-out" |
+
+
+Any valid CSS3 timing function (eg. "linear", "ease-in", "cubic-bezier(1, 0, 0, 1)").
+
+---
+
+### `duration`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Number` | `350` |
+
+
+The length, in milliseconds, that the transition ought to take.
+
+
+---
+
+### `delay`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Number` | `0` |
+
+
+The length, in milliseconds, to wait before the animation begins.
+
+---
+
+### `staggerDurationBy`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Number` | `0` |
+
+
+The length, in milliseconds, to be added to the duration of each subsequent element.
+
+For example, if you are animating 4 elements with a `duration` of 200 and a `staggerDurationBy` of 20:
+
+* The first element will take 200ms to transition.
+* The second element will take 220ms to transition.
+* The third element will take 240ms to transition.
+* The fourth element will take 260ms to transition.
+
+This effect is great for "humanizing" transitions and making them feel less robotic.
+
+---
+
+### `staggerDelayBy`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Number` | `0` |
+
+
+The length, in milliseconds, to be added to the delay of each subsequent element.
+
+For example, if you are animating 4 elements with a `delay` of 0 and a `staggerDelayBy` of 20:
+
+* The first element will start transitioning immediately.
+* The second element will start transitioning after 20ms.
+* The third element will start transitioning after 40ms.
+* The fourth element will start transitioning after 60ms.
+
+Similarly to staggerDurationBy, This effect is great for "humanizing" transitions and making them feel less robotic.
+
+**Protip:** You can make elements animate one-at-a-time by using an identical `duration` and `staggerDelayBy`.
+
+---
+
+### `enterAnimation`
+
+| **Accepted Types:**            | **Default Value** |
+|--------------------------------|-------------------|
+|  `String`, `Boolean`, `Object` | 'elevator'        |
+
+Control the onEnter animation that runs when new items are added to the DOM. For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move#enterleave-animations">feature description above</a></strong>.
+
+Accepts several types:
+
+**String:** You can enter one of the following presets to select that as your enter animation:
+  * `elevator` (default)
+  * `fade`
+  * `accordionVertical`
+  * `accordionHorizontal`
+  * `none`
+
+<a href="https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js">View the CSS implementation of these presets.</a>
+
+**Boolean:** You can enter `false` to disable the enter animation, or `true` to select the default enter animation (elevator).
+
+**Object:** For fully granular control, you can pass in an object that contains the styles you'd like to animate.
+
+It requires two keys: `from` and `to`. Each key holds an object of CSS properties. You can supply any valid camelCase CSS properties, and flip-move will transition between the two, over the course of the specified `duration`.
+
+Example:
+
+```js
+const customEnterAnimation = {
+  from: { transform: 'scale(0.5, 1)' },
+  to:   { transform: 'scale(1, 1)' }
+};
+
+<FlipMove enterAnimation={customEnterAnimation}>
+  {renderChildren()}
+</FlipMove>
+```
+
+It is recommended that you stick to hardware-accelerated CSS properties for optimal performance: transform and opacity.
+
+---
+
+### `leaveAnimation`
+
+| **Accepted Types:**            | **Default Value** |
+|--------------------------------|-------------------|
+|  `String`, `Boolean`, `Object` | 'elevator'        |
+
+Control the onLeave animation that runs when new items are removed from the DOM. For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move#enterleave-animations">feature description above</a></strong>.
+
+This property functions identically to `enterAnimation`.
+
+Accepts several types:
+
+**String:** You can enter one of the following presets to select that as your enter animation:
+  * `elevator` (default)
+  * `fade`
+  * `accordionVertical`
+  * `accordionHorizontal`
+  * `none`
+
+<a href="https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js">View the CSS implementation of these presets.</a>
+
+**Boolean:** You can enter `false` to disable the leave animation, or `true` to select the default leave animation (elevator).
+
+**Object:** For fully granular control, you can pass in an object that contains the styles you'd like to animate.
+
+It requires two keys: `from` and `to`. Each key holds an object of CSS properties. You can supply any valid camelCase CSS properties, and flip-move will transition between the two, over the course of the specified `duration`.
+
+Example:
+
+```js
+const customLeaveAnimation = {
+  from: { transform: 'scale(1, 1)' },
+  to:   { transform: 'scale(0.5, 1) translateY(-20px)' }
+};
+
+<FlipMove leaveAnimation={customLeaveAnimation}>
+  {renderChildren()}
+</FlipMove>
+```
+
+It is recommended that you stick to hardware-accelerated CSS properties for optimal performance: transform and opacity.
+
+---
+
+### `onStart`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Function`         | `undefined`       |
+
+
+A callback to be invoked **once per child element** at the start of the animation.
+
+The callback is invoked with two arguments:
+
+* `childElement`: A reference to the React Element being animated.
+* `domNode`: A reference to the unadulterated DOM node being animated.
+
+In general, it is advisable to ignore the `domNode` argument and work with the `childElement`. The `domNode` is just an escape hatch for doing complex things not otherwise possible.
+
+---
+
+### `onFinish`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Function`         | `undefined`       |
+
+
+A callback to be invoked **once per child element** at the end of the animation.
+
+The callback is invoked with two arguments:
+
+* `childElement`: A reference to the React Element being animated.
+* `domNode`: A reference to the unadulterated DOM node being animated.
+
+In general, it is advisable to ignore the `domNode` argument and work with the `childElement`. The `domNode` is just an escape hatch for doing complex things not otherwise possible.
+
+---
+
+### `onStartAll`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Function`         | `undefined`       |
+
+
+A callback to be invoked **once per group** at the start of the animation.
+
+The callback is invoked with two arguments:
+
+* `childElements`: An array of the references to the React Element(s) being animated.
+* `domNodes`: An array of the references to the unadulterated DOM node(s) being animated.
+
+These arguments are similar to the ones provided for `onStart`, except we provide an *array* of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.
+
+In general, it is advisable to ignore the `domNodes` argument and work with the `childElements`. The `domNodes` are just an escape hatch for doing complex things not otherwise possible.
+
+---
+
+### `onFinishAll`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Function`         | `undefined`       |
+
+
+A callback to be invoked **once per group** at the end of the animation.
+
+The callback is invoked with two arguments:
+
+* `childElements`: An array of the references to the React Element(s) being animated.
+* `domNodes`: An array of the references to the unadulterated DOM node(s) being animated.
+
+These arguments are similar to the ones provided for `onFinish`, except we provide an *array* of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.
+
+In general, it is advisable to ignore the `domNodes` argument and work with the `childElements`. The `domNodes` are just an escape hatch for doing complex things not otherwise possible.
+
+---
+
+### `style`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Object`           | `undefined`       |
+
+
+Flip Move wraps your children in a container element. You may wish to apply custom styles to the wrapping element.
+
+This property is simply passed on to the created container element, so any valid React `style` object will work.
+
+---
+
+### `className`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `String`           | `undefined`       |
+
+
+Flip Move wraps your children in a container element. You may wish to apply a custom class to that wrapping element (for example, for bootstrap-style grids).
+
+---
+
+### `typeName`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `String`           | 'div'             |
+
+
+Flip Move wraps your children in a container element. By default, this element is a `div`, but you may wish to provide a custom HTML element (for example, if your children are list items, you may wish to set this to `ul`).
+
+Any valid HTML element type is accepted, but peculiar things may happen if you use an unconventional element.
+
+---
+
+### `disableAnimations`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Boolean`          | `false`           |
+
+
+Sometimes, you may wish to temporarily disable the animations and have the normal behaviour resumed. Setting this flag to `true` skips all animations.
+
+---
 
 ## Gotchas
 
