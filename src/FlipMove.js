@@ -413,8 +413,11 @@ class FlipMove extends Component {
 
 
   getPositionDelta(domNode, key) {
+    // TEMP: A mystery bug is sometimes causing unnecessary boundingBoxes to
+    // remain. Until this bug can be solved, this band-aid fix does the job:
+    const defaultBox = { left: 0, top: 0 };
     const newBox  = domNode.getBoundingClientRect();
-    const oldBox  = this.boundingBoxes[key];
+    const oldBox  = this.boundingBoxes[key] || defaultBox;
     const relativeBox = {
       top:  newBox.top - this.parentBox.top,
       left: newBox.left - this.parentBox.left
