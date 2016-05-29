@@ -61,7 +61,7 @@
     "karma-chrome-launcher": "^0.2.2",
     "karma-mocha": "^0.2.1",
     "karma-sinon": "^1.0.4",
-    "karma-sinon-chai": "^1.1.0",
+    "karma-sinon-chai": "1.1.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
     "lodash": "^4.3.0",
@@ -73,5 +73,8 @@
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.12.11"
+  },
+  "dependencies": {
+    "lodash.omit": "^4.3.0"
   }
 }

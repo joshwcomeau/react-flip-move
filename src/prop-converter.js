@@ -12,6 +12,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import omit from 'lodash.omit';
 
 import { convertToInt } from './helpers.js';
 import {
@@ -54,6 +55,22 @@ function propConverter(ComposedComponent) {
         workingProps.disableAnimations = undefined;
         workingProps.disableAllAnimations = props.disableAnimations;
       }
+
+      // Gather any additional props; they will be delegated to the
+      // ReactElement created.
+      const primaryPropKeys = Object.keys(Converter.propTypes);
+      const delegatedProps = omit(this.props, primaryPropKeys);
+
+      // The FlipMove container element needs to have a non-static position.
+      // We use `relative` by default, but it can be overridden by the user.
+      // Now that we're delegating props, we need to merge this in.
+      delegatedProps.style = {
+        position: 'relative',
+        ...delegatedProps.style
+      };
+
+      workingProps = omit(workingProps, delegatedProps);
+      workingProps.delegated = delegatedProps;
 
       return workingProps;
     }
@@ -133,9 +150,7 @@ function propConverter(ComposedComponent) {
       onFinish:             PropTypes.func,
       onStartAll:           PropTypes.func,
       onFinishAll:          PropTypes.func,
-      className:            PropTypes.string,
       typeName:             PropTypes.string,
-      style:                PropTypes.object,
       disableAllAnimations: PropTypes.bool,
       enterAnimation:       PropTypes.oneOfType([
                               PropTypes.string,
@@ -157,7 +172,6 @@ function propConverter(ComposedComponent) {
       staggerDurationBy:  0,
       staggerDelayBy:     0,
       typeName:           'div',
-      style:              {},
       enterAnimation:     defaultPreset,
       leaveAnimation:     defaultPreset,
     };

@@ -485,13 +485,7 @@ class FlipMove extends Component {
   render() {
     return React.createElement(
       this.props.typeName,
-      {
-        className: this.props.className,
-        style: {
-          position: 'relative',
-          ...this.props.style
-        }
-      },
+      this.props.delegated,
       this.childrenWithRefs()
     );
   }
