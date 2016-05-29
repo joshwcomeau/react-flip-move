@@ -26,7 +26,6 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
 
 ## Table of Contents
 
-* [Version 2.0](https://github.com/joshwcomeau/react-flip-move#version-20)
 * [Installation](https://github.com/joshwcomeau/react-flip-move#installation)
 * [Features](https://github.com/joshwcomeau/react-flip-move#features)
 * [Quickstart](https://github.com/joshwcomeau/react-flip-move#quickstart)
@@ -49,24 +48,12 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
   * [className](https://github.com/joshwcomeau/react-flip-move#classname)
   * [typeName](https://github.com/joshwcomeau/react-flip-move#typename)
   * [disableAllAnimations](https://github.com/joshwcomeau/react-flip-move#disableallanimations)
+  * [HTML Attributes](https://github.com/joshwcomeau/react-flip-move#html-attributes)
 * [Gotchas](https://github.com/joshwcomeau/react-flip-move#gotchas)
 * [Changelog](https://github.com/joshwcomeau/react-flip-move#changelog)
 * [Contributions](https://github.com/joshwcomeau/react-flip-move#contributions)
 * [Development](https://github.com/joshwcomeau/react-flip-move#development)
 * [License](https://github.com/joshwcomeau/react-flip-move#license)
-
-
-## Version 2.0
-
-This release's big feature is **Enter/Leave Animations**. It's been requested a ton, and I'm happy with how it's come out.
-
-For more information on its implementation, see the documentation below.
-
-#### Breaking Changes
-
-* Items entering or leaving will now have an animation applied to them (the default is a preset called `elevator`, a combination of fading and scaling). If you want to retain the original behaviour, set `enterAnimation` and `leaveAnimation` to `false`, in the <FlipMove> props.
-
-* Renamed `disableAnimations` to `disableAllAnimations`, since there are now multiple animation types and this boolean disables them all.
 
 
 
@@ -457,30 +444,6 @@ In general, it is advisable to ignore the `domNodes` argument and work with the 
 
 ---
 
-### `style`
-
-| **Accepted Types:** | **Default Value** |
-|---------------------|-------------------|
-|  `Object`           | `undefined`       |
-
-
-Flip Move wraps your children in a container element. You may wish to apply custom styles to the wrapping element.
-
-This property is simply passed on to the created container element, so any valid React `style` object will work.
-
----
-
-### `className`
-
-| **Accepted Types:** | **Default Value** |
-|---------------------|-------------------|
-|  `String`           | `undefined`       |
-
-
-Flip Move wraps your children in a container element. You may wish to apply a custom class to that wrapping element (for example, for bootstrap-style grids).
-
----
-
 ### `typeName`
 
 | **Accepted Types:** | **Default Value** |
@@ -502,6 +465,36 @@ Any valid HTML element type is accepted, but peculiar things may happen if you u
 
 
 Sometimes, you may wish to temporarily disable the animations and have the normal behaviour resumed. Setting this flag to `true` skips all animations.
+
+---
+
+### HTML Attributes
+
+FlipMove creates its own DOM node to wrap the children it needs to animate. Sometimes, you'll want to be able to pass specific HTML attributes to this node.
+
+All props other than the ones listed above will be delegated to this new node, so you can apply them directly to FlipMove. For example:
+
+```html
+<div>
+  <FlipMove typeName="ul" className="row" style={{ backgroundColor: 'red' }}>
+    <li className="col">Column 1</li>
+    <li className="col">Column 2</li>
+  </FlipMove>
+</div>
+```
+
+FlipMove passes the `className` and `style` props along to the `ul` that needs to be created. Here's how it renders:
+
+```html
+<div>
+  <ul class="row" style="background-color: red">
+    <li class="col">Column 1</li>
+    <li class="col">Column 2</li>
+  </ul>
+</div>
+```
+
+This works for all HTML props - there's no validation.
 
 ---
 

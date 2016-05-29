@@ -105,6 +105,9 @@ storiesOf('FlipMove', module)
   .add('when prop keys do not change, but items rearrange', () => (
     <StaticItems />
   ))
+  .add('delegated prop - width', () => (
+    <Controls typeName="table" width="50%" />
+  ))
 
 // Controlling component
 const items = [
