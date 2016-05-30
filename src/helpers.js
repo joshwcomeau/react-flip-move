@@ -47,7 +47,20 @@ export function whichTransitionEvent() {
 
   const el = document.createElement('fakeelement');
 
-  for ( let t in transitions ) {
+  for ( const t in transitions ) {
     if ( el.style[t] !== undefined ) return transitions[t];
   }
+}
+
+export function fetchTransformFromNode(node) {
+  const style = window.getComputedStyle(node);
+
+  const transform = style.getPropertyValue('-webkit-transform') ||
+    style.getPropertyValue('-moz-transform') ||
+    style.getPropertyValue('-ms-transform') ||
+    style.getPropertyValue('-o-transform') ||
+    style.getPropertyValue('transform');
+
+  // Return undefined if no transform is set.
+  return transform !== 'none' ? transform : undefined;
 }

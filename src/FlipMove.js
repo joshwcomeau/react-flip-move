@@ -20,7 +20,10 @@ import ReactDOM from 'react-dom';
 import './polyfills';
 import propConverter from './prop-converter';
 import {
-  whichTransitionEvent, filterNewItems, applyStylesToDOMNode
+  whichTransitionEvent,
+  filterNewItems,
+  applyStylesToDOMNode,
+  fetchTransformFromNode
 } from './helpers.js';
 
 const transitionEnd = whichTransitionEvent();
@@ -283,9 +286,21 @@ class FlipMove extends Component {
         };
       }
     } else {
-      let domNode       = ReactDOM.findDOMNode( this.refs[child.key] );
-      const [ dX, dY ]  = this.getPositionDelta(domNode, child.key);
-      style.transform   = `translate(${dX}px, ${dY}px)`;
+      let domNode = ReactDOM.findDOMNode( this.refs[child.key] );
+
+      // Preserve the existing transform; we'll want to combine it with the
+      // calculated one. This allows for graceful interrupts.
+      const initialTransform = fetchTransformFromNode(domNode);
+
+      const [ dX, dY ] = this.getPositionDelta(domNode, child.key);
+      const newTransform = `translate(${dX}px, ${dY}px)`;
+
+      // We can simply concatenate the two transforms, because initialTransform
+      // will always be a `matrix`, so `transform: matrix(...) translate(...)`
+      // is valid :)
+      style.transform = initialTransform
+        ? `${initialTransform} ${newTransform}`
+        : newTransform;
     }
 
     return style;
