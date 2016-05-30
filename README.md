@@ -82,7 +82,7 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
   * Ability to provide `onStart` / `onFinish` callbacks.
 
-  * Implementation based on the [_FLIP technique_](https://medium.com/developers-writing/animating-the-unanimatable-1346a5aab3cd), a beautiful-in-its-simplicity method of tackling this problem. UMD build, when minified and gzipped, is only 4kb! ⚡
+  * Implementation based on the [_FLIP technique_](https://medium.com/developers-writing/animating-the-unanimatable-1346a5aab3cd), a beautiful-in-its-simplicity method of tackling this problem. UMD build, when minified and gzipped, is only 6kb! ⚡
 
 
 
