@@ -3,7 +3,8 @@ require('../stories/style.css')
 
 function loadStories() {
   require('../stories/index.js');
-  require('../stories/github-issues.js');
+  require('../stories/issue-31.js');
+  require('../stories/issue-45.js');
 }
 
 configure(loadStories, module);

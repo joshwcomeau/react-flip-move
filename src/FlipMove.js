@@ -92,7 +92,7 @@ class FlipMove extends Component {
 
     // Calculate the parentBox. This is used to find childBoxes relative
     // to the parent container, not the viewport.
-    const parentBox = this.parentElement.getBoundingClientRect();
+    this.parentBox = this.parentElement.getBoundingClientRect();
 
     // Get the bounding boxes of all currently-rendered, keyed children.
     const newBoundingBoxes = this.props.children.reduce( (boxes, child) => {
@@ -104,10 +104,10 @@ class FlipMove extends Component {
 
       const childBox    = domNode.getBoundingClientRect();
       const relativeBox = {
-        'top':    childBox['top']  - parentBox['top'],
-        'left':   childBox['left'] - parentBox['left'],
-        'right':  parentBox['right'] - childBox['right'],
-        'bottom': parentBox['bottom'] - childBox['bottom']
+        'top':    childBox['top']  - this.parentBox['top'],
+        'left':   childBox['left'] - this.parentBox['left'],
+        'right':  this.parentBox['right'] - childBox['right'],
+        'bottom': this.parentBox['bottom'] - childBox['bottom']
       };
 
       return { ...boxes, [child.key]: relativeBox };
@@ -141,11 +141,23 @@ class FlipMove extends Component {
     let updatedChildren = nextChildren.map( nextChild => {
       const child = this.state.children.find( ({key}) => key === nextChild.key );
 
-      // If the current child did exist, but it was in the middle of leaving,
-      // we want to treat it as though it's entering
-      const isEntering = !child || child.leaving;
+      // If the child is _already_ entering (the props change while it's on
+      // the way in), we need to know so that we don't restart the animation.
+      const isMidTransition = child && !!child.entering;
 
-      return { ...nextChild, entering: isEntering };
+      // If the child exists now when it didn't in the previous iteration,
+      // it's brand new!
+      const isBrandNew = !child;
+
+      // If the child was in the middle of exiting, but that exit was canceled,
+      // we want to re-introduce it with an entrance animation.
+      const isBeingReintroduced = child && child.leaving;
+
+      return {
+        ...nextChild,
+        entering: isBrandNew || isBeingReintroduced,
+        transitioning: isMidTransition
+      };
     });
 
     // This is tricky. We want to keep the nextChildren's ordering, but with
@@ -163,14 +175,24 @@ class FlipMove extends Component {
     // inserting old items into the new list, the "original" position will
     // keep incrementing.
     let numOfChildrenLeaving = 0;
+
     this.state.children.forEach( (child, index) => {
-      const isLeaving = !nextChildren.find( ({key}) => key === child.key );
+      // If the child is _already_ exiting (the props updated while it was
+      // already on the way out), we need to know so we don't restart the
+      // animation.
+      const isMidTransition = !!child.leaving;
 
       // If the child isn't leaving (or, if there is no leave animation),
       // we don't need to add it into the state children.
+      const isLeaving = !nextChildren.find( ({key}) => key === child.key );
       if ( !isLeaving || !this.props.leaveAnimation ) return;
 
-      let nextChild = { ...child, leaving: true };
+      let nextChild = {
+        ...child,
+        leaving: true,
+        entering: false,
+        transitioning: isMidTransition
+      };
       let nextChildIndex = index + numOfChildrenLeaving;
 
       updatedChildren.splice(nextChildIndex, 0, nextChild);
@@ -195,12 +217,16 @@ class FlipMove extends Component {
       return this.setState({ children: this.props.children });
     }
 
+    // TODO: This can probably be removed, as it's calculated when the
+    // component receives props. Do it as part of a refactor patch?
     this.parentBox = this.parentElement.getBoundingClientRect();
 
     // we need to make all leaving nodes "invisible" to the layout calculations
     // that will take place in the next step (this.runAnimation).
     if ( this.props.leaveAnimation ) {
-      const leavingChildren = this.state.children.filter( ({leaving}) => leaving );
+      const leavingChildren = this.state.children.filter( child => (
+        child.leaving && !child.transitioning
+      ));
 
       leavingChildren.forEach( leavingChild => {
         const domNode = ReactDOM.findDOMNode( this.refs[leavingChild.key] );
@@ -231,9 +257,9 @@ class FlipMove extends Component {
           cleanedComputed[margin] = Number( propertyVal.replace('px', '') );
         });
 
-        domNode.style.position  = 'absolute';
-        domNode.style.top   = leavingBoundingBox.top - cleanedComputed['margin-top'] + 'px';
-        domNode.style.left  = leavingBoundingBox.left - cleanedComputed['margin-left'] + 'px';
+        domNode.style.position = 'absolute';
+        domNode.style.top = leavingBoundingBox.top - cleanedComputed['margin-top'] + 'px';
+        domNode.style.left = leavingBoundingBox.left - cleanedComputed['margin-left'] + 'px';
         domNode.style.right = leavingBoundingBox.right - cleanedComputed['margin-right'] + 'px';
       });
     }
@@ -269,7 +295,9 @@ class FlipMove extends Component {
   computeInitialStyles(child) {
     let style = { transition: '0ms' };
 
-    if ( child.entering ) {
+    if ( child.transitioning ) {
+      return {};
+    } else if ( child.entering ) {
       if ( this.props.enterAnimation ) {
         let original = this.originalDomStyles[child.key] || {};
         style = {
