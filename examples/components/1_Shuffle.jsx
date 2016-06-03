@@ -1,7 +1,7 @@
-import React, { Component, PropTypes }  from 'react';
-import moment                           from 'moment';
-import { shuffle }                      from 'lodash';
-import classNames                       from 'classnames';
+import React, { Component, PropTypes } from 'react';
+import moment from 'moment';
+import shuffle from 'lodash/shuffle';
+import throttle from 'lodash/throttle';
 
 import articles from '../data/articles';
 
@@ -36,15 +36,14 @@ class Shuffle extends Component {
       order: 'asc',
       sortingMethod: 'chronological',
       enterLeaveAnimation: 'accordianVertical',
-      inProgress: false,
       articles
     };
 
-    this.toggleList       = this.toggleList.bind(this);
-    this.toggleGrid       = this.toggleGrid.bind(this);
-    this.toggleSort       = this.toggleSort.bind(this);
-    this.sortShuffle      = this.sortShuffle.bind(this);
-    this.sortRotate       = this.sortRotate.bind(this);
+    this.toggleList = this.toggleList.bind(this);
+    this.toggleGrid = this.toggleGrid.bind(this);
+    this.toggleSort = this.toggleSort.bind(this);
+    this.sortRotate = this.sortRotate.bind(this);
+    this.sortShuffle = this.sortShuffle.bind(this);
   }
 
   toggleList() {
@@ -62,8 +61,8 @@ class Shuffle extends Component {
   }
 
   toggleSort() {
-    const sortAsc   = (a, b) => a.timestamp - b.timestamp;
-    const sortDesc  = (a, b) => b.timestamp - a.timestamp;
+    const sortAsc = (a, b) => a.timestamp - b.timestamp;
+    const sortDesc = (a, b) => b.timestamp - a.timestamp;
 
     this.setState({
       order: (this.state.order === 'asc' ? 'desc' : 'asc'),
@@ -81,25 +80,29 @@ class Shuffle extends Component {
     });
   }
 
-  moveArticle(source, dest, index=0) {
-    if ( this.state.inProgress ) return;
-
-    let sourceArticles = this.state[source].slice();
+  moveArticle(source, dest, id) {
+    const sourceArticles = this.state[source].slice();
     let destArticles = this.state[dest].slice();
 
     if ( !sourceArticles.length ) return;
 
-    destArticles = [].concat( sourceArticles.splice(index, 1), destArticles );
+    // Find the index of the article clicked.
+    // If no ID is provided, the index is 0
+    const i = id ? sourceArticles.findIndex(article => article.id === id) : 0;
+
+    // If the article is already removed, do nothing.
+    if ( i === -1 ) return;
+
+    destArticles = [].concat( sourceArticles.splice(i, 1), destArticles );
 
     this.setState({
       [source]: sourceArticles,
-      [dest]:   destArticles,
-      inProgress: true
+      [dest]: destArticles,
     });
   }
 
   sortRotate() {
-    let articles = this.state.articles.slice();
+    const articles = this.state.articles.slice();
     articles.unshift(articles.pop())
 
     this.setState({
@@ -115,7 +118,7 @@ class Shuffle extends Component {
           key={article.id}
           view={this.state.view}
           index={i}
-          clickHandler={() => this.moveArticle('articles', 'removedArticles', i)}
+          clickHandler={throttle(() => this.moveArticle('articles', 'removedArticles', article.id), 800)}
           {...article}
         />
       );
@@ -164,9 +167,6 @@ class Shuffle extends Component {
             enterAnimation={this.state.enterLeaveAnimation}
             leaveAnimation={this.state.enterLeaveAnimation}
             typeName="ul"
-            onFinishAll={() => {
-              this.setState({ inProgress: false });
-            }}
           >
             { this.renderArticles() }
             <footer key="foot">
