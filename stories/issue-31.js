@@ -13,8 +13,8 @@ const items = [
   { name: 'A Petit Déjeuner' }
 ]
 
-storiesOf('Github Issues', module)
-  .add('#31', () => (
+storiesOf('Github Issue 31 - Vertical Flexbox', module)
+  .add('default', () => (
     <Controls duration={400} />
   ));
 
