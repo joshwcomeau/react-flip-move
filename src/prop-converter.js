@@ -161,7 +161,8 @@ function propConverter(ComposedComponent) {
                               PropTypes.string,
                               PropTypes.bool,
                               PropTypes.object
-                            ])
+                            ]),
+      getPosition:          PropTypes.func,
       };
 
 
@@ -174,6 +175,7 @@ function propConverter(ComposedComponent) {
       typeName:           'div',
       enterAnimation:     defaultPreset,
       leaveAnimation:     defaultPreset,
+      getPosition:        node => node.getBoundingClientRect(),
     };
   }
 }

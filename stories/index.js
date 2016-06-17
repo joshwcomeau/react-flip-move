@@ -3,6 +3,7 @@ import { storiesOf, action } from '@kadira/storybook';
 import shuffle from 'lodash/shuffle';
 import sampleSize from 'lodash/sampleSize';
 import range from 'lodash/range';
+import _ from 'lodash';
 
 import FlipMove from '../src/FlipMove.js';
 
@@ -108,6 +109,21 @@ storiesOf('FlipMove', module)
   .add('delegated prop - width', () => (
     <Controls typeName="table" width="50%" />
   ))
+  .add('inside a scaled container', () => (
+    <Controls style={{transform: 'scale(0.5)'}} getPosition={getPosition} />
+  ))
+
+function getPosition(node) {
+  const rect = node.getBoundingClientRect();
+  const newRect = {};
+
+  for (const prop in rect) {
+    newRect[prop] = rect[prop] / 0.5;
+  }
+
+  return newRect;
+}
+
 
 // Controlling component
 const items = [

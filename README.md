@@ -48,6 +48,7 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
   * [className](https://github.com/joshwcomeau/react-flip-move#classname)
   * [typeName](https://github.com/joshwcomeau/react-flip-move#typename)
   * [disableAllAnimations](https://github.com/joshwcomeau/react-flip-move#disableallanimations)
+  * [getPosition](https://github.com/joshwcomeau/react-flip-move#getPosition)
   * [HTML Attributes](https://github.com/joshwcomeau/react-flip-move#html-attributes)
 * [Gotchas](https://github.com/joshwcomeau/react-flip-move#gotchas)
 * [Changelog](https://github.com/joshwcomeau/react-flip-move#changelog)
@@ -465,6 +466,19 @@ Any valid HTML element type is accepted, but peculiar things may happen if you u
 
 
 Sometimes, you may wish to temporarily disable the animations and have the normal behaviour resumed. Setting this flag to `true` skips all animations.
+
+---
+
+### `getPosition`
+
+| **Accepted Types:** | **Default Value**       |
+|---------------------|-------------------------|
+|  `Function`         | `getBoundingClientRect` |
+
+
+This function is called with a DOM node as the only argument. It should return an object as specified by the [getBoundingClientRect() spec](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect).
+
+For normal usage of FlipMove you won't need this. An example of usage is when FlipMove is used in a container that is scaled using CSS. You can correct the values from `getBoundingClientRect` by using this prop.
 
 ---
 
