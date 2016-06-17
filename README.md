@@ -468,6 +468,19 @@ Sometimes, you may wish to temporarily disable the animations and have the norma
 
 ---
 
+### `getPosition`
+
+| **Accepted Types:** | **Default Value**       |
+|---------------------|-------------------------|
+|  `Function`         | `getBoundingClientRect` |
+
+
+This function is called with a DOM node as the only argument. It should return an object as specified by the [getBoundingClientRect() spec](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect).
+
+For normal usage of FlipMove you won't need this. An example of usage is when FlipMove is used in a container that is scaled using CSS. You can correct the values from `getBoundingClientRect` by using this prop.
+
+---
+
 ### HTML Attributes
 
 FlipMove creates its own DOM node to wrap the children it needs to animate. Sometimes, you'll want to be able to pass specific HTML attributes to this node.
