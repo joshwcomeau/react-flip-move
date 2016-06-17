@@ -89,7 +89,7 @@ class FlipMove extends Component {
 
     // Calculate the parentBox. This is used to find childBoxes relative
     // to the parent container, not the viewport.
-    const parentBox = this.parentElement.getBoundingClientRect();
+    const parentBox = this.props.getPosition(this.parentElement);
 
     // Get the bounding boxes of all currently-rendered, keyed children.
     const newBoundingBoxes = this.props.children.reduce( (boxes, child) => {
@@ -99,7 +99,7 @@ class FlipMove extends Component {
 
       const domNode     = ReactDOM.findDOMNode( this.refs[child.key] );
 
-      const childBox    = domNode.getBoundingClientRect();
+      const childBox    = this.props.getPosition(domNode);
       const relativeBox = {
         'top':    childBox['top']  - parentBox['top'],
         'left':   childBox['left'] - parentBox['left'],
@@ -192,7 +192,7 @@ class FlipMove extends Component {
       return this.setState({ children: this.props.children });
     }
 
-    this.parentBox = this.parentElement.getBoundingClientRect();
+    this.parentBox = this.props.getPosition(this.parentElement);
 
     // we need to make all leaving nodes "invisible" to the layout calculations
     // that will take place in the next step (this.runAnimation).
@@ -416,7 +416,7 @@ class FlipMove extends Component {
     // TEMP: A mystery bug is sometimes causing unnecessary boundingBoxes to
     // remain. Until this bug can be solved, this band-aid fix does the job:
     const defaultBox = { left: 0, top: 0 };
-    const newBox  = domNode.getBoundingClientRect();
+    const newBox  = this.props.getPosition(domNode);
     const oldBox  = this.boundingBoxes[key] || defaultBox;
     const relativeBox = {
       top:  newBox.top - this.parentBox.top,
