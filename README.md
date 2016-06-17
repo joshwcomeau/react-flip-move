@@ -48,6 +48,7 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
   * [className](https://github.com/joshwcomeau/react-flip-move#classname)
   * [typeName](https://github.com/joshwcomeau/react-flip-move#typename)
   * [disableAllAnimations](https://github.com/joshwcomeau/react-flip-move#disableallanimations)
+  * [getPosition](https://github.com/joshwcomeau/react-flip-move#getPosition)
   * [HTML Attributes](https://github.com/joshwcomeau/react-flip-move#html-attributes)
 * [Gotchas](https://github.com/joshwcomeau/react-flip-move#gotchas)
 * [Changelog](https://github.com/joshwcomeau/react-flip-move#changelog)
