@@ -457,10 +457,10 @@ class FlipMove extends Component {
       // Remove any items from the DOM that have left, and reset `entering`.
       const nextChildren = this.state.children
         .filter( ({leaving}) => !leaving )
-        .map( item => {
-          item.entering = false;
-          return item;
-        });
+        .map(item => ({
+          ...item,
+          entering: false
+        }));
 
       this.originalDomStyles = {}
 
