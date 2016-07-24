@@ -522,6 +522,8 @@ This works for all HTML props - there's no validation.
 
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
+  * Sometimes you'll want to update or change an item _without_ triggering a Flip Move animation. For example, with optimistic updating, you may render a temporary version before replacing it with the server-validated one. In this case, simply use the same `key` for both versions, and Flip Move will treat them as the same item.
+
 
 ## Changelog
 
@@ -529,13 +531,13 @@ See the [GitHub releases](https://github.com/joshwcomeau/react-flip-move/release
 
 
 
-## Note on 3D transforms and `will-change`
+## Note on `will-change`
 
-Many articles I've seen claim that in order to force browsers to use hardware acceleration, you need to resort to hacky fixes like `transformZ(0)` or use the new `will-change` property.
+To fully benefit from hardware acceleration, each item being translated should have its own compositing layer. This can be accomplished with the [CSS will-change property](https://dev.opera.com/articles/css-will-change-property/).
 
-In my personal experimentations on modern versions of Chrome, Safari, Firefox and IE, these properties offer little to no gain (in Chrome's timeline I saw a savings of ~0.5ms on a 24-item shuffle).
+Applying `will-change` too willy-nilly, though, can have an adverse effect on mobile browsers, so I have opted to not use it at all.
 
-Applying `will-change` too willy-nilly can have an adverse effect on mobile browsers, so I have opted to not use it at all.
+In my personal experimentations on modern versions of Chrome, Safari, Firefox and IE, this property offers little to no gain (in Chrome's timeline I saw a savings of ~0.5ms on a 24-item shuffle).
 
 YMMV: Feel free to experiment with the property in your CSS. Flip Move will respect the wishes of your stylesheet :)
 
