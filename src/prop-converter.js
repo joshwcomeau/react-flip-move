@@ -163,6 +163,7 @@ function propConverter(ComposedComponent) {
                               PropTypes.object
                             ]),
       getPosition:          PropTypes.func,
+      ignoreOpacity:        PropTypes.bool
       };
 
 
@@ -176,6 +177,7 @@ function propConverter(ComposedComponent) {
       enterAnimation:     defaultPreset,
       leaveAnimation:     defaultPreset,
       getPosition:        node => node.getBoundingClientRect(),
+      ignoreOpacity:      false
     };
   }
 }

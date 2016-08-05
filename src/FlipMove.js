@@ -367,9 +367,15 @@ class FlipMove extends Component {
         // to its new position.
         let styles = {
           transition: this.createTransitionString(n),
-          transform: '',
-          opacity: ''
+          transform: ''
         };
+
+        if ( !this.props.ignoreOpacity ) {
+          styles = {
+            ...styles,
+            opacity: ''
+          };
+        }
 
         if ( child.entering && this.props.enterAnimation ) {
           styles = {
@@ -430,8 +436,14 @@ class FlipMove extends Component {
   }
 
 
-  createTransitionString(n, props=['transform', 'opacity']) {
-    let { duration, staggerDurationBy, delay, staggerDelayBy, easing } = this.props;
+  createTransitionString(n, props=['transform']) {
+    let { duration, staggerDurationBy, delay, staggerDelayBy, easing, ignoreOpacity } = this.props;
+
+    if ( !props && ignoreOpacity ) {
+      props = ['transform'];
+    } else {
+      props = ['transform', 'opacity'];
+    }
 
     delay     += n * staggerDelayBy;
     duration  += n * staggerDurationBy;
