@@ -112,6 +112,35 @@ storiesOf('FlipMove', module)
   .add('inside a scaled container', () => (
     <Controls style={{transform: 'scale(0.5)'}} getPosition={getPosition} />
   ))
+  .add('empty', () => {
+    class HandleEmpty extends Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          empty: true,
+        };
+      }
+
+      render() {
+        return (
+          <div>
+            <button
+              onClick={() => this.setState({ empty: !this.state.empty })}
+            >
+              Toggle!
+            </button>
+
+            <FlipMove>
+              {this.state.empty ? null : <div>Not empty!</div>}
+            </FlipMove>
+          </div>
+        )
+      }
+    }
+
+    return <HandleEmpty />
+  })
 
 function getPosition(node) {
   const rect = node.getBoundingClientRect();

@@ -128,7 +128,7 @@ function propConverter(ComposedComponent) {
       children:             PropTypes.oneOfType([
                               PropTypes.array,
                               PropTypes.object
-                            ]).isRequired,
+                            ]),
       easing:               PropTypes.string,
       duration:             PropTypes.oneOfType([
                               PropTypes.string,
