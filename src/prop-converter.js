@@ -21,7 +21,7 @@ import {
 
 
 function propConverter(ComposedComponent) {
-  return class Converter extends Component {
+  return class FlipMovePropConverter extends Component {
     convertProps(props) {
       // Create a non-immutable working copy
       let workingProps = { ...props };
@@ -58,7 +58,7 @@ function propConverter(ComposedComponent) {
 
       // Gather any additional props; they will be delegated to the
       // ReactElement created.
-      const primaryPropKeys = Object.keys(Converter.propTypes);
+      const primaryPropKeys = Object.keys(FlipMovePropConverter.propTypes);
       const delegatedProps = omit(this.props, primaryPropKeys);
 
       // The FlipMove container element needs to have a non-static position.
