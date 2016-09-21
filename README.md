@@ -65,8 +65,8 @@ npm i -S react-flip-move
 ```
 
 UMD builds are also available via CDN:
-* [react-flip-move.js](https://npmcdn.com/react-flip-move@2.1.4/dist/react-flip-move.js)
-* [react-flip-move.min.js](https://npmcdn.com/react-flip-move@2.1.4/dist/react-flip-move.min.js)
+* [react-flip-move.js](https://unpkg.com/react-flip-move@2.1.4/dist/react-flip-move.js)
+* [react-flip-move.min.js](https://unpkg.com/react-flip-move@2.1.4/dist/react-flip-move.min.js)
 
 
 ## Features
