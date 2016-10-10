@@ -104,7 +104,8 @@ class FlipMove extends Component {
         'top':    childBox['top']  - parentBox['top'],
         'left':   childBox['left'] - parentBox['left'],
         'right':  parentBox['right'] - childBox['right'],
-        'bottom': parentBox['bottom'] - childBox['bottom']
+        'bottom': parentBox['bottom'] - childBox['bottom'],
+        'height': childBox['height']
       };
 
       return { ...boxes, [child.key]: relativeBox };
@@ -476,9 +477,36 @@ class FlipMove extends Component {
 
 
   childrenWithRefs() {
-    return this.state.children.map( child => {
+    const { children } = this.state;
+
+    const childNodes = children.map( child => {
       return React.cloneElement(child, { ref: child.key });
     });
+
+    // Sum the height of all boxes leaving the document flow.
+    const leavingHeight = children.reduce( (height, child) => {
+      return child.leaving
+        ? height + this.boundingBoxes[child.key].height
+        : height;
+    }, 0)
+
+    // If elements are indeed disappearing then create an invisible child
+    // element at the end of the list whose height will prevent the
+    // container from collapsing prematurely.
+    if (leavingHeight > 0) {
+      childNodes.push(
+        <div
+          key='leaving-padding'
+          style={{
+            // This should be `visibility: hidden` - blue is just for review.
+            background: 'blue',
+            height: leavingHeight
+          }}
+        />
+      );
+    }
+
+    return childNodes;
   }
 
 
