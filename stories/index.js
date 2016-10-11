@@ -141,6 +141,9 @@ storiesOf('FlipMove', module)
 
     return <HandleEmpty />
   })
+  .add('maintain container height', () => (
+    <Controls maintainContainerHeight={true} style={{border: 'solid 2px magenta'}} />
+  ))
 
 function getPosition(node) {
   const rect = node.getBoundingClientRect();

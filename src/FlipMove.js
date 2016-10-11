@@ -25,7 +25,6 @@ import {
 
 const transitionEnd = whichTransitionEvent();
 
-
 @propConverter
 class FlipMove extends Component {
   constructor(props) {
@@ -233,20 +232,22 @@ class FlipMove extends Component {
         domNode.style.right = leavingBoundingBox.right - cleanedComputed['margin-right'] + 'px';
       });
 
-      // We need to find the height of the container *without* the padding
-      // element. Since it's possible that the padding element might already
-      // be present, we first set its height to 0. This allows the container to
-      // collapse down to the size of just its content.
-      this.leavingPaddingElement.style.height = 0;
-      const contentHeight = this.props.getPosition(this.parentElement).height;
+      if ( this.props.maintainContainerHeight ) {
+        // We need to find the height of the container *without* the padding
+        // element. Since it's possible that the padding element might already
+        // be present, we first set its height to 0. This allows the container to
+        // collapse down to the size of just its content.
+        this.heightPlaceholder.style.height = 0;
+        const contentHeight = this.props.getPosition(this.parentElement).height;
 
-      // Find the distance by which the container would be collapsed by elements
-      // leaving. We compare the temporarily available `collapsedHeight` with
-      // the previously cached container height.
-      const collapseHeight = this.parentBox.height - contentHeight;
+        // Find the distance by which the container would be collapsed by elements
+        // leaving. We compare the temporarily available `collapsedHeight` with
+        // the previously cached container height.
+        const collapseHeight = this.parentBox.height - contentHeight;
 
-      // Update the padding element's height.
-      this.leavingPaddingElement.style.height = Math.max(0, collapseHeight) + 'px';
+        // Update the padding element's height.
+        this.heightPlaceholder.style.height = Math.max(0, collapseHeight) + 'px';
+      }
     }
 
     const dynamicChildren = this.state.children.filter(
@@ -486,31 +487,29 @@ class FlipMove extends Component {
         }
       });
 
-      this.leavingPaddingElement.style.height = 0;
+      // If the placeholder was holding the container open while elements were
+      // leaving, we we can now set its height to zero.
+      if (this.heightPlaceholder != null) {
+        this.heightPlaceholder.style.height = 0;
+      }
     }
   }
 
 
   childrenWithRefs() {
-    const { children } = this.state;
-
-    const childNodes = children.map( child => {
+    const childNodes = this.state.children.map( child => {
       return React.cloneElement(child, { ref: child.key });
     });
 
-    if ( this.props.leaveAnimation ) {
+    if ( this.props.leaveAnimation && this.props.maintainContainerHeight ) {
 
-      // Create an invisible child element at the end of the list whose height
-      // will prevent the container from collapsing prematurely.
+      // Create an invisible element at the end of the list. Its height will be
+      // modified to prevent the container from collapsing prematurely.
       childNodes.push(
         <div
-          key='leaving-padding'
-          ref={element => this.leavingPaddingElement = element}
-          style={{
-            // This should be `visibility: hidden` - blue is just for review.
-            background: 'blue',
-            height: 0
-          }}
+          key='height-placeholder'
+          ref={element => { this.heightPlaceholder = element }}
+          style={{ visibility: 'hidden', height: 0 }}
         />
       );
     }

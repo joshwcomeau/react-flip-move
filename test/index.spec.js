@@ -42,6 +42,7 @@ describe('FlipMove', () => {
         staggerDelayBy: 0,
         staggerDurationBy: 0,
         disableAllAnimations: false,
+        maintainContainerHeight: false,
         articles
       };
       this.count = 0;
@@ -67,6 +68,7 @@ describe('FlipMove', () => {
             staggerDelayBy={this.state.staggerDelayBy}
             staggerDurationBy={this.state.staggerDurationBy}
             disableAllAnimations={this.state.disableAllAnimations}
+            maintainContainerHeight={this.state.maintainContainerHeight}
             onStart={::this.onStartHandler}
             onFinish={::this.onFinishHandler}
             onFinishAll={finishAllStub}
@@ -279,7 +281,31 @@ describe('FlipMove', () => {
     });
 
   });
+
+  describe('container height', () => {
+    let containerBox = null;
+
+    before( () => {
+      containerBox = getContainerBox(renderedComponent)
+
+      renderedComponent.setState({
+        maintainContainerHeight: true,
+        articles: articles.slice(-1)
+      });
+    })
+
+    it('should be maintained', () => {
+      expect(containerBox.height).to.equal(getContainerBox(renderedComponent).height);
+    })
+  })
 });
+
+function getContainerBox(renderedComponent) {
+  const container = TestUtils.findRenderedDOMComponentWithTag(
+    renderedComponent, 'ul'
+  );
+  return container.getBoundingClientRect();
+}
 
 function getTagPositions(renderedComponent) {
   const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
