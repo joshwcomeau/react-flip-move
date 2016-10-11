@@ -233,9 +233,20 @@ class FlipMove extends Component {
         domNode.style.right = leavingBoundingBox.right - cleanedComputed['margin-right'] + 'px';
       });
 
-      const newHeight = this.props.getPosition(this.parentElement).height;
-      const collapseHeight = this.parentBox.height - newHeight;
-      this.leavingPaddingElement.style.height = collapseHeight + 'px';
+      // We need to find the height of the container *without* the padding
+      // element. Since it's possible that the padding element might already
+      // be present, we first set its height to 0. This allows the container to
+      // collapse down to the size of just its content.
+      this.leavingPaddingElement.style.height = 0;
+      const contentHeight = this.props.getPosition(this.parentElement).height;
+
+      // Find the distance by which the container would be collapsed by elements
+      // leaving. We compare the temporarily available `collapsedHeight` with
+      // the previously cached container height.
+      const collapseHeight = this.parentBox.height - contentHeight;
+
+      // Update the padding element's height.
+      this.leavingPaddingElement.style.height = Math.max(0, collapseHeight) + 'px';
     }
 
     const dynamicChildren = this.state.children.filter(
