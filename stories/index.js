@@ -144,7 +144,7 @@ storiesOf('FlipMove', module)
   .add('maintain container height', () => (
     <Controls
       maintainContainerHeight={true}
-      style={{border: 'solid 2px magenta'}}
+      style={{border: 'solid 2px magenta', padding: '7px' }}
       childOuterStyles={{ margin: '20px' }}
     />
   ))
