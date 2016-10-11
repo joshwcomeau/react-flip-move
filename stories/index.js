@@ -142,7 +142,11 @@ storiesOf('FlipMove', module)
     return <HandleEmpty />
   })
   .add('maintain container height', () => (
-    <Controls maintainContainerHeight={true} style={{border: 'solid 2px magenta'}} />
+    <Controls
+      maintainContainerHeight={true}
+      style={{border: 'solid 2px magenta'}}
+      childOuterStyles={{ margin: '20px' }}
+    />
   ))
 
 function getPosition(node) {
@@ -168,7 +172,9 @@ const items = [
 class Controls extends Component {
   static defaultProps = {
     firstChildOuterStyles: {},
-    firstChildInnerStyles: {}
+    firstChildInnerStyles: {},
+    childInnerStyles: {},
+    childOuterStyles: {},
   };
 
   constructor() {
@@ -230,8 +236,8 @@ class Controls extends Component {
 
     return this.state.items.map( (item, i) => {
       // Make a working copy of styles
-      let stylesOuterCopy = { ...stylesOuter };
-      let stylesInnerCopy = { ...stylesInner };
+      let stylesOuterCopy = { ...stylesOuter, ...this.props.childOuterStyles };
+      let stylesInnerCopy = { ...stylesInner, ...this.props.childInnerStyles };
 
       if ( this.props.styleFirstChild && item.name === 'Potent Potables' ) {
         stylesOuterCopy = {
