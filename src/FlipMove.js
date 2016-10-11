@@ -68,7 +68,6 @@ class FlipMove extends Component {
     this.parentElement = ReactDOM.findDOMNode(this);
   }
 
-
   componentDidUpdate(previousProps) {
     // If the children have been re-arranged, moved, or added/removed,
     // trigger the main FLIP animation.
@@ -104,8 +103,7 @@ class FlipMove extends Component {
         'top':    childBox['top']  - parentBox['top'],
         'left':   childBox['left'] - parentBox['left'],
         'right':  parentBox['right'] - childBox['right'],
-        'bottom': parentBox['bottom'] - childBox['bottom'],
-        'height': childBox['height']
+        'bottom': parentBox['bottom'] - childBox['bottom']
       };
 
       return { ...boxes, [child.key]: relativeBox };
@@ -234,6 +232,10 @@ class FlipMove extends Component {
         domNode.style.left  = leavingBoundingBox.left - cleanedComputed['margin-left'] + 'px';
         domNode.style.right = leavingBoundingBox.right - cleanedComputed['margin-right'] + 'px';
       });
+
+      const newHeight = this.props.getPosition(this.parentElement).height;
+      const collapseHeight = this.parentBox.height - newHeight;
+      this.leavingPaddingElement.style.height = collapseHeight + 'px';
     }
 
     const dynamicChildren = this.state.children.filter(
@@ -472,6 +474,8 @@ class FlipMove extends Component {
           );
         }
       });
+
+      this.leavingPaddingElement.style.height = 0;
     }
   }
 
@@ -483,24 +487,18 @@ class FlipMove extends Component {
       return React.cloneElement(child, { ref: child.key });
     });
 
-    // Sum the height of all boxes leaving the document flow.
-    const leavingHeight = children.reduce( (height, child) => {
-      return child.leaving
-        ? height + this.boundingBoxes[child.key].height
-        : height;
-    }, 0)
+    if ( this.props.leaveAnimation ) {
 
-    // If elements are indeed disappearing then create an invisible child
-    // element at the end of the list whose height will prevent the
-    // container from collapsing prematurely.
-    if (leavingHeight > 0) {
+      // Create an invisible child element at the end of the list whose height
+      // will prevent the container from collapsing prematurely.
       childNodes.push(
         <div
           key='leaving-padding'
+          ref={element => this.leavingPaddingElement = element}
           style={{
             // This should be `visibility: hidden` - blue is just for review.
             background: 'blue',
-            height: leavingHeight
+            height: 0
           }}
         />
       );
