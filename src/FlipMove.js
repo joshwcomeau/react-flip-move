@@ -508,16 +508,22 @@ class FlipMove extends Component {
       return React.cloneElement(child, { ref: child.key });
     });
 
+    // If requested, create an invisible element at the end of the list.
+    // Its height will be modified to prevent the container from collapsing
+    // prematurely.
     if ( this.props.leaveAnimation && this.props.maintainContainerHeight ) {
+      // Create a <li> when nested inside a <ul>
+      const placeholderType = this.props.typeName === 'ul' ? 'li' : 'div';
 
-      // Create an invisible element at the end of the list. Its height will be
-      // modified to prevent the container from collapsing prematurely.
       childNodes.push(
-        <div
-          key='height-placeholder'
-          ref={element => { this.heightPlaceholder = element }}
-          style={{ visibility: 'hidden', height: 0 }}
-        />
+        React.createElement(
+          placeholderType,
+          {
+            key: 'height-placeholder',
+            ref: element => { this.heightPlaceholder = element },
+            style: { visibility: 'hidden', height: 0 },
+          }
+        )
       );
     }
 
