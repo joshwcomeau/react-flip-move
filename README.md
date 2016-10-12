@@ -40,6 +40,7 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
   * [staggerDelayBy](https://github.com/joshwcomeau/react-flip-move#staggerdelayby)
   * [enterAnimation](https://github.com/joshwcomeau/react-flip-move#enteranimation)
   * [leaveAnimation](https://github.com/joshwcomeau/react-flip-move#leaveanimation)
+  * [maintainContainerHeight](https://github.com/joshwcomeau/react-flip-move#maintaincontainerheight)
   * [onStart](https://github.com/joshwcomeau/react-flip-move#onstart)
   * [onFinish](https://github.com/joshwcomeau/react-flip-move#onfinish)
   * [onStartAll](https://github.com/joshwcomeau/react-flip-move#onstartall)
@@ -366,6 +367,18 @@ const customLeaveAnimation = {
 ```
 
 It is recommended that you stick to hardware-accelerated CSS properties for optimal performance: transform and opacity.
+
+---
+
+### `maintainContainerHeight`
+
+| **Accepted Types:** | **Default Value** |
+|---------------------|-------------------|
+|  `Boolean`          | `false`           |
+
+Do not collapse container height until after leaving animations complete.
+
+When `false`, children are immediately removed from the DOM flow as they animate away. Setting this value to `true` will maintain the height of the container until after their leaving animation completes.
 
 ---
 

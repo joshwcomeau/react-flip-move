@@ -25,7 +25,6 @@ import {
 
 const transitionEnd = whichTransitionEvent();
 
-
 @propConverter
 class FlipMove extends Component {
   constructor(props) {
@@ -67,7 +66,6 @@ class FlipMove extends Component {
   componentDidMount() {
     this.parentElement = ReactDOM.findDOMNode(this);
   }
-
 
   componentDidUpdate(previousProps) {
     // If the children have been re-arranged, moved, or added/removed,
@@ -233,6 +231,30 @@ class FlipMove extends Component {
         domNode.style.left  = leavingBoundingBox.left - cleanedComputed['margin-left'] + 'px';
         domNode.style.right = leavingBoundingBox.right - cleanedComputed['margin-right'] + 'px';
       });
+
+      if ( this.props.maintainContainerHeight ) {
+        // We need to find the height of the container *without* the padding
+        // element. Since it's possible that the padding element might already
+        // be present, we first set its height to 0. This allows the container to
+        // collapse down to the size of just its content (plus container padding
+        // or borders if any).
+        this.heightPlaceholder.style.height = 0;
+        const collapsedHeight = this.props.getPosition(this.parentElement).height;
+
+        // Find the distance by which the container would be collapsed by elements
+        // leaving. We compare the temporarily available `collapsedHeight` with
+        // the previously cached container height.
+        const reductionInHeight = this.parentBox.height - collapsedHeight;
+
+        // If the container has become shorter, update the padding element's
+        // height to take up the difference. Otherwise set its height to zero for
+        // no effect.
+        if ( reductionInHeight > 0 ) {
+          this.heightPlaceholder.style.height = `${reductionInHeight}px`;
+        } else {
+          this.heightPlaceholder.style.height = 0;
+        }
+      }
     }
 
     const dynamicChildren = this.state.children.filter(
@@ -471,14 +493,35 @@ class FlipMove extends Component {
           );
         }
       });
+
+      // If the placeholder was holding the container open while elements were
+      // leaving, we we can now set its height to zero.
+      if (this.heightPlaceholder != null) {
+        this.heightPlaceholder.style.height = 0;
+      }
     }
   }
 
 
   childrenWithRefs() {
-    return this.state.children.map( child => {
+    const childNodes = this.state.children.map( child => {
       return React.cloneElement(child, { ref: child.key });
     });
+
+    if ( this.props.leaveAnimation && this.props.maintainContainerHeight ) {
+
+      // Create an invisible element at the end of the list. Its height will be
+      // modified to prevent the container from collapsing prematurely.
+      childNodes.push(
+        <div
+          key='height-placeholder'
+          ref={element => { this.heightPlaceholder = element }}
+          style={{ visibility: 'hidden', height: 0 }}
+        />
+      );
+    }
+
+    return childNodes;
   }
 
 

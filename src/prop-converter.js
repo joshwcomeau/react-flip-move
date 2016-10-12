@@ -163,7 +163,8 @@ function propConverter(ComposedComponent) {
                               PropTypes.object
                             ]),
       getPosition:          PropTypes.func,
-      };
+      maintainContainerHeight: PropTypes.bool.isRequired,
+    };
 
 
     static defaultProps = {
@@ -176,6 +177,7 @@ function propConverter(ComposedComponent) {
       enterAnimation:     defaultPreset,
       leaveAnimation:     defaultPreset,
       getPosition:        node => node.getBoundingClientRect(),
+      maintainContainerHeight: false,
     };
   }
 }
