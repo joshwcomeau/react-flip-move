@@ -148,6 +148,13 @@ storiesOf('FlipMove', module)
       childOuterStyles={{ margin: '20px' }}
     />
   ))
+  .add('maintain container height with <ul>', () => (
+    <Controls
+      typeName="ul"
+      maintainContainerHeight={true}
+      style={{border: 'solid 2px magenta' }}
+    />
+  ))
 
 function getPosition(node) {
   const rect = node.getBoundingClientRect();
