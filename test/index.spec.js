@@ -245,7 +245,7 @@ describe('FlipMove', () => {
 
     it('applies an array prop and throws', () => {
       renderedComponent.setState({ duration: [10] });
-      expect(consoleStub).to.have.been.calledOnce;
+      expect(consoleStub).to.have.been.called;
     });
   });
 
@@ -286,7 +286,7 @@ describe('FlipMove', () => {
     let containerBox = null;
 
     before( () => {
-      containerBox = getContainerBox(renderedComponent)
+      containerBox = getContainerBox(renderedComponent);
 
       renderedComponent.setState({
         maintainContainerHeight: true,

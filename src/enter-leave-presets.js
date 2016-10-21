@@ -7,54 +7,54 @@
  */
 
  export const enterPresets = {
-   'elevator': {
+   elevator: {
      from: { transform: 'scale(0)', opacity: 0 },
-     to:   { transform: '', opacity: '' }
+     to: { transform: '', opacity: '' },
    },
-   'fade': {
+   fade: {
      from: { opacity: 0 },
-     to:   { opacity: '' }
+     to: { opacity: '' },
    },
-   'accordionVertical': {
+   accordionVertical: {
      from: { transform: 'scaleY(0)', transformOrigin: 'center top' },
-     to:   { transform: '', transformOrigin: 'center top' }
+     to: { transform: '', transformOrigin: 'center top' },
    },
-   'accordionHorizontal': {
+   accordionHorizontal: {
      from: { transform: 'scaleX(0)', transformOrigin: 'left center' },
-     to:   { transform: '', transformOrigin: 'left center' }
+     to: { transform: '', transformOrigin: 'left center' },
    },
-   'none': false
+   none: false,
  };
 
-export const leavePresets = {
-  'elevator': {
-    from: { transform: 'scale(1)', opacity: 1 },
-    to:   { transform: 'scale(0)', opacity: 0 }
-  },
-  'fade': {
-    from: { opacity: 1 },
-    to:   { opacity: 0 }
-  },
-  'accordionVertical': {
-    from: { transform: 'scaleY(1)', transformOrigin: 'center top' },
-    to:   { transform: 'scaleY(0)', transformOrigin: 'center top' }
-  },
-  'accordionHorizontal': {
-    from: { transform: 'scaleX(1)', transformOrigin: 'left center' },
-    to:   { transform: 'scaleX(0)', transformOrigin: 'left center' }
-  },
-  'none': false
-};
+ export const leavePresets = {
+   elevator: {
+     from: { transform: 'scale(1)', opacity: 1 },
+     to: { transform: 'scale(0)', opacity: 0 },
+   },
+   fade: {
+     from: { opacity: 1 },
+     to: { opacity: 0 },
+   },
+   accordionVertical: {
+     from: { transform: 'scaleY(1)', transformOrigin: 'center top' },
+     to: { transform: 'scaleY(0)', transformOrigin: 'center top' },
+   },
+   accordionHorizontal: {
+     from: { transform: 'scaleX(1)', transformOrigin: 'left center' },
+     to: { transform: 'scaleX(0)', transformOrigin: 'left center' },
+   },
+   none: false,
+ };
 
 // Embarrassingly enough, v2.0 launched with typo'ed preset names.
 // To avoid penning a new major version over something so inconsequential,
 // we're supporting both spellings. In a future version, these alternatives
 // may be deprecated.
-enterPresets.accordianVertical    = enterPresets.accordionVertical;
-enterPresets.accordianHorizontal  = enterPresets.accordionHorizontal;
-leavePresets.accordianVertical    = leavePresets.accordionVertical;
-leavePresets.accordianHorizontal  = leavePresets.accordionHorizontal;
+ enterPresets.accordianVertical = enterPresets.accordionVertical;
+ enterPresets.accordianHorizontal = enterPresets.accordionHorizontal;
+ leavePresets.accordianVertical = leavePresets.accordionVertical;
+ leavePresets.accordianHorizontal = leavePresets.accordionHorizontal;
 
 
-export const defaultPreset = 'elevator';
-export const disablePreset = 'none';
+ export const defaultPreset = 'elevator';
+ export const disablePreset = 'none';
