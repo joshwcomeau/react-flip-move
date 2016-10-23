@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 import FlipMove from '../src';
 
-storiesOf('FlipMove', module)
+storiesOf('Legacy Stories', module)
   .add('simple transition', () => (
     <Controls duration={400} />
   ))

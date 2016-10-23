@@ -205,7 +205,9 @@ function propConverter(ComposedComponent) {
     enterAnimation: defaultPreset,
     leaveAnimation: defaultPreset,
     disableAllAnimations: false,
-    getPosition: node => node.getBoundingClientRect(),
+    getPosition: (node) => {
+      return node.getBoundingClientRect();
+    },
     maintainContainerHeight: false,
   };
 
