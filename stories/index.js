@@ -5,9 +5,9 @@ import sampleSize from 'lodash/sampleSize';
 import range from 'lodash/range';
 import _ from 'lodash';
 
-import FlipMove from '../src/FlipMove.js';
+import FlipMove from '../src';
 
-storiesOf('FlipMove', module)
+storiesOf('Legacy Stories', module)
   .add('simple transition', () => (
     <Controls duration={400} />
   ))
