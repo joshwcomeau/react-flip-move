@@ -148,10 +148,7 @@ function propConverter(ComposedComponent) {
   }
 
   FlipMovePropConverter.propTypes = {
-    children: PropTypes.oneOfType([
-      PropTypes.array,
-      PropTypes.object,
-    ]),
+    children: PropTypes.node,
     easing: PropTypes.string,
     duration: PropTypes.oneOfType([
       PropTypes.string,
@@ -205,9 +202,7 @@ function propConverter(ComposedComponent) {
     enterAnimation: defaultPreset,
     leaveAnimation: defaultPreset,
     disableAllAnimations: false,
-    getPosition: (node) => {
-      return node.getBoundingClientRect();
-    },
+    getPosition: node => node.getBoundingClientRect(),
     maintainContainerHeight: false,
   };
 

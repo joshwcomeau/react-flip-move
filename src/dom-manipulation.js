@@ -52,8 +52,6 @@ export const getRelativeBoundingBox = ({
   const { domNode: childDomNode } = childData;
   const { domNode: parentDomNode } = parentData;
 
-  console.log(childData, childDomNode);
-
   const parentBox = getPosition(parentDomNode);
   const { top, left, right, bottom } = getPosition(childDomNode);
 

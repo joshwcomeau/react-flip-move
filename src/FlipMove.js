@@ -5,8 +5,9 @@
  * For information on how this code is laid out, check out CODE_TOUR.md
  */
 
+ /* eslint-disable react/prop-types */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 
 import './polyfills';
 import propConverter from './prop-converter';
@@ -554,38 +555,5 @@ class FlipMove extends Component {
     );
   }
 }
-
-FlipMove.propTypes = {
-  typeName: PropTypes.string.isRequired,
-  children: PropTypes.node,
-  easing: PropTypes.string.isRequired,
-  duration: PropTypes.number.isRequired,
-  delay: PropTypes.number.isRequired,
-  staggerDurationBy: PropTypes.number.isRequired,
-  staggerDelayBy: PropTypes.number.isRequired,
-  enterAnimation: PropTypes.oneOfType([
-    PropTypes.shape({
-      from: PropTypes.object.isRequired,
-      to: PropTypes.object.isRequired,
-    }),
-    PropTypes.bool,
-  ]),
-  leaveAnimation: PropTypes.oneOfType([
-    PropTypes.shape({
-      from: PropTypes.object.isRequired,
-      to: PropTypes.object.isRequired,
-    }),
-    PropTypes.bool,
-  ]),
-  onStart: PropTypes.func,
-  onStartAll: PropTypes.func,
-  onFinish: PropTypes.func,
-  onFinishAll: PropTypes.func,
-  getPosition: PropTypes.func.isRequired,
-  disableAllAnimations: PropTypes.bool.isRequired,
-  maintainContainerHeight: PropTypes.bool.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  delegated: PropTypes.object,
-};
 
 export default propConverter(FlipMove);
