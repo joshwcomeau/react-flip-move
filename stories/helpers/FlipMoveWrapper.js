@@ -28,6 +28,7 @@ class FlipMoveWrapper extends Component {
     };
 
     this.removeItem = this.removeItem.bind(this);
+    this.removeAllItems = this.removeAllItems.bind(this);
     this.restoreItems = this.restoreItems.bind(this);
     this.rotateItems = this.rotateItems.bind(this);
     this.shuffleItems = this.shuffleItems.bind(this);
@@ -48,10 +49,12 @@ class FlipMoveWrapper extends Component {
     this.setState({ items: newItems });
   }
 
+  removeAllItems() {
+    this.setState({ items: [] });
+  }
+
   restoreItems() {
-    this.setState({
-      items: this.props.items,
-    });
+    this.setState({ items: this.props.items });
   }
 
   rotateItems() {
@@ -93,6 +96,7 @@ class FlipMoveWrapper extends Component {
       >
         <Controls
           onRemove={this.removeItem}
+          onRemoveAll={this.removeAllItems}
           onRestore={this.restoreItems}
           onRotate={this.rotateItems}
           onShuffle={this.shuffleItems}

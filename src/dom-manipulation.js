@@ -128,7 +128,7 @@ export const removeNodeFromDOMFlow = ({ domNode, boundingBox }) => {
       ...acc,
       [margin]: Number(propertyVal.replace('px', '')),
     };
-  });
+  }, {});
 
   const styles = {
     position: 'absolute',
@@ -136,6 +136,7 @@ export const removeNodeFromDOMFlow = ({ domNode, boundingBox }) => {
     left: `${boundingBox.left - margins['margin-left']}px`,
     right: `${boundingBox.right - margins['margin-right']}px`,
   };
+
   applyStylesToDOMNode({ domNode, styles });
 };
 
