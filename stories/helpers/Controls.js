@@ -11,6 +11,7 @@ const styles = {
 
 const Controls = ({
   onRemove,
+  onRemoveAll,
   onRestore,
   onRotate,
   onShuffle,
@@ -23,7 +24,15 @@ const Controls = ({
       style={styles.button}
       disabled={numOfCurrentItems === 0}
     >
-      Remove Item
+      Remove 1 Item
+    </button>
+
+    <button
+      onClick={() => onRemoveAll()}
+      style={styles.button}
+      disabled={numOfCurrentItems === 0}
+    >
+      Remove All Items
     </button>
 
     <button
@@ -46,6 +55,7 @@ const Controls = ({
 
 Controls.propTypes = {
   onRemove: PropTypes.func.isRequired,
+  onRemoveAll: PropTypes.func.isRequired,
   onRestore: PropTypes.func.isRequired,
   onRotate: PropTypes.func.isRequired,
   onShuffle: PropTypes.func.isRequired,
