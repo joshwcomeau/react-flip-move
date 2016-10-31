@@ -184,7 +184,7 @@ export const updateHeightPlaceholder = ({
 
 export const getNativeNode = (element) => {
   // When running in a windowless environment, abort!
-  if (typeof HTMLElement !== 'undefined') {
+  if (typeof HTMLElement === 'undefined') {
     return null;
   }
 
