@@ -183,10 +183,13 @@ export const updateHeightPlaceholder = ({
 };
 
 export const getNativeNode = (element) => {
-  var isBrowser = typeof HTMLElement !== 'undefined';
+  // When running in a windowless environment, abort!
+  if (typeof HTMLElement !== 'undefined') {
+    return null;
+  }
 
   // `element` may already be a native node.
-  if (isBrowser && element instanceof HTMLElement) {
+  if (element instanceof HTMLElement) {
     return element;
   }
 
