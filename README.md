@@ -172,26 +172,29 @@ You can supply your own CSS-based transitions to customize the behaviour. Both `
 ![Custom](https://s3.amazonaws.com/githubdocs/fm-custom-rotate-x.gif)
 
 ```js
-<FlipMove
-  staggerDelayBy={50}
-  enterAnimation={{
-    from: {
-      transform: 'rotateX(135deg)'
-    },
-    to: {
-      transform: ''
-    }
-  }}
-  leaveAnimation={{
-    from: {
-      transform: ''
-    },
-    to: {
-      transform: 'rotateX(-120deg)',
-      opacity: 0.6
-    }
-  }}
-/>
+ <FlipMove
+   staggerDelayBy={150}
+   enterAnimation={{
+     from: {
+       transform: 'rotateX(180deg)',
+       opacity: 0.1,
+     },
+     to: {
+       transform: '',
+     },
+   }}
+   leaveAnimation={{
+     from: {
+        transform: '',
+     },
+     to: {
+       transform: 'rotateX(-120deg)',
+       opacity: 0.1,
+     },
+   }}
+ >
+   {this.renderRows()}
+ </FlipMove>
 ```
 
 
