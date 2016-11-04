@@ -393,7 +393,9 @@ class FlipMove extends Component {
     this.props.children.forEach((child) => {
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
-      if (!child.key) {
+      // It is also possible that there is no childrenData for the key;
+      // Also ignore these.
+      if (!child.key || !this.childrenData[child.key]) {
         return;
       }
 
