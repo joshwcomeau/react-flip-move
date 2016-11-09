@@ -101,7 +101,7 @@ class FlipMove extends Component {
     // Essentially, we want to keep just-deleted nodes in the DOM for a bit
     // longer, so that we can animate them away.
     const newChildren = this.isAnimationDisabled()
-      ? this.props.children
+      ? nextProps.children
       : this.calculateNextSetOfChildren(nextProps.children);
 
     this.setState({ children: newChildren });
