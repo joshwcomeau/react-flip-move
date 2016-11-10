@@ -348,10 +348,10 @@ class FlipMove extends Component {
           const [elements, domNodes] = this.formatChildrenForHooks();
 
           this.props.onFinishAll(elements, domNodes);
-
-          // Reset our variables for the next iteration
-          this.childrenToAnimate = [];
         }
+
+        // Reset our variables for the next iteration
+        this.childrenToAnimate = [];
       });
 
       // If the placeholder was holding the container open while elements were
