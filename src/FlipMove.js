@@ -319,6 +319,7 @@ class FlipMove extends Component {
       this.triggerFinishHooks(child, domNode);
 
       domNode.removeEventListener(transitionEnd, transitionEndHandler);
+      if (child.leaving) delete this.childrenData[child.key];
     };
 
     domNode.addEventListener(transitionEnd, transitionEndHandler);
