@@ -391,11 +391,16 @@ class FlipMove extends Component {
     );
 
     this.props.children.forEach((child) => {
+      // In very rare circumstances, for reasons unknown, the ref is never
+      // populated for certain children. In this case, avoid doing this update.
+      // see: https://github.com/joshwcomeau/react-flip-move/pull/91
+      if (!this.childrenData[child.key]) {
+        return;
+      }
+
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
-      // It is also possible that there is no childrenData for the key;
-      // Also ignore these.
-      if (!child.key || !this.childrenData[child.key]) {
+      if (!child.key) {
         return;
       }
 
