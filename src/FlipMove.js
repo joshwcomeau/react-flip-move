@@ -114,7 +114,10 @@ class FlipMove extends Component {
     // IMPORTANT: We need to make sure that the children have actually changed.
     // At the end of the transition, we clean up nodes that need to be removed.
     // We DON'T want this cleanup to trigger another update.
-    const shouldTriggerFLIP = this.props.children !== previousProps.children;
+    const shouldTriggerFLIP = (
+      this.props.children !== previousProps.children &&
+      !this.isAnimationDisabled()
+    );
 
     if (shouldTriggerFLIP) {
       this.prepForAnimation();
