@@ -1,19 +1,22 @@
+/* eslint-disable no-undef, react/prop-types, react/no-multi-comp, no-unused-expressions */
 import React, { Component } from 'react';
-import ReactDOM             from 'react-dom';
-import TestUtils            from 'react-addons-test-utils';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-addons-test-utils';
 
-import FlipMove             from '../src/FlipMove';
+import { getContainerBox, getTagPositions } from './helpers';
+import FlipMove from '../src/FlipMove';
 
 
 describe('FlipMove', () => {
-  let consoleStub, finishAllStub;
+  let consoleStub;
+  let finishAllStub;
 
-  before(     () => {
-    consoleStub   = sinon.stub(console, 'error');
+  before(() => {
+    consoleStub = sinon.stub(console, 'error');
     finishAllStub = sinon.stub();
   });
-  afterEach(  () => consoleStub.reset() );
-  after(      () => consoleStub.restore() );
+  afterEach(() => consoleStub.reset());
+  after(() => consoleStub.restore());
 
   // To test this, here is our setup:
   // We're making a simple list of news articles, with the ability to
@@ -23,10 +26,11 @@ describe('FlipMove', () => {
   const articles = [
     { id: 'a', name: 'The Dawn of Time', timestamp: 123456 },
     { id: 'b', name: 'A While Back', timestamp: 333333 },
-    { id: 'c', name: 'This Just Happened', timestamp: 654321 }
+    { id: 'c', name: 'This Just Happened', timestamp: 654321 },
   ];
 
   // We need a list item, the thing we'll be moving about.
+  // eslint-disable-next-line react/prefer-stateless-function
   const ListItem = class ListItem extends Component {
     render() {
       return <li id={this.props.id}>{this.props.name}</li>;
@@ -43,19 +47,22 @@ describe('FlipMove', () => {
         staggerDurationBy: 0,
         disableAllAnimations: false,
         maintainContainerHeight: false,
-        articles
+        articles,
       };
       this.count = 0;
+
+      this.onStartHandler = this.onStartHandler.bind(this);
+      this.onFinishHandler = this.onFinishHandler.bind(this);
     }
 
-    onFinishHandler(){
-      this.count++;
+    onFinishHandler() {
+      this.count += 1;
     }
-    onStartHandler(){
-      this.count--;
+    onStartHandler() {
+      this.count -= 1;
     }
     renderArticles() {
-      return this.state.articles.map( article => (
+      return this.state.articles.map(article => (
         <ListItem key={article.id} id={article.id} name={article.name} />
       ));
     }
@@ -69,8 +76,8 @@ describe('FlipMove', () => {
             staggerDurationBy={this.state.staggerDurationBy}
             disableAllAnimations={this.state.disableAllAnimations}
             maintainContainerHeight={this.state.maintainContainerHeight}
-            onStart={::this.onStartHandler}
-            onFinish={::this.onFinishHandler}
+            onStart={this.onStartHandler}
+            onFinish={this.onFinishHandler}
             onFinishAll={finishAllStub}
           >
             { this.renderArticles() }
@@ -82,7 +89,7 @@ describe('FlipMove', () => {
 
   let renderedComponent;
 
-  before( () => {
+  before(() => {
     renderedComponent = ReactDOM.render(
       <ListParent />,
       document.getElementsByTagName('body')[0]
@@ -110,7 +117,7 @@ describe('FlipMove', () => {
   describe('updating state', () => {
     let originalPositions;
 
-    before( () => {
+    before(() => {
       const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
         renderedComponent, 'li'
       );
@@ -122,7 +129,6 @@ describe('FlipMove', () => {
       };
 
       renderedComponent.setState({ articles: articles.reverse() });
-
     });
 
     it('has rearranged the components and DOM nodes', () => {
@@ -146,11 +152,11 @@ describe('FlipMove', () => {
       // The animation has not started yet.
       // While the DOM nodes might have changed places, their on-screen
       // positions should be consistent with where they started.
-      const newPositions = getTagPositions(renderedComponent)
+      const newPositions = getTagPositions(renderedComponent);
 
       // Even though, in terms of the DOM, tag C is at the top,
       // its bounding box should still be the lowest
-      expect(newPositions).to.deep.equal(originalPositions)
+      expect(newPositions).to.deep.equal(originalPositions);
     });
 
     it('has stacked them all on top of each other after 250ms', (done) => {
@@ -158,7 +164,7 @@ describe('FlipMove', () => {
       // Three items are being re-arranged; top and bottom changing places.
       // Therefore, if we wait 250ms, all 3 items should be stacked.
       setTimeout(() => {
-        const newPositions = getTagPositions(renderedComponent)
+        const newPositions = getTagPositions(renderedComponent);
 
         // B should not move at all
         expect(newPositions.b).to.deep.equal(originalPositions.b);
@@ -172,14 +178,14 @@ describe('FlipMove', () => {
         expect(newPositions.c.top).to.be.lessThan(originalPositions.c.top);
 
         done();
-      }, 250)
+      }, 250);
     });
 
     it('has finished the animation after another 500ms', (done) => {
       // Waiting 500ms, for a total of 750ms. Giving a buffer because
       // Travis is slowwww
       setTimeout(() => {
-        const newPositions = getTagPositions(renderedComponent)
+        const newPositions = getTagPositions(renderedComponent);
 
         // B should still be in the same place.
         expect(newPositions.b).to.deep.equal(originalPositions.b);
@@ -189,7 +195,7 @@ describe('FlipMove', () => {
         expect(newPositions.c).to.deep.equal(originalPositions.a);
 
         done();
-      }, 500)
+      }, 500);
     });
   });
 
@@ -197,7 +203,7 @@ describe('FlipMove', () => {
     before(() => {
       finishAllStub.reset();
       renderedComponent.setState({
-        articles: articles.reverse()
+        articles: articles.reverse(),
       });
     });
 
@@ -205,34 +211,20 @@ describe('FlipMove', () => {
       expect(renderedComponent.count).to.equal(-2);
     });
 
-    it('should fire onFinish after the animation', done => {
+    it('should fire onFinish after the animation', (done) => {
       setTimeout(() => {
         expect(renderedComponent.count).to.equal(0);
         done();
-      }, 750)
+      }, 750);
     });
 
     it('should have fired the onFinishAll stub only once', () => {
       expect(finishAllStub).to.have.been.calledOnce;
       finishAllStub.reset();
-    })
+    });
   });
 
   describe('duration propType', () => {
-    let originalPositions;
-
-    before( () => {
-      const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
-        renderedComponent, 'li'
-      );
-
-      originalPositions = {
-        a: outputTags[0].getBoundingClientRect(),
-        b: outputTags[1].getBoundingClientRect(),
-        c: outputTags[2].getBoundingClientRect(),
-      };
-    });
-
     it('applies a string that can be converted to an int', () => {
       renderedComponent.setState({ duration: '10' });
       expect(consoleStub).to.not.have.been.called;
@@ -252,7 +244,7 @@ describe('FlipMove', () => {
   describe('disabling animation', () => {
     let originalPositions;
 
-    before( () => {
+    before(() => {
       const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
         renderedComponent, 'li'
       );
@@ -273,48 +265,28 @@ describe('FlipMove', () => {
     });
 
     it('should transition immediately', () => {
-      const newPositions = getTagPositions(renderedComponent)
+      const newPositions = getTagPositions(renderedComponent);
 
       expect(newPositions.a).to.deep.equal(originalPositions.c);
       expect(newPositions.b).to.deep.equal(originalPositions.b);
       expect(newPositions.c).to.deep.equal(originalPositions.a);
     });
-
   });
 
   describe('container height', () => {
     let containerBox = null;
 
-    before( () => {
+    before(() => {
       containerBox = getContainerBox(renderedComponent);
 
       renderedComponent.setState({
         maintainContainerHeight: true,
-        articles: articles.slice(-1)
+        articles: articles.slice(-1),
       });
-    })
+    });
 
     it('should be maintained', () => {
       expect(containerBox.height).to.equal(getContainerBox(renderedComponent).height);
-    })
-  })
+    });
+  });
 });
-
-function getContainerBox(renderedComponent) {
-  const container = TestUtils.findRenderedDOMComponentWithTag(
-    renderedComponent, 'ul'
-  );
-  return container.getBoundingClientRect();
-}
-
-function getTagPositions(renderedComponent) {
-  const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
-    renderedComponent, 'li'
-  );
-  const [ tagC, tagB, tagA ] = outputTags;
-  return {
-    a: tagA.getBoundingClientRect(),
-    b: tagB.getBoundingClientRect(),
-    c: tagC.getBoundingClientRect()
-  }
-}

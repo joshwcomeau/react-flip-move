@@ -15,6 +15,7 @@ import React, { Component, PropTypes } from 'react';
 import omit from 'lodash.omit';
 
 import {
+  statelessFunctionalComponentSupplied,
   invalidTypeForTimingProp,
   invalidEnterLeavePreset,
   deprecatedDisableAnimations,
@@ -22,12 +23,25 @@ import {
 import {
   enterPresets, leavePresets, defaultPreset, disablePreset,
 } from './enter-leave-presets';
+import { isElementAnSFC } from './helpers';
 
 
 function propConverter(ComposedComponent) {
   class FlipMovePropConverter extends Component {
     convertProps(props) {
       const { propTypes, defaultProps } = FlipMovePropConverter;
+
+      // FlipMove does not support stateless functional components.
+      // Check to see if any supplied components won't work.
+      // If the child doesn't have a key, it means we aren't animating it.
+      // It's allowed to be an SFC, since we ignore it.
+      const noStateless = props.children.every(child =>
+         !isElementAnSFC(child) || typeof child.key === 'undefined'
+      );
+
+      if (!noStateless) {
+        console.warn(statelessFunctionalComponentSupplied());
+      }
 
       // Create a non-immutable working copy
       let workingProps = { ...props };

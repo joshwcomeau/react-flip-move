@@ -1,3 +1,11 @@
+export const statelessFunctionalComponentSupplied = () => `
+>> Error, via react-flip-move <<
+
+You provided a stateless functional component as a child to <FlipMove>. Unfortunately, SFCs aren't supported, because Flip Move needs access to the backing instances via refs, and SFCs don't have a public instance that holds that info.
+
+Please wrap your components in a native element (eg. <div>), or a non-functional component.
+`;
+
 export const invalidTypeForTimingProp = ({
   prop,
   value,
