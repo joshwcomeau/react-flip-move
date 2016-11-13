@@ -28,5 +28,17 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
           height: '400px',
         }}
       />
+    ))
+    .add('Including children without keys', () => (
+      <FlipMoveWrapper
+        itemType={type}
+        items={[
+          { id: 'a', text: "7 Insecticides You Don't Know You're Consuming" },
+          { id: 'b', text: '11 Ways To Style Your Hair' },
+          { text: 'This item has no key' },
+          { id: 'c', text: 'The 200 Countries You Have To Visit Before The Apocalypse' },
+          { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product' },
+        ]}
+      />
     ));
 });

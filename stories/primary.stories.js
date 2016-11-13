@@ -3,6 +3,7 @@ import { storiesOf } from '@kadira/storybook';
 
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
 import FlipMoveListItem from './helpers/FlipMoveListItem';
+import FlipMoveListItemLegacy from './helpers/FlipMoveListItemLegacy';
 
 
 storiesOf('Basic Behaviour', module)
@@ -12,6 +13,11 @@ storiesOf('Basic Behaviour', module)
   .add('composite (<FlipMoveListItem>) children', () => (
     <FlipMoveWrapper
       itemType={FlipMoveListItem}
+    />
+  ))
+  .add('Original composite (<FlipMoveListItemLegacy>) children (createClass)', () => (
+    <FlipMoveWrapper
+      itemType={FlipMoveListItemLegacy}
     />
   ))
   .add('with long duration', () => (
