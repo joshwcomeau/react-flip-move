@@ -63,7 +63,11 @@ describe('FlipMove', () => {
     }
     renderArticles() {
       return this.state.articles.map(article => (
-        <ListItem key={article.id} id={article.id} name={article.name} />
+        <ListItem
+          key={article ? article.id : null}
+          id={article ? article.id : null}
+          name={article ? article.name : null}
+        />
       ));
     }
 
@@ -270,6 +274,20 @@ describe('FlipMove', () => {
       expect(newPositions.a).to.deep.equal(originalPositions.c);
       expect(newPositions.b).to.deep.equal(originalPositions.b);
       expect(newPositions.c).to.deep.equal(originalPositions.a);
+    });
+  });
+
+  describe('falsy children', () => {
+    it('adds a false child to the articles', () => {
+      renderedComponent.setState({ articles: [null, ...articles.slice(1)] });
+      expect(consoleStub).to.not.have.been.called;
+    });
+
+    it('transitions without issue', (done) => {
+      setTimeout(() => {
+        expect(consoleStub).to.not.have.been.called;
+        done();
+      }, 750);
     });
   });
 
