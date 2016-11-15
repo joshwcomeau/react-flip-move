@@ -40,5 +40,11 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
           { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product' },
         ]}
       />
+    ))
+    .add('falsy children', () => (
+      <FlipMoveWrapper
+        itemType={type}
+        items={null}
+      />
     ));
 });

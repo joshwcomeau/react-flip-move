@@ -71,6 +71,11 @@ class FlipMoveWrapper extends Component {
   }
 
   renderItems() {
+    // Support falsy children by passing them straight to FlipMove
+    if (!this.state.items) {
+      return this.state.items;
+    }
+
     return this.state.items.map(item => (
       React.createElement(
         this.props.itemType,
@@ -100,8 +105,8 @@ class FlipMoveWrapper extends Component {
           onRestore={this.restoreItems}
           onRotate={this.rotateItems}
           onShuffle={this.shuffleItems}
-          numOfCurrentItems={this.state.items.length}
-          numOfTotalItems={this.props.items.length}
+          numOfCurrentItems={this.state.items ? this.state.items.length : 0}
+          numOfTotalItems={this.props.items ? this.props.items.length : 0}
         />
         <FlipMove
           style={{
