@@ -81,6 +81,7 @@ class FlipMoveWrapper extends Component {
         this.props.itemType,
         {
           key: item.id,
+          id: item.id,
           style: {
             ...baseStyles.listItemStyles,
             ...this.props.listItemStyles,

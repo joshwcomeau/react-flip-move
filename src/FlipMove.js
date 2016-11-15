@@ -398,6 +398,12 @@ class FlipMove extends Component {
     );
 
     this.props.children.forEach((child) => {
+      // It is possible that a child does not have a `key` property;
+      // Ignore these children, they don't need to be moved.
+      if (!child.key) {
+        return;
+      }
+
       // In very rare circumstances, for reasons unknown, the ref is never
       // populated for certain children. In this case, avoid doing this update.
       // see: https://github.com/joshwcomeau/react-flip-move/pull/91
@@ -405,16 +411,20 @@ class FlipMove extends Component {
         return;
       }
 
-      // It is possible that a child does not have a `key` property;
-      // Ignore these children, they don't need to be moved.
-      if (!child.key) {
-        return;
-      }
-
       this.childrenData[child.key].boundingBox = getRelativeBoundingBox({
         childData: this.childrenData[child.key],
         parentData: this.parentData,
         getPosition: this.props.getPosition,
+      });
+
+      // Once the child is updated, its `transform` property should be unset.
+      // This is so that if we're mid-transition, the current transition doesn't
+      // affect the calculations. This is how to ensure smooth interrupts
+      applyStylesToDOMNode({
+        domNode: this.childrenData[child.key].domNode,
+        styles: {
+          transition: '',
+        },
       });
     });
   }
@@ -444,6 +454,7 @@ class FlipMove extends Component {
         parentData: this.parentData,
         getPosition: this.props.getPosition,
       });
+
       style.transform = `translate(${dX}px, ${dY}px)`;
     }
 
@@ -483,6 +494,9 @@ class FlipMove extends Component {
     if (isEnteringWithAnimation || isLeavingWithAnimation) {
       return true;
     }
+
+    // TEMP
+    return true;
 
     // If it isn't entering/leaving, we want to animate it if it's
     // on-screen position has changed.
