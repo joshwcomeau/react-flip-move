@@ -43,11 +43,19 @@ const Controls = ({
       Restore Items
     </button>
 
-    <button onClick={() => onShuffle()} style={styles.button}>
+    <button
+      onClick={() => onShuffle()}
+      style={styles.button}
+      disabled={numOfCurrentItems === 0}
+    >
       Shuffle Items
     </button>
 
-    <button onClick={() => onRotate()} style={styles.button}>
+    <button
+      onClick={() => onRotate()}
+      style={styles.button}
+      disabled={numOfCurrentItems === 0}
+    >
       Rotate Items
     </button>
   </div>
