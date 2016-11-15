@@ -31,23 +31,24 @@ function propConverter(ComposedComponent) {
     convertProps(props) {
       const { propTypes, defaultProps } = FlipMovePropConverter;
 
+      // Create a non-immutable working copy
+      let workingProps = { ...props };
+
+      // Convert `children` to an array. This is to standardize when a single
+      // child is passed, as well as if the child is falsy.
+      workingProps.children = React.Children.toArray(props.children);
+
       // FlipMove does not support stateless functional components.
       // Check to see if any supplied components won't work.
       // If the child doesn't have a key, it means we aren't animating it.
       // It's allowed to be an SFC, since we ignore it.
-      // Note: React.Children.toArray(...) takes care of corner cases like
-      // no children or 'falsy' children
-      const newChildren = React.Children.toArray(props.children);
-      const noStateless = newChildren.every(child =>
+      const noStateless = workingProps.children.every(child =>
          !isElementAnSFC(child) || typeof child.key === 'undefined'
       );
 
       if (!noStateless) {
         console.warn(statelessFunctionalComponentSupplied());
       }
-
-      // Create a non-immutable working copy
-      let workingProps = { ...props };
 
       // Do string-to-int conversion for all timing-related props
       const timingPropNames = [
@@ -74,12 +75,6 @@ function propConverter(ComposedComponent) {
 
         workingProps[prop] = value;
       });
-
-      // Convert the children to a React.Children array.
-      // This is to ensure we're always working with an array, and not
-      // an only child. There's some weirdness with this.
-      // See: https://github.com/facebook/react/pull/3650/files
-      workingProps.children = newChildren;
 
       // Our enter/leave animations can be specified as boolean (default or
       // disabled), string (preset name), or object (actual animation values).
