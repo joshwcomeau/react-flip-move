@@ -77,12 +77,6 @@ class FlipMove extends Component {
     this.remainingAnimations = 0;
     this.childrenToAnimate = [];
 
-    // When leaving items, we apply some over-ride styles to them (position,
-    // top, left). If the item is passed in through props BEFORE the item has
-    // finished leaving, its style will be wrong. So, to prevent any weirdness,
-    // we store the "original" styles here so they can be applied on re-entry.
-    this.originalDomStyles = {};
-
     this.doesChildNeedToBeAnimated = this.doesChildNeedToBeAnimated.bind(this);
     this.runAnimation = this.runAnimation.bind(this);
   }
@@ -202,19 +196,6 @@ class FlipMove extends Component {
 
         // We need to take the items out of the "flow" of the document, so that
         // its siblings can move to take its place.
-        // By setting its position to absolute and positioning it where it is,
-        // we can make it leave in-place while its siblings can calculate where
-        // they need to go.
-        // If, however, the 'leave' is interrupted and they're forced to
-        // re-enter, we want to undo this change, and the only way to do that
-        // is to preserve their current styles.
-        this.originalDomStyles[leavingChild.key] = {
-          position: childData.domNode.style.position,
-          top: childData.domNode.style.top,
-          left: childData.domNode.style.left,
-          right: childData.domNode.style.right,
-        };
-
         removeNodeFromDOMFlow(childData);
       });
 
@@ -226,6 +207,20 @@ class FlipMove extends Component {
         });
       }
     }
+
+    // For all children not in the middle of entering or leaving,
+    // we need to reset the transition, so that the NEW shuffle starts from
+    // the right place.
+    this.state.children.forEach((child) => {
+      if (!child.entering && !child.leaving) {
+        applyStylesToDOMNode({
+          domNode: this.childrenData[child.key].domNode,
+          styles: {
+            transition: '',
+          },
+        });
+      }
+    });
   }
 
   runAnimation() {
@@ -347,8 +342,6 @@ class FlipMove extends Component {
           entering: false,
         }));
 
-      this.originalDomStyles = {};
-
       this.setState({ children: nextChildren }, () => {
         if (typeof this.props.onFinishAll === 'function') {
           const [elements, domNodes] = this.formatChildrenForHooks();
@@ -416,49 +409,43 @@ class FlipMove extends Component {
         parentData: this.parentData,
         getPosition: this.props.getPosition,
       });
-
-      // Once the child is updated, its `transform` property should be unset.
-      // This is so that if we're mid-transition, the current transition doesn't
-      // affect the calculations. This is how to ensure smooth interrupts
-      applyStylesToDOMNode({
-        domNode: this.childrenData[child.key].domNode,
-        styles: {
-          transition: '',
-        },
-      });
     });
   }
 
   computeInitialStyles(child) {
-    let style = { transition: '0ms' };
+    const enterOrLeaveWithoutAnimation = (
+      (child.entering && !this.props.enterAnimation) ||
+      (child.leaving && !this.props.leaveAnimation)
+    );
 
-    if (child.entering) {
-      if (this.props.enterAnimation) {
-        const original = this.originalDomStyles[child.key] || {};
-        style = {
-          ...style,
-          ...this.props.enterAnimation.from,
-          ...original,
-        };
-      }
-    } else if (child.leaving) {
-      if (this.props.leaveAnimation) {
-        style = {
-          ...style,
-          ...this.props.leaveAnimation.from,
-        };
-      }
-    } else {
-      const [dX, dY] = getPositionDelta({
-        childData: this.childrenData[child.key],
-        parentData: this.parentData,
-        getPosition: this.props.getPosition,
-      });
-
-      style.transform = `translate(${dX}px, ${dY}px)`;
+    if (enterOrLeaveWithoutAnimation) {
+      return {};
     }
 
-    return style;
+    if (child.entering) {
+      // If this child was in the middle of leaving, it still has its
+      // absolute positioning styles applied. We need to undo those.
+      return {
+        position: '',
+        top: '',
+        left: '',
+        right: '',
+        bottom: '',
+        ...this.props.enterAnimation.from,
+      };
+    } else if (child.leaving) {
+      return this.props.leaveAnimation.from;
+    }
+
+    const [dX, dY] = getPositionDelta({
+      childData: this.childrenData[child.key],
+      parentData: this.parentData,
+      getPosition: this.props.getPosition,
+    });
+
+    return {
+      transform: `translate(${dX}px, ${dY}px)`,
+    };
   }
 
   isAnimationDisabled() {
@@ -494,9 +481,6 @@ class FlipMove extends Component {
     if (isEnteringWithAnimation || isLeavingWithAnimation) {
       return true;
     }
-
-    // TEMP
-    return true;
 
     // If it isn't entering/leaving, we want to animate it if it's
     // on-screen position has changed.
