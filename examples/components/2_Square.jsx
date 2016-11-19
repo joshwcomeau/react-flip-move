@@ -24,7 +24,6 @@ class Board extends Component {
     this.state = {
       squares: times(NUM_SQUARES, i => ({
         id: i,
-        painted: false,
         red: i === RED_SQUARE
       }))
     };
@@ -44,7 +43,6 @@ class Board extends Component {
       const classes = classNames({
         square: true,
         red: square.red,
-        painted: square.painted
       });
 
       return (
@@ -102,12 +100,7 @@ class Board extends Component {
     if ( element.props.red ) return;
 
     // Wait half the duration of the FlipMove animation, and then paint it!
-    setTimeout( () => {
-      const squares = this.state.squares.slice();
-      const squareIndex = squares.findIndex( s => s.id === parseInt(node.id) );
-      squares[squareIndex].painted = true;
-      this.setState({ squares });
-    }, FLIP_DURATION / 6)
+    setTimeout(() => node.classList.add('painted'), FLIP_DURATION / 6)
   }
 
   startMove(element, node) {
