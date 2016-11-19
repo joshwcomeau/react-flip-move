@@ -3,6 +3,8 @@ import ReactDOM, { render }                 from 'react-dom';
 import classNames                           from 'classnames';
 import { Router, Route, Link, IndexRoute }  from 'react-router';
 
+import './polyfills/classlist';
+
 import Header     from './components/Header.jsx';
 import Home       from './components/Home.jsx';
 import Shuffle    from './components/1_Shuffle.jsx';
@@ -11,7 +13,7 @@ import Scrabble   from './components/3_Scrabble.jsx';
 import Laboratory from './components/4_Laboratory.jsx';
 import Footer     from './components/Footer.jsx';
 
-require('./scss/main.scss');
+import './scss/main.scss';
 
 
 class App extends Component {

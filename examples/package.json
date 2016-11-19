@@ -32,7 +32,7 @@
     "react-dnd-html5-backend": "^2.0.0",
     "react-dom": "^0.14.7",
     "react-dropdown": "^0.7.2",
-    "react-flip-move": "^2.4.0-rc2",
+    "react-flip-move": "^2.7.0-beta1",
     "react-router": "^1.0.3",
     "react-select": "^1.0.0-beta9",
     "react-slider": "^0.6.1"
