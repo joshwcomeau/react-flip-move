@@ -228,7 +228,7 @@ Similarly to staggerDurationBy, This effect is great for "humanizing" transition
 |--------------------------------|-------------------|
 |  `String`, `Boolean`, `Object` | 'elevator'        |
 
-Control the onEnter animation that runs when new items are added to the DOM. For examples of this property, see the <strong><a href="#enterleave-animations">feature description above</a></strong>.
+Control the onEnter animation that runs when new items are added to the DOM. For examples of this property, see the [**feature description above**](#enterleave-animations).
 
 Accepts several types:
 
@@ -239,7 +239,7 @@ Accepts several types:
   * `accordionHorizontal`
   * `none`
 
-<a href="https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js">View the CSS implementation of these presets.</a>
+[View the CSS implementation of these presets](https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js).
 
 **Boolean:** You can enter `false` to disable the enter animation, or `true` to select the default enter animation (elevator).
 
@@ -270,7 +270,7 @@ It is recommended that you stick to hardware-accelerated CSS properties for opti
 |--------------------------------|-------------------|
 |  `String`, `Boolean`, `Object` | 'elevator'        |
 
-Control the onLeave animation that runs when new items are removed from the DOM. For examples of this property, see the <strong><a href="#enterleave-animations">feature description above</a></strong>.
+Control the onLeave animation that runs when new items are removed from the DOM. For examples of this property, see the [**feature description above**](#enterleave-animations).
 
 This property functions identically to `enterAnimation`.
 
@@ -283,7 +283,7 @@ Accepts several types:
   * `accordionHorizontal`
   * `none`
 
-<a href="https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js">View the CSS implementation of these presets.</a>
+[View the CSS implementation of these presets](https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js).
 
 **Boolean:** You can enter `false` to disable the leave animation, or `true` to select the default leave animation (elevator).
 
@@ -370,7 +370,7 @@ The callback is invoked with two arguments:
 * `childElements`: An array of the references to the React Element(s) being animated.
 * `domNodes`: An array of the references to the unadulterated DOM node(s) being animated.
 
-These arguments are similar to the ones provided for `onStart`, except we provide an *array* of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.
+These arguments are similar to the ones provided for `onStart`, except we provide an *array* of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like [lodash's .zip](https://lodash.com/docs#zip) to get pairs of element/node, if needed.
 
 In general, it is advisable to ignore the `domNodes` argument and work with the `childElements`. The `domNodes` are just an escape hatch for doing complex things not otherwise possible.
 
@@ -390,7 +390,7 @@ The callback is invoked with two arguments:
 * `childElements`: An array of the references to the React Element(s) being animated.
 * `domNodes`: An array of the references to the unadulterated DOM node(s) being animated.
 
-These arguments are similar to the ones provided for `onFinish`, except we provide an *array* of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.
+These arguments are similar to the ones provided for `onFinish`, except we provide an *array* of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like [lodash's .zip](https://lodash.com/docs#zip) to get pairs of element/node, if needed.
 
 In general, it is advisable to ignore the `domNodes` argument and work with the `childElements`. The `domNodes` are just an escape hatch for doing complex things not otherwise possible.
 
