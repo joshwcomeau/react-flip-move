@@ -26,36 +26,36 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
 
 ## Table of Contents
 
-* [Installation](https://github.com/joshwcomeau/react-flip-move#installation)
-* [Features](https://github.com/joshwcomeau/react-flip-move#features)
-* [Quickstart](https://github.com/joshwcomeau/react-flip-move#quickstart)
-* [Compatibility](https://github.com/joshwcomeau/react-flip-move#compatibility)
-* [Enter/Leave Animations](https://github.com/joshwcomeau/react-flip-move#enterleave-animations)
-* [Options](https://github.com/joshwcomeau/react-flip-move#options)
-  * [children](https://github.com/joshwcomeau/react-flip-move#children)
-  * [easing](https://github.com/joshwcomeau/react-flip-move#easing)
-  * [duration](https://github.com/joshwcomeau/react-flip-move#duration)
-  * [delay](https://github.com/joshwcomeau/react-flip-move#delay)
-  * [staggerDurationBy](https://github.com/joshwcomeau/react-flip-move#staggerdurationby)
-  * [staggerDelayBy](https://github.com/joshwcomeau/react-flip-move#staggerdelayby)
-  * [enterAnimation](https://github.com/joshwcomeau/react-flip-move#enteranimation)
-  * [leaveAnimation](https://github.com/joshwcomeau/react-flip-move#leaveanimation)
-  * [maintainContainerHeight](https://github.com/joshwcomeau/react-flip-move#maintaincontainerheight)
-  * [onStart](https://github.com/joshwcomeau/react-flip-move#onstart)
-  * [onFinish](https://github.com/joshwcomeau/react-flip-move#onfinish)
-  * [onStartAll](https://github.com/joshwcomeau/react-flip-move#onstartall)
-  * [onFinishAll](https://github.com/joshwcomeau/react-flip-move#onfinishall)
-  * [style](https://github.com/joshwcomeau/react-flip-move#style)
-  * [className](https://github.com/joshwcomeau/react-flip-move#classname)
-  * [typeName](https://github.com/joshwcomeau/react-flip-move#typename)
-  * [disableAllAnimations](https://github.com/joshwcomeau/react-flip-move#disableallanimations)
-  * [getPosition](https://github.com/joshwcomeau/react-flip-move#getPosition)
-  * [HTML Attributes](https://github.com/joshwcomeau/react-flip-move#html-attributes)
-* [Gotchas](https://github.com/joshwcomeau/react-flip-move#gotchas)
-* [Changelog](https://github.com/joshwcomeau/react-flip-move#changelog)
-* [Contributions](https://github.com/joshwcomeau/react-flip-move#contributions)
-* [Development](https://github.com/joshwcomeau/react-flip-move#development)
-* [License](https://github.com/joshwcomeau/react-flip-move#license)
+* [Installation](#installation)
+* [Features](#features)
+* [Quickstart](#quickstart)
+* [Compatibility](#compatibility)
+* [Enter/Leave Animations](#enterleave-animations)
+* [Options](#options)
+  * [children](#children)
+  * [easing](#easing)
+  * [duration](#duration)
+  * [delay](#delay)
+  * [staggerDurationBy](#staggerdurationby)
+  * [staggerDelayBy](#staggerdelayby)
+  * [enterAnimation](#enteranimation)
+  * [leaveAnimation](#leaveanimation)
+  * [maintainContainerHeight](#maintaincontainerheight)
+  * [onStart](#onstart)
+  * [onFinish](#onfinish)
+  * [onStartAll](#onstartall)
+  * [onFinishAll](#onfinishall)
+  * [style](#style)
+  * [className](#classname)
+  * [typeName](#typename)
+  * [disableAllAnimations](#disableallanimations)
+  * [getPosition](#getPosition)
+  * [HTML Attributes](#html-attributes)
+* [Gotchas](#gotchas)
+* [Changelog](#changelog)
+* [Contributions](#contributions)
+* [Development](#development)
+* [License](#license)
 
 
 
@@ -90,7 +90,7 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
 ## Quickstart
 
-The implementation couldn't be simpler. Just wrap the items you'd like to move in a `FlipMove`, with any [custom options](https://github.com/joshwcomeau/react-flip-move#options):
+The implementation couldn't be simpler. Just wrap the items you'd like to move in a `FlipMove`, with any [custom options](#options):
 
 ```js
 import FlipMove from 'react-flip-move';
@@ -228,7 +228,7 @@ Similarly to staggerDurationBy, This effect is great for "humanizing" transition
 |--------------------------------|-------------------|
 |  `String`, `Boolean`, `Object` | 'elevator'        |
 
-Control the onEnter animation that runs when new items are added to the DOM. For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move#enterleave-animations">feature description above</a></strong>.
+Control the onEnter animation that runs when new items are added to the DOM. For examples of this property, see the [**feature description above**](#enterleave-animations).
 
 Accepts several types:
 
@@ -239,7 +239,7 @@ Accepts several types:
   * `accordionHorizontal`
   * `none`
 
-<a href="https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js">View the CSS implementation of these presets.</a>
+[View the CSS implementation of these presets](https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js).
 
 **Boolean:** You can enter `false` to disable the enter animation, or `true` to select the default enter animation (elevator).
 
@@ -270,7 +270,7 @@ It is recommended that you stick to hardware-accelerated CSS properties for opti
 |--------------------------------|-------------------|
 |  `String`, `Boolean`, `Object` | 'elevator'        |
 
-Control the onLeave animation that runs when new items are removed from the DOM. For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move#enterleave-animations">feature description above</a></strong>.
+Control the onLeave animation that runs when new items are removed from the DOM. For examples of this property, see the [**feature description above**](#enterleave-animations).
 
 This property functions identically to `enterAnimation`.
 
@@ -283,7 +283,7 @@ Accepts several types:
   * `accordionHorizontal`
   * `none`
 
-<a href="https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js">View the CSS implementation of these presets.</a>
+[View the CSS implementation of these presets](https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js).
 
 **Boolean:** You can enter `false` to disable the leave animation, or `true` to select the default leave animation (elevator).
 
@@ -370,7 +370,7 @@ The callback is invoked with two arguments:
 * `childElements`: An array of the references to the React Element(s) being animated.
 * `domNodes`: An array of the references to the unadulterated DOM node(s) being animated.
 
-These arguments are similar to the ones provided for `onStart`, except we provide an *array* of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.
+These arguments are similar to the ones provided for `onStart`, except we provide an *array* of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like [lodash's .zip](https://lodash.com/docs#zip) to get pairs of element/node, if needed.
 
 In general, it is advisable to ignore the `domNodes` argument and work with the `childElements`. The `domNodes` are just an escape hatch for doing complex things not otherwise possible.
 
@@ -390,7 +390,7 @@ The callback is invoked with two arguments:
 * `childElements`: An array of the references to the React Element(s) being animated.
 * `domNodes`: An array of the references to the unadulterated DOM node(s) being animated.
 
-These arguments are similar to the ones provided for `onFinish`, except we provide an *array* of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like <a href="https://lodash.com/docs#zip">lodash's .zip</a> to get pairs of element/node, if needed.
+These arguments are similar to the ones provided for `onFinish`, except we provide an *array* of the elements and nodes. The order of both arguments is guaranteed; this means you can use a zipping function like [lodash's .zip](https://lodash.com/docs#zip) to get pairs of element/node, if needed.
 
 In general, it is advisable to ignore the `domNodes` argument and work with the `childElements`. The `domNodes` are just an escape hatch for doing complex things not otherwise possible.
 
