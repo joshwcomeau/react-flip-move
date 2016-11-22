@@ -84,17 +84,23 @@ export const getPositionDelta = ({
   // remain. Until this bug can be solved, this band-aid fix does the job:
   const defaultBox = { left: 0, top: 0 };
 
-  const newBoundingBox = getPosition(childData.domNode);
-  const oldBoundingBox = childData.boundingBox || defaultBox;
+  // Our old box is its last calculated position, derived on mount or at the
+  // start of the previous animation.
+  const oldRelativeBox = childData.boundingBox || defaultBox;
 
-  const relativeBox = {
-    top: newBoundingBox.top - parentData.boundingBox.top,
-    left: newBoundingBox.left - parentData.boundingBox.left,
+  // Our new box is the new final resting place: Where we expect it to wind up
+  // after the animation. First we get the box in absolute terms (AKA relative
+  // to the viewport), and then we calculate its relative box (relative to the
+  // parent container)
+  const newAbsoluteBox = getPosition(childData.domNode);
+  const newRelativeBox = {
+    top: newAbsoluteBox.top - parentData.boundingBox.top,
+    left: newAbsoluteBox.left - parentData.boundingBox.left,
   };
 
   return [
-    oldBoundingBox.left - relativeBox.left,
-    oldBoundingBox.top - relativeBox.top,
+    oldRelativeBox.left - newRelativeBox.left,
+    oldRelativeBox.top - newRelativeBox.top,
   ];
 };
 

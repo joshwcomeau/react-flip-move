@@ -13,6 +13,7 @@ const baseStyles = {
   },
   flipMoveContainerStyles: { paddingTop: '20px' },
   listItemStyles: {
+    position: 'relative',
     fontFamily: '"Helvetica Neue", "San Francisco", sans-serif',
     padding: '10px',
     background: '#FFFFFF',
@@ -81,9 +82,11 @@ class FlipMoveWrapper extends Component {
         this.props.itemType,
         {
           key: item.id,
+          id: item.id,
           style: {
             ...baseStyles.listItemStyles,
             ...this.props.listItemStyles,
+            // zIndex: item.id.charCodeAt(0),
           },
         },
         item.text
