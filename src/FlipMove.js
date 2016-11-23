@@ -212,9 +212,16 @@ class FlipMove extends Component {
     // we need to reset the transition, so that the NEW shuffle starts from
     // the right place.
     this.state.children.forEach((child) => {
+      const { domNode } = this.childrenData[child.key];
+
+      // Ignore children that don't render DOM nodes (eg. by returning null)
+      if (!domNode) {
+        return;
+      }
+
       if (!child.entering && !child.leaving) {
         applyStylesToDOMNode({
-          domNode: this.childrenData[child.key].domNode,
+          domNode,
           styles: {
             transition: '',
           },
@@ -397,15 +404,23 @@ class FlipMove extends Component {
         return;
       }
 
+      const childData = this.childrenData[child.key];
+
       // In very rare circumstances, for reasons unknown, the ref is never
       // populated for certain children. In this case, avoid doing this update.
       // see: https://github.com/joshwcomeau/react-flip-move/pull/91
-      if (!this.childrenData[child.key]) {
+      if (!childData) {
         return;
       }
 
-      this.childrenData[child.key].boundingBox = getRelativeBoundingBox({
-        childData: this.childrenData[child.key],
+      // If the child element returns null, we need to avoid trying to
+      // account for it
+      if (!childData.domNode) {
+        return;
+      }
+
+      childData.boundingBox = getRelativeBoundingBox({
+        childData,
         parentData: this.parentData,
         getPosition: this.props.getPosition,
       });
@@ -473,6 +488,12 @@ class FlipMove extends Component {
       return false;
     }
 
+    const childData = this.childrenData[child.key];
+
+    if (!childData.domNode) {
+      return false;
+    }
+
     const { enterAnimation, leaveAnimation, getPosition } = this.props;
 
     const isEnteringWithAnimation = child.entering && enterAnimation;
@@ -485,7 +506,7 @@ class FlipMove extends Component {
     // If it isn't entering/leaving, we want to animate it if it's
     // on-screen position has changed.
     const [dX, dY] = getPositionDelta({
-      childData: this.childrenData[child.key],
+      childData,
       parentData: this.parentData,
       getPosition,
     });

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { storiesOf } from '@kadira/storybook';
 
+import FlipMove from '../src';
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
 import FlipMoveListItem from './helpers/FlipMoveListItem';
 
@@ -44,7 +45,39 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
     .add('falsy children', () => (
       <FlipMoveWrapper
         itemType={type}
-        items={null}
+        items={[
+          { id: 'a', text: "7 Insecticides You Don't Know You're Consuming" },
+          { id: 'b', text: '11 Ways To Style Your Hair' },
+          null,
+          { id: 'c', text: 'The 200 Countries You Have To Visit Before The Apocalypse' },
+          { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product' },
+        ]}
       />
-    ));
+    ))
+    .add('Valid children that resolve to null', () => {
+      /* eslint-disable react/prop-types */
+      class CustomComponent extends Component {
+        render() {
+          if (!this.props.isVisible) {
+            return null;
+          }
+
+          return (
+            <div>{this.props.children}</div>
+          );
+        }
+      }
+      /* eslint-enable */
+
+      return (
+        <FlipMove>
+          <CustomComponent key="a" isVisible>
+            Hello!
+          </CustomComponent>
+          <CustomComponent key="b" isVisible={false}>
+            Hi!
+          </CustomComponent>
+        </FlipMove>
+      );
+    });
 });
