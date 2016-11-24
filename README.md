@@ -1,6 +1,8 @@
 React Flip Move
 =========
 
+[![Join the chat at https://gitter.im/react-flip-move/Lobby](https://badges.gitter.im/react-flip-move/Lobby.svg)](https://gitter.im/react-flip-move/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![build status](https://travis-ci.org/joshwcomeau/react-flip-move.svg?branch=master)](https://travis-ci.org/joshwcomeau/react-flip-move)
 [![npm version](https://img.shields.io/npm/v/react-flip-move.svg)](https://www.npmjs.com/package/react-flip-move)
 [![npm monthly downloads](https://img.shields.io/npm/dm/react-flip-move.svg)](https://www.npmjs.com/package/react-flip-move)
