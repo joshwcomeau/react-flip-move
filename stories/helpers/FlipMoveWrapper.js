@@ -35,6 +35,28 @@ class FlipMoveWrapper extends Component {
     this.shuffleItems = this.shuffleItems.bind(this);
   }
 
+  componentDidMount() {
+    if (this.props.sequence) {
+      this.runSequence();
+    }
+  }
+
+  runSequence(index = 0) {
+    const { eventName, delay } = this.props.sequence[index];
+
+    window.setTimeout(() => {
+      this[eventName]();
+
+      // If it's not the last item in the sequence, queue the next step.
+      const nextIndex = index + 1;
+      const nextItem = this.props.sequence[nextIndex];
+
+      if (nextItem) {
+        this.runSequence(nextIndex);
+      }
+    }, delay);
+  }
+
   removeItem(itemId) {
     // Randomly remove one, if no specific itemId is provided.
     if (typeof itemId === 'undefined') {
@@ -139,6 +161,10 @@ FlipMoveWrapper.propTypes = {
   bodyContainerStyles: PropTypes.object,
   flipMoveContainerStyles: PropTypes.object,
   listItemStyles: PropTypes.object,
+  sequence: PropTypes.arrayOf(PropTypes.shape({
+    eventName: PropTypes.string,
+    delay: PropTypes.number,
+  })),
 };
 
 FlipMoveWrapper.defaultProps = {
