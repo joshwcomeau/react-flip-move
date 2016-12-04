@@ -464,24 +464,34 @@ This works for all HTML props - there's no validation.
 
 ---
 
+## Changelog
+
+See the [GitHub releases](https://github.com/joshwcomeau/react-flip-move/releases) for version changes.
+
+---
+
 ## Gotchas
 
   * Does not work with stateless functional component children. This is because Flip Move uses refs to identify and apply styles to children, and stateless functional components cannot be given refs.
 
   * All children **need a unique `key` property**. Even if Flip Move is only given a single child, it needs to have a unique `key` prop for Flip Move to track it.
 
-  * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, Flip Move does not take into account existing `transition` or `transform` CSS properties on its direct children.
-
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
   * Sometimes you'll want to update or change an item _without_ triggering a Flip Move animation. For example, with optimistic updating, you may render a temporary version before replacing it with the server-validated one. In this case, simply use the same `key` for both versions, and Flip Move will treat them as the same item.
 
 
-## Changelog
-
-See the [GitHub releases](https://github.com/joshwcomeau/react-flip-move/releases) for version changes.
+---
 
 
+## Known Issues
+
+  * **Interrupted enter/leave animations can be funky**. If enter/leave animations are interrupted, odd quirks can occur. It's generally fine if they're batched, but spamming a `remove item` button causes items to jump around.
+
+  * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, Flip Move does not take into account existing `transition` or `transform` CSS properties on its direct children.
+
+
+---
 
 ## Note on `will-change`
 
