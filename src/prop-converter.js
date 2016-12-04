@@ -12,7 +12,6 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import omit from 'lodash.omit';
 
 import {
   statelessFunctionalComponentSupplied,
@@ -25,6 +24,15 @@ import {
 } from './enter-leave-presets';
 import { isElementAnSFC } from './helpers';
 
+function omit(obj, attrs = []) {
+  const result = {};
+  Object.keys(obj).forEach((key) => {
+    if (attrs.indexOf(key) === -1) {
+      result[key] = obj[key];
+    }
+  });
+  return result;
+}
 
 function propConverter(ComposedComponent) {
   class FlipMovePropConverter extends Component {
@@ -106,7 +114,7 @@ function propConverter(ComposedComponent) {
         ...delegatedProps.style,
       };
 
-      workingProps = omit(workingProps, delegatedProps);
+      workingProps = omit(workingProps, Object.keys(delegatedProps));
       workingProps.delegated = delegatedProps;
 
       return workingProps;
