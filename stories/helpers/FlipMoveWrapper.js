@@ -33,6 +33,8 @@ class FlipMoveWrapper extends Component {
     this.restoreItems = this.restoreItems.bind(this);
     this.rotateItems = this.rotateItems.bind(this);
     this.shuffleItems = this.shuffleItems.bind(this);
+    this.runSequence = this.runSequence.bind(this);
+    this.restartSequence = this.restartSequence.bind(this);
   }
 
   componentDidMount() {
@@ -41,11 +43,19 @@ class FlipMoveWrapper extends Component {
     }
   }
 
-  runSequence(index = 0) {
-    const { eventName, delay } = this.props.sequence[index];
+  restartSequence() {
+    this.restoreItems();
 
     window.setTimeout(() => {
-      this[eventName]();
+      this.runSequence(0);
+    }, this.props.flipMoveProps.duration || 500);
+  }
+
+  runSequence(index = 0) {
+    const { eventName, delay, args = [] } = this.props.sequence[index];
+
+    window.setTimeout(() => {
+      this[eventName](...args);
 
       // If it's not the last item in the sequence, queue the next step.
       const nextIndex = index + 1;
@@ -130,14 +140,17 @@ class FlipMoveWrapper extends Component {
           onRestore={this.restoreItems}
           onRotate={this.rotateItems}
           onShuffle={this.shuffleItems}
+          onRestartSequence={this.restartSequence}
           numOfCurrentItems={this.state.items ? this.state.items.length : 0}
           numOfTotalItems={this.props.items ? this.props.items.length : 0}
+          numOfStepsInSequence={this.props.sequence ? this.props.sequence.length : 0}
         />
         <FlipMove
           style={{
             ...baseStyles.flipMoveContainerStyles,
             ...this.props.flipMoveContainerStyles,
           }}
+          duration={500}
           {...this.props.flipMoveProps}
         >
           {this.renderItems()}

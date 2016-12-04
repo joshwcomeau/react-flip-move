@@ -42,4 +42,39 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
         ]}
       />
     ))
+    .add('leave during shuffle', () => (
+      <FlipMoveWrapper
+        itemType={type}
+        flipMoveProps={{ duration: 500 }}
+        sequence={[
+          { eventName: 'shuffleItems', delay: 20 },
+          { eventName: 'removeItem', delay: 300 },
+          { eventName: 'shuffleItems', delay: 400 },
+        ]}
+      />
+    ))
+    .add('remove items with interrupt, in order', () => (
+      <FlipMoveWrapper
+        itemType={type}
+        flipMoveProps={{ duration: 1000 }}
+        sequence={[
+          { eventName: 'removeItem', delay: 500, args: ['a'] },
+          { eventName: 'removeItem', delay: 200, args: ['b'] },
+          { eventName: 'removeItem', delay: 200, args: ['c'] },
+          { eventName: 'removeItem', delay: 200, args: ['d'] },
+        ]}
+      />
+    ))
+    .add('remove items with interrupt, random order', () => (
+      <FlipMoveWrapper
+        itemType={type}
+        flipMoveProps={{ duration: 1000 }}
+        sequence={[
+          { eventName: 'removeItem', delay: 500 },
+          { eventName: 'removeItem', delay: 200 },
+          { eventName: 'removeItem', delay: 200 },
+          { eventName: 'removeItem', delay: 200 },
+        ]}
+      />
+    ))
 });
