@@ -22,17 +22,8 @@ import {
 import {
   enterPresets, leavePresets, defaultPreset, disablePreset,
 } from './enter-leave-presets';
-import { isElementAnSFC } from './helpers';
+import { isElementAnSFC, omit } from './helpers';
 
-function omit(obj, attrs = []) {
-  const result = {};
-  Object.keys(obj).forEach((key) => {
-    if (attrs.indexOf(key) === -1) {
-      result[key] = obj[key];
-    }
-  });
-  return result;
-}
 
 function propConverter(ComposedComponent) {
   class FlipMovePropConverter extends Component {

@@ -8,3 +8,13 @@ export const isElementAnSFC = (element) => {
 
   return !element.type.prototype.isReactComponent;
 };
+
+export function omit(obj, attrs = []) {
+  const result = {};
+  Object.keys(obj).forEach((key) => {
+    if (attrs.indexOf(key) === -1) {
+      result[key] = obj[key];
+    }
+  });
+  return result;
+}
