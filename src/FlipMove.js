@@ -196,7 +196,9 @@ class FlipMove extends Component {
 
         // We need to take the items out of the "flow" of the document, so that
         // its siblings can move to take its place.
-        removeNodeFromDOMFlow(childData);
+        if (childData.boundingBox) {
+          removeNodeFromDOMFlow(childData);
+        }
       });
 
       if (maintainContainerHeight) {
@@ -397,7 +399,7 @@ class FlipMove extends Component {
       this.parentData.domNode
     );
 
-    this.props.children.forEach((child) => {
+    this.state.children.forEach((child) => {
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
       if (!child.key) {

@@ -15,8 +15,10 @@ const Controls = ({
   onRestore,
   onRotate,
   onShuffle,
+  onRestartSequence,
   numOfCurrentItems,
   numOfTotalItems,
+  numOfStepsInSequence,
 }) => (
   <div className="controls">
     <button
@@ -58,6 +60,14 @@ const Controls = ({
     >
       Rotate Items
     </button>
+
+    <button
+      onClick={() => onRestartSequence()}
+      style={styles.button}
+      disabled={numOfStepsInSequence === 0}
+    >
+      Restart Sequence
+    </button>
   </div>
 );
 
@@ -67,8 +77,14 @@ Controls.propTypes = {
   onRestore: PropTypes.func.isRequired,
   onRotate: PropTypes.func.isRequired,
   onShuffle: PropTypes.func.isRequired,
+  onRestartSequence: PropTypes.func.isRequired,
   numOfCurrentItems: PropTypes.number.isRequired,
   numOfTotalItems: PropTypes.number.isRequired,
+  numOfStepsInSequence: PropTypes.number.isRequired,
+};
+
+Controls.defaultProps = {
+  numOfStepsInSequence: 0,
 };
 
 export default Controls;

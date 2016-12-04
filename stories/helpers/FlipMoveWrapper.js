@@ -33,6 +33,38 @@ class FlipMoveWrapper extends Component {
     this.restoreItems = this.restoreItems.bind(this);
     this.rotateItems = this.rotateItems.bind(this);
     this.shuffleItems = this.shuffleItems.bind(this);
+    this.runSequence = this.runSequence.bind(this);
+    this.restartSequence = this.restartSequence.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.sequence) {
+      this.runSequence();
+    }
+  }
+
+  restartSequence() {
+    this.restoreItems();
+
+    window.setTimeout(() => {
+      this.runSequence(0);
+    }, this.props.flipMoveProps.duration || 500);
+  }
+
+  runSequence(index = 0) {
+    const { eventName, delay, args = [] } = this.props.sequence[index];
+
+    window.setTimeout(() => {
+      this[eventName](...args);
+
+      // If it's not the last item in the sequence, queue the next step.
+      const nextIndex = index + 1;
+      const nextItem = this.props.sequence[nextIndex];
+
+      if (nextItem) {
+        this.runSequence(nextIndex);
+      }
+    }, delay);
   }
 
   removeItem(itemId) {
@@ -108,14 +140,17 @@ class FlipMoveWrapper extends Component {
           onRestore={this.restoreItems}
           onRotate={this.rotateItems}
           onShuffle={this.shuffleItems}
+          onRestartSequence={this.restartSequence}
           numOfCurrentItems={this.state.items ? this.state.items.length : 0}
           numOfTotalItems={this.props.items ? this.props.items.length : 0}
+          numOfStepsInSequence={this.props.sequence ? this.props.sequence.length : 0}
         />
         <FlipMove
           style={{
             ...baseStyles.flipMoveContainerStyles,
             ...this.props.flipMoveContainerStyles,
           }}
+          duration={500}
           {...this.props.flipMoveProps}
         >
           {this.renderItems()}
@@ -139,6 +174,10 @@ FlipMoveWrapper.propTypes = {
   bodyContainerStyles: PropTypes.object,
   flipMoveContainerStyles: PropTypes.object,
   listItemStyles: PropTypes.object,
+  sequence: PropTypes.arrayOf(PropTypes.shape({
+    eventName: PropTypes.string,
+    delay: PropTypes.number,
+  })),
 };
 
 FlipMoveWrapper.defaultProps = {
