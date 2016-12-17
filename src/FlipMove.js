@@ -94,7 +94,7 @@ class FlipMove extends Component {
     // Assuming that we can animate, though, we have to do some work.
     // Essentially, we want to keep just-deleted nodes in the DOM for a bit
     // longer, so that we can animate them away.
-    const newChildren = this.isAnimationDisabled()
+    const newChildren = this.isAnimationDisabled(nextProps)
       ? nextProps.children
       : this.calculateNextSetOfChildren(nextProps.children);
 
@@ -110,7 +110,7 @@ class FlipMove extends Component {
     // We DON'T want this cleanup to trigger another update.
     const shouldTriggerFLIP = (
       this.props.children !== previousProps.children &&
-      !this.isAnimationDisabled()
+      !this.isAnimationDisabled(this.props)
     );
 
     if (shouldTriggerFLIP) {
@@ -465,7 +465,7 @@ class FlipMove extends Component {
     };
   }
 
-  isAnimationDisabled() {
+  isAnimationDisabled(props) {
     // If the component is explicitly passed a `disableAllAnimations` flag,
     // we can skip this whole process. Similarly, if all of the numbers have
     // been set to 0, there is no point in trying to animate; doing so would
@@ -473,12 +473,12 @@ class FlipMove extends Component {
     // We can also skip this rigamarole if there's no browser support for it.
     return (
       noBrowserSupport ||
-      this.props.disableAllAnimations ||
+      props.disableAllAnimations ||
       (
-        this.props.duration === 0 &&
-        this.props.delay === 0 &&
-        this.props.staggerDurationBy === 0 &&
-        this.props.staggerDelayBy === 0
+        props.duration === 0 &&
+        props.delay === 0 &&
+        props.staggerDurationBy === 0 &&
+        props.staggerDelayBy === 0
       )
     );
   }
