@@ -41,6 +41,12 @@ class FlipMoveWrapper extends Component {
     if (this.props.sequence) {
       this.runSequence();
     }
+    setInterval(() => {
+      const newItems = _.clone(this.state.items)
+      if (newItems.length === 0) return
+      newItems[0] = { ...newItems[0], count: newItems[0].count + 1 }
+      this.setState({ items: newItems })
+    } , 500)
   }
 
   restartSequence() {
@@ -182,7 +188,7 @@ FlipMoveWrapper.propTypes = {
 
 FlipMoveWrapper.defaultProps = {
   items: [
-    { id: 'a', text: "7 Insecticides You Don't Know You're Consuming" },
+    { id: 'a', text: "7 Insecticides You Don't Know You're Consuming", count: 0 },
     { id: 'b', text: '11 Ways To Style Your Hair' },
     { id: 'c', text: 'The 200 Countries You Have To Visit Before The Apocalypse' },
     { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product' },
