@@ -41,7 +41,17 @@ class FlipMoveWrapper extends Component {
     if (this.props.sequence) {
       this.runSequence();
     }
-    setInterval(() => {
+    if (this.props.changeItem) {
+      this.constantlyChangeItem();
+    }
+  }
+
+  componentWillUnmount () {
+    clearInterval(this.runningInterval)
+  }
+
+  constantlyChangeItem () {
+    this.runningInterval = setInterval(() => {
       const newItems = _.clone(this.state.items)
       if (newItems.length === 0) return
       newItems[0] = { ...newItems[0], count: newItems[0].count + 1 }
@@ -127,7 +137,7 @@ class FlipMoveWrapper extends Component {
             // zIndex: item.id.charCodeAt(0),
           },
         },
-        item.text
+        item.text + (this.props.changeItem ? `- Count: ${item.count}` : '')
       )
     ));
   }
@@ -189,10 +199,10 @@ FlipMoveWrapper.propTypes = {
 FlipMoveWrapper.defaultProps = {
   items: [
     { id: 'a', text: "7 Insecticides You Don't Know You're Consuming", count: 0 },
-    { id: 'b', text: '11 Ways To Style Your Hair' },
-    { id: 'c', text: 'The 200 Countries You Have To Visit Before The Apocalypse' },
-    { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product' },
-    { id: 'e', text: 'Divine Intervention: Fashion Tips For The Vatican' },
+    { id: 'b', text: '11 Ways To Style Your Hair', count: 0  },
+    { id: 'c', text: 'The 200 Countries You Have To Visit Before The Apocalypse', count: 0  },
+    { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product', count: 0  },
+    { id: 'e', text: 'Divine Intervention: Fashion Tips For The Vatican', count: 0  },
   ],
   itemType: 'div',
 };
