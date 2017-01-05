@@ -16,7 +16,7 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
     .add('default (elevator preset) with constantly change item', () => (
       <FlipMoveWrapper
         itemType={type}
-        changeItem
+        applyContinuousItemUpdates
       />
     ))
     .add('preset - fade', () => (

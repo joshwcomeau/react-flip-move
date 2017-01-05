@@ -21,7 +21,7 @@ import {
   updateHeightPlaceholder,
   whichTransitionEvent,
 } from './dom-manipulation';
-import { arraysEqual } from './helpers'
+import { arraysEqual } from './helpers';
 
 const transitionEnd = whichTransitionEvent();
 const noBrowserSupport = !transitionEnd;
@@ -110,8 +110,8 @@ class FlipMove extends Component {
     // At the end of the transition, we clean up nodes that need to be removed.
     // We DON'T want this cleanup to trigger another update.
 
-    const oldChildrenKeys = this.props.children.map(d => d.key)
-    const nextChildrenKeys = previousProps.children.map(d => d.key)
+    const oldChildrenKeys = this.props.children.map(d => d.key);
+    const nextChildrenKeys = previousProps.children.map(d => d.key);
 
     const shouldTriggerFLIP = (
       !arraysEqual(oldChildrenKeys, nextChildrenKeys) &&
