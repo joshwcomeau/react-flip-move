@@ -483,7 +483,7 @@ See the [GitHub releases](https://github.com/joshwcomeau/react-flip-move/release
 
 ## Known Issues
 
-  * **Interrupted enter/leave animations can be funky**. If enter/leave animations are interrupted, odd quirks can occur. It's generally fine if they're batched, but spamming a `remove item` button causes items to jump around.
+  * **Interrupted enter/leave animations can be funky**. This has gotten better recently thanks to our great contributors, but extremely fast adding/removing of items can cause weird visual glitches, or cause state to become inconsistent. Experiment with your usecase!
 
   * **Existing transition/transform properties will be overridden.** I am hoping to change this in a future version, but at present, Flip Move does not take into account existing `transition` or `transform` CSS properties on its direct children.
 
