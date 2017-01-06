@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { sample, shuffle } from 'lodash';
+import { sample, shuffle, clone } from 'lodash';
 
 import FlipMove from '../../src';
 import Controls from './Controls';
@@ -41,6 +41,27 @@ class FlipMoveWrapper extends Component {
     if (this.props.sequence) {
       this.runSequence();
     }
+    if (this.props.applyContinuousItemUpdates) {
+      this.updateCountOnInterval();
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.runningInterval);
+  }
+
+  updateCountOnInterval() {
+    this.runningInterval = setInterval(() => {
+      const newItems = clone(this.state.items);
+
+      if (newItems.length === 0) {
+        return;
+      }
+
+      newItems[0] = { ...newItems[0], count: newItems[0].count + 1 };
+
+      this.setState({ items: newItems });
+    }, 250);
   }
 
   restartSequence() {
@@ -104,13 +125,21 @@ class FlipMoveWrapper extends Component {
   }
 
   renderItems() {
+    const { items } = this.state;
+
     // Support falsy children by passing them straight to FlipMove
-    if (!this.state.items) {
-      return this.state.items;
+    if (!items) {
+      return items;
     }
 
-    return this.state.items.map(item => (
-      React.createElement(
+    return items.map((item) => {
+      let text = item.text;
+
+      if (item.count) {
+        text += ` - Count: ${item.count}`;
+      }
+
+      return React.createElement(
         this.props.itemType,
         {
           key: item.id,
@@ -121,9 +150,9 @@ class FlipMoveWrapper extends Component {
             // zIndex: item.id.charCodeAt(0),
           },
         },
-        item.text
-      )
-    ));
+        text
+      );
+    });
   }
 
   render() {
@@ -174,19 +203,21 @@ FlipMoveWrapper.propTypes = {
   bodyContainerStyles: PropTypes.object,
   flipMoveContainerStyles: PropTypes.object,
   listItemStyles: PropTypes.object,
+  applyContinuousItemUpdates: PropTypes.bool,
   sequence: PropTypes.arrayOf(PropTypes.shape({
     eventName: PropTypes.string,
     delay: PropTypes.number,
+    args: PropTypes.array,
   })),
 };
 
 FlipMoveWrapper.defaultProps = {
   items: [
-    { id: 'a', text: "7 Insecticides You Don't Know You're Consuming" },
-    { id: 'b', text: '11 Ways To Style Your Hair' },
-    { id: 'c', text: 'The 200 Countries You Have To Visit Before The Apocalypse' },
-    { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product' },
-    { id: 'e', text: 'Divine Intervention: Fashion Tips For The Vatican' },
+    { id: 'a', text: "7 Insecticides You Don't Know You're Consuming", count: 0 },
+    { id: 'b', text: '11 Ways To Style Your Hair', count: 0 },
+    { id: 'c', text: 'The 200 Countries You Have To Visit Before The Apocalypse', count: 0 },
+    { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product', count: 0 },
+    { id: 'e', text: 'Divine Intervention: Fashion Tips For The Vatican', count: 0 },
   ],
   itemType: 'div',
 };
