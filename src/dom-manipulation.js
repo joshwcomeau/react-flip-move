@@ -53,13 +53,15 @@ export const getRelativeBoundingBox = ({
   const { domNode: parentDomNode } = parentData;
 
   const parentBox = getPosition(parentDomNode);
-  const { top, left, right, bottom } = getPosition(childDomNode);
+  const { top, left, right, bottom, width, height } = getPosition(childDomNode);
 
   return {
     top: top - parentBox.top,
     left: left - parentBox.left,
     right: parentBox.right - right,
     bottom: parentBox.bottom - bottom,
+    width,
+    height,
   };
 };
 
@@ -82,7 +84,7 @@ export const getPositionDelta = ({
 }) => {
   // TEMP: A mystery bug is sometimes causing unnecessary boundingBoxes to
   // remain. Until this bug can be solved, this band-aid fix does the job:
-  const defaultBox = { left: 0, top: 0 };
+  const defaultBox = { top: 0, left: 0, right: 0, bottom: 0 };
 
   // Our old box is its last calculated position, derived on mount or at the
   // start of the previous animation.
@@ -120,7 +122,9 @@ export const getPositionDelta = ({
  *
  * @returns null
  */
-export const removeNodeFromDOMFlow = ({ domNode, boundingBox }) => {
+export const removeNodeFromDOMFlow = (childData, verticalAlignment) => {
+  const { domNode, boundingBox } = childData;
+
   // For this to work, we have to offset any given `margin`.
   const computed = window.getComputedStyle(domNode);
 
@@ -136,9 +140,17 @@ export const removeNodeFromDOMFlow = ({ domNode, boundingBox }) => {
     };
   }, {});
 
+  // If we're bottom-aligned, we need to add the height of the child to its
+  // top offset. This is because, when the container is bottom-aligned, its
+  // height shrinks from the top, not the bottom. We're removing this node
+  // from the flow, so the top is going to drop by its height.
+  const topOffset = verticalAlignment === 'bottom'
+    ? boundingBox.top - boundingBox.height
+    : boundingBox.top;
+
   const styles = {
     position: 'absolute',
-    top: `${boundingBox.top - margins['margin-top']}px`,
+    top: `${topOffset - margins['margin-top']}px`,
     left: `${boundingBox.left - margins['margin-left']}px`,
     right: `${boundingBox.right - margins['margin-right']}px`,
   };
