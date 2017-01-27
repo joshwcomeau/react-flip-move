@@ -50,7 +50,8 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
   * [className](#classname)
   * [typeName](#typename)
   * [disableAllAnimations](#disableallanimations)
-  * [getPosition](#getPosition)
+  * [getPosition](#getposition)
+  * [verticalAlignment](#verticalalignment)
   * [HTML Attributes](#html-attributes)
 * [Gotchas](#gotchas)
 * [Known Issues](#known-issues)
@@ -432,6 +433,36 @@ Sometimes, you may wish to temporarily disable the animations and have the norma
 This function is called with a DOM node as the only argument. It should return an object as specified by the [getBoundingClientRect() spec](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect).
 
 For normal usage of FlipMove you won't need this. An example of usage is when FlipMove is used in a container that is scaled using CSS. You can correct the values from `getBoundingClientRect` by using this prop.
+
+---
+
+### `verticalAlignment`
+
+| **Accepted Types:** | **Default Value**       |
+|---------------------|-------------------------|
+|  `String` (either 'top' or 'bottom')         | `top` |
+
+By default, Flip Move assumes that when items are removed from a list, the parent container's height is going to shrink from the bottom.
+
+```
+ _____              _____
+|     |     ->     |_____|
+|     |               
+|_____|               ^
+```
+
+Sometimes, though, you may wish to position your list so that it shrinks from the top. A good example is Facebook's web chat; it sticks to the bottom of your screen.
+
+```
+ _____   
+|     |               v
+|     |             _____
+|_____|      ->    |_____|
+```
+
+If your item's container is aligned to the bottom like this, leave animations will be funky. This is because Flip Move does some math to figure out where the item should be, and it orients it relative to _the top of the container_.
+
+By setting `verticalAlignment="bottom"`, you reverse this logic, and ensure that when items are added and removed from the list, they're positioned correctly.
 
 ---
 
