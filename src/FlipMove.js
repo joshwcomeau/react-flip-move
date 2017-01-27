@@ -202,7 +202,7 @@ class FlipMove extends Component {
         // We need to take the items out of the "flow" of the document, so that
         // its siblings can move to take its place.
         if (childData.boundingBox) {
-          removeNodeFromDOMFlow(childData);
+          removeNodeFromDOMFlow(childData, this.props.verticalAlignment);
         }
       });
 

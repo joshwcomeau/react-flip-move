@@ -30,6 +30,18 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
         }}
       />
     ))
+    .add('Bottom aligned', () => (
+      <FlipMoveWrapper
+        itemType={type}
+        flipMoveProps={{
+          verticalAlignment: 'bottom',
+        }}
+        flipMoveContainerStyles={{
+          position: 'absolute',
+          bottom: 0,
+        }}
+      />
+    ))
     .add('Including children without keys', () => (
       <FlipMoveWrapper
         itemType={type}
