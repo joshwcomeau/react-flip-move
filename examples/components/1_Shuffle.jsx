@@ -35,7 +35,7 @@ class Shuffle extends Component {
       view: 'list',
       order: 'asc',
       sortingMethod: 'chronological',
-      enterLeaveAnimation: 'accordianVertical',
+      enterLeaveAnimation: 'accordionVertical',
       articles
     };
 
@@ -49,14 +49,14 @@ class Shuffle extends Component {
   toggleList() {
     this.setState({
       view: 'list',
-      enterLeaveAnimation: 'accordianVertical'
+      enterLeaveAnimation: 'accordionVertical'
     });
   }
 
   toggleGrid() {
     this.setState({
       view: 'grid',
-      enterLeaveAnimation: 'accordianHorizontal'
+      enterLeaveAnimation: 'accordionHorizontal'
     });
   }
 
