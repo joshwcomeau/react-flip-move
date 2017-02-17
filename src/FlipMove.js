@@ -107,9 +107,15 @@ class FlipMove extends Component {
   }
 
   componentDidMount() {
+    // If the prop was not provided then we don't need to actually run
+    // the appear animation!
+    const shouldTriggerFLIP = (
+      this.props.appearAnimation &&
+      !this.isAnimationDisabled(this.props)
+    );
     // Update the children in the state so we properly run
     // the animations.
-    if (!this.isAnimationDisabled(this.props)) {
+    if (shouldTriggerFLIP) {
       this.prepForAnimation();
       this.runAnimation();
     }
