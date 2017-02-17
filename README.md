@@ -259,7 +259,7 @@ const customAppearAnimation = {
   to:   { transform: 'scale(1, 1)' }
 };
 
-<FlipMove appearAnimation={customEnterAnimation}>
+<FlipMove appearAnimation={customAppearAnimation}>
   {renderChildren()}
 </FlipMove>
 ```
