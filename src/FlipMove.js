@@ -68,7 +68,11 @@ class FlipMove extends Component {
     // We want to keep the item rendered for a little while, until its animation
     // can complete. Because we cannot mutate props, we make `state` the source
     // of truth.
-    this.state = { children: props.children };
+    this.state = {
+      children: props.children.map(child => {
+        return { ...child, appearing: true };
+      })
+    };
 
     // Keep track of remaining animations so we know when to fire the
     // all-finished callback, and clean up after ourselves.
@@ -100,6 +104,15 @@ class FlipMove extends Component {
       : this.calculateNextSetOfChildren(nextProps.children);
 
     this.setState({ children: newChildren });
+  }
+
+  componentDidMount() {
+    // Update the children in the state so we properly run
+    // the animations.
+    if (!this.isAnimationDisabled(this.props)) {
+      this.prepForAnimation();
+      this.runAnimation();
+    }
   }
 
   componentDidUpdate(previousProps) {
@@ -292,7 +305,12 @@ class FlipMove extends Component {
           opacity: '',
         };
 
-        if (child.entering && this.props.enterAnimation) {
+        if (child.appearing && this.props.appearAnimation) {
+          styles = {
+            ...styles,
+            ...this.props.appearAnimation.to,
+          }
+        } else if (child.entering && this.props.enterAnimation) {
           styles = {
             ...styles,
             ...this.props.enterAnimation.to,
@@ -353,6 +371,7 @@ class FlipMove extends Component {
         .filter(({ leaving }) => !leaving)
         .map(item => ({
           ...item,
+          appearing: false,
           entering: false,
         }));
 
@@ -436,6 +455,7 @@ class FlipMove extends Component {
 
   computeInitialStyles(child) {
     const enterOrLeaveWithoutAnimation = (
+      (child.appearing && !this.props.appearAnimation) ||
       (child.entering && !this.props.enterAnimation) ||
       (child.leaving && !this.props.leaveAnimation)
     );
@@ -444,7 +464,16 @@ class FlipMove extends Component {
       return {};
     }
 
-    if (child.entering) {
+    if (child.appearing) {
+      return {
+        position: '',
+        top: '',
+        left: '',
+        right: '',
+        bottom: '',
+        ...this.props.appearAnimation.from,
+      };
+    } else if (child.entering) {
       // If this child was in the middle of leaving, it still has its
       // absolute positioning styles applied. We need to undo those.
       return {
@@ -501,12 +530,13 @@ class FlipMove extends Component {
       return false;
     }
 
-    const { enterAnimation, leaveAnimation, getPosition } = this.props;
+    const { appearAnimation, enterAnimation, leaveAnimation, getPosition } = this.props;
 
+    const isAppearingWithAnimation = child.appearing && appearAnimation;
     const isEnteringWithAnimation = child.entering && enterAnimation;
     const isLeavingWithAnimation = child.leaving && leaveAnimation;
 
-    if (isEnteringWithAnimation || isLeavingWithAnimation) {
+    if (isAppearingWithAnimation || isEnteringWithAnimation || isLeavingWithAnimation) {
       return true;
     }
 

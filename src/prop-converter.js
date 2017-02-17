@@ -78,6 +78,9 @@ function propConverter(ComposedComponent) {
       // Our enter/leave animations can be specified as boolean (default or
       // disabled), string (preset name), or object (actual animation values).
       // Let's standardize this so that they're always objects
+      workingProps.appearAnimation = this.convertAnimationProp(
+        workingProps.appearAnimation, enterPresets
+      );
       workingProps.enterAnimation = this.convertAnimationProp(
         workingProps.enterAnimation, enterPresets
       );
@@ -182,6 +185,14 @@ function propConverter(ComposedComponent) {
     onStartAll: PropTypes.func,
     onFinishAll: PropTypes.func,
     typeName: PropTypes.string,
+    appearAnimation: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.bool,
+      PropTypes.shape({
+        from: PropTypes.object,
+        to: PropTypes.object,
+      }),
+    ]),
     enterAnimation: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.bool,
