@@ -7,7 +7,7 @@ FlipMove supports CSS-based enter/leave animations. For convenience, several pre
 
 ![Elevator](https://s3.amazonaws.com/githubdocs/fm-elevator.gif)
 
-```js
+```jsx
 <FlipMove enterAnimation="elevator" leaveAnimation="elevator" />
 ```
 
@@ -15,7 +15,7 @@ FlipMove supports CSS-based enter/leave animations. For convenience, several pre
 
 ![Fade](https://s3.amazonaws.com/githubdocs/fm-fade.gif)
 
-```js
+```jsx
 <FlipMove enterAnimation="fade" leaveAnimation="fade" />
 ```
 
@@ -23,7 +23,7 @@ FlipMove supports CSS-based enter/leave animations. For convenience, several pre
 
 ![Accordian (Vertical)](https://s3.amazonaws.com/githubdocs/fm-accordian-vertical.gif)
 
-```js
+```jsx
 <FlipMove enterAnimation="accordianVertical" leaveAnimation="accordianVertical" />
 ```
 
@@ -31,7 +31,7 @@ FlipMove supports CSS-based enter/leave animations. For convenience, several pre
 
 ![Accordian (Horizontal)](https://s3.amazonaws.com/githubdocs/fm-accordian-horizontal.gif)
 
-```js
+```jsx
 <FlipMove enterAnimation="accordianHorizontal" leaveAnimation="accordianHorizontal" />
 ```
 
@@ -41,7 +41,7 @@ You can supply your own CSS-based transitions to customize the behaviour. Both `
 
 ![Custom](https://s3.amazonaws.com/githubdocs/fm-custom-rotate-x.gif)
 
-```js
+```jsx
  <FlipMove
    staggerDelayBy={150}
    enterAnimation={{
@@ -75,7 +75,7 @@ It functions identically to `enterAnimation`, and has the same presets.
 
 For example:
 
-```js
+```jsx
  <FlipMove
    staggerDelayBy={150}
    appearAnimation="accordionVertical"

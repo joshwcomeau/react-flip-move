@@ -128,7 +128,7 @@ It requires two keys: `from` and `to`. Each key holds an object of CSS propertie
 
 Example:
 
-```js
+```jsx
 const customEnterAnimation = {
   from: { transform: 'scale(0.5, 1)' },
   to:   { transform: 'scale(1, 1)' }
@@ -172,7 +172,7 @@ It requires two keys: `from` and `to`. Each key holds an object of CSS propertie
 
 Example:
 
-```js
+```jsx
 const customLeaveAnimation = {
   from: { transform: 'scale(1, 1)' },
   to:   { transform: 'scale(0.5, 1) translateY(-20px)' }

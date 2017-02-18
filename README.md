@@ -50,8 +50,8 @@ npm i -S react-flip-move
 ```
 
 UMD builds are also available via CDN:
-* [react-flip-move.js](https://unpkg.com/react-flip-move@2.1.4/dist/react-flip-move.js)
-* [react-flip-move.min.js](https://unpkg.com/react-flip-move@2.1.4/dist/react-flip-move.min.js)
+* [react-flip-move.js](https://unpkg.com/react-flip-move/dist/react-flip-move.js)
+* [react-flip-move.min.js](https://unpkg.com/react-flip-move/dist/react-flip-move.min.js)
 
 
 ## Features
@@ -76,7 +76,7 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
 The implementation couldn't be simpler. Just wrap the items you'd like to move in a `FlipMove`, with any [custom options](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/api_reference.md):
 
-```js
+```jsx
 import FlipMove from 'react-flip-move';
 
 const TopArticles = ({ articles }) => (
