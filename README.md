@@ -39,7 +39,7 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
   * [delay](#delay)
   * [staggerDurationBy](#staggerdurationby)
   * [staggerDelayBy](#staggerdelayby)
-  * [appearAnimation](#appearAnimation)
+  * [appearAnimation](#appearanimation)
   * [enterAnimation](#enteranimation)
   * [leaveAnimation](#leaveanimation)
   * [maintainContainerHeight](#maintaincontainerheight)
@@ -230,41 +230,10 @@ Similarly to staggerDurationBy, This effect is great for "humanizing" transition
 
 | **Accepted Types:**            | **Default Value** |
 |--------------------------------|-------------------|
-|  `String`, `Boolean`, `Object` | 'elevator'        |
+|  `String`, `Boolean`, `Object` | undefined         |
 
-Control the appear animation that runs when your items are initially added to the DOM. For examples of this property, see the [**feature description above**](#enterleave-animations).
+Control the appear animation that runs when the component mounts. Works identically to [`enterAnimation`](#enteranimation) below, but only fires on the initial children.
 
-Accepts several types:
-
-**String:** You can enter one of the following presets to select that as your enter animation:
-  * `elevator` (default)
-  * `fade`
-  * `accordionVertical`
-  * `accordionHorizontal`
-  * `none`
-
-[View the CSS implementation of these presets](https://github.com/joshwcomeau/react-flip-move/blob/master/src/enter-leave-presets.js).
-
-**Boolean:** You can enter `false` to disable the enter animation, or `true` to select the default enter animation (elevator).
-
-**Object:** For fully granular control, you can pass in an object that contains the styles you'd like to animate.
-
-It requires two keys: `from` and `to`. Each key holds an object of CSS properties. You can supply any valid camelCase CSS properties, and flip-move will transition between the two, over the course of the specified `duration`.
-
-Example:
-
-```js
-const customAppearAnimation = {
-  from: { transform: 'scale(0.5, 1)' },
-  to:   { transform: 'scale(1, 1)' }
-};
-
-<FlipMove appearAnimation={customAppearAnimation}>
-  {renderChildren()}
-</FlipMove>
-```
-
-It is recommended that you stick to hardware-accelerated CSS properties for optimal performance: transform and opacity.
 
 ### `enterAnimation`
 
