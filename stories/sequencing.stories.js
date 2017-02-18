@@ -42,6 +42,17 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
         ]}
       />
     ))
+    .add('interrupted appear', () => (
+      <FlipMoveWrapper
+        itemType={type}
+        flipMoveProps={{ duration: 1000, appearAnimation: 'fade' }}
+        sequence={[
+          { eventName: 'shuffleItems', delay: 600 },
+          { eventName: 'shuffleItems', delay: 300 },
+          { eventName: 'shuffleItems', delay: 400 },
+        ]}
+      />
+    ))
     .add('leave during shuffle', () => (
       <FlipMoveWrapper
         itemType={type}
