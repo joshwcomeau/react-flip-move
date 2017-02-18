@@ -20,7 +20,11 @@ import {
   deprecatedDisableAnimations,
 } from './error-messages';
 import {
-  enterPresets, leavePresets, defaultPreset, disablePreset,
+  appearPresets,
+  enterPresets,
+  leavePresets,
+  defaultPreset,
+  disablePreset,
 } from './enter-leave-presets';
 import { isElementAnSFC, omit } from './helpers';
 
@@ -79,7 +83,7 @@ function propConverter(ComposedComponent) {
       // disabled), string (preset name), or object (actual animation values).
       // Let's standardize this so that they're always objects
       workingProps.appearAnimation = this.convertAnimationProp(
-        workingProps.appearAnimation, enterPresets
+        workingProps.appearAnimation, appearPresets
       );
       workingProps.enterAnimation = this.convertAnimationProp(
         workingProps.enterAnimation, enterPresets
