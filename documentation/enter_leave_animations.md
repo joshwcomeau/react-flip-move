@@ -66,3 +66,22 @@ You can supply your own CSS-based transitions to customize the behaviour. Both `
    {this.renderRows()}
  </FlipMove>
 ```
+
+## Appear animations
+
+`enterAnimation` will not fire for the _initial_ render. If you want your items to animate on mount, you'll have to use `appearAnimation`.
+
+It functions identically to `enterAnimation`, and has the same presets.
+
+For example:
+
+```js
+ <FlipMove
+   staggerDelayBy={150}
+   appearAnimation="accordionVertical"
+   enterAnimation="fade"
+   leaveAnimation="fade"
+ >
+   {this.renderRows()}
+ </FlipMove>
+```

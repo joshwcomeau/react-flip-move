@@ -91,13 +91,23 @@ Similarly to staggerDurationBy, This effect is great for "humanizing" transition
 
 ---
 
+### `appearAnimation`
+
+| **Accepted Types:**            | **Default Value** |
+|--------------------------------|-------------------|
+|  `String`, `Boolean`, `Object` | undefined         |
+
+Control the appear animation that runs when the component mounts. Works identically to [`enterAnimation`](#enteranimation) below, but only fires on the initial children.
+
+---
+
 ### `enterAnimation`
 
 | **Accepted Types:**            | **Default Value** |
 |--------------------------------|-------------------|
 |  `String`, `Boolean`, `Object` | 'elevator'        |
 
-Control the onEnter animation that runs when new items are added to the DOM. For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move#enterleave-animations">feature description above</a></strong>.
+Control the onEnter animation that runs when new items are added to the DOM. For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/enter_leave_animations.md">enter/leave docs</a></strong>.
 
 Accepts several types:
 
@@ -139,7 +149,7 @@ It is recommended that you stick to hardware-accelerated CSS properties for opti
 |--------------------------------|-------------------|
 |  `String`, `Boolean`, `Object` | 'elevator'        |
 
-Control the onLeave animation that runs when new items are removed from the DOM. For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move#enterleave-animations">feature description above</a></strong>.
+Control the onLeave animation that runs when new items are removed from the DOM. For examples of this property, see the <strong><a href="https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/enter_leave_animations.md">enter/leave docs</a></strong>.
 
 This property functions identically to `enterAnimation`.
 
