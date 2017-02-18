@@ -46,6 +46,10 @@
    none: false,
  };
 
+ // For now, appearPresets will be identical to enterPresets.
+ // Assigning a custom export in case we ever want to add appear-specific ones.
+ export const appearPresets = enterPresets;
+
 // Embarrassingly enough, v2.0 launched with typo'ed preset names.
 // To avoid penning a new major version over something so inconsequential,
 // we're supporting both spellings. In a future version, these alternatives

@@ -39,6 +39,7 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
   * [delay](#delay)
   * [staggerDurationBy](#staggerdurationby)
   * [staggerDelayBy](#staggerdelayby)
+  * [appearAnimation](#appearanimation)
   * [enterAnimation](#enteranimation)
   * [leaveAnimation](#leaveanimation)
   * [maintainContainerHeight](#maintaincontainerheight)
@@ -224,6 +225,15 @@ Similarly to staggerDurationBy, This effect is great for "humanizing" transition
 **Protip:** You can make elements animate one-at-a-time by using an identical `duration` and `staggerDelayBy`.
 
 ---
+
+### `appearAnimation`
+
+| **Accepted Types:**            | **Default Value** |
+|--------------------------------|-------------------|
+|  `String`, `Boolean`, `Object` | undefined         |
+
+Control the appear animation that runs when the component mounts. Works identically to [`enterAnimation`](#enteranimation) below, but only fires on the initial children.
+
 
 ### `enterAnimation`
 
@@ -447,14 +457,14 @@ By default, Flip Move assumes that when items are removed from a list, the paren
 ```
  _____              _____
 |     |     ->     |_____|
-|     |               
+|     |
 |_____|               ^
 ```
 
 Sometimes, though, you may wish to position your list so that it shrinks from the top. A good example is Facebook's web chat; it sticks to the bottom of your screen.
 
 ```
- _____   
+ _____
 |     |               v
 |     |             _____
 |_____|      ->    |_____|

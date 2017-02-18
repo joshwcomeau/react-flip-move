@@ -20,7 +20,11 @@ import {
   deprecatedDisableAnimations,
 } from './error-messages';
 import {
-  enterPresets, leavePresets, defaultPreset, disablePreset,
+  appearPresets,
+  enterPresets,
+  leavePresets,
+  defaultPreset,
+  disablePreset,
 } from './enter-leave-presets';
 import { isElementAnSFC, omit } from './helpers';
 
@@ -78,6 +82,9 @@ function propConverter(ComposedComponent) {
       // Our enter/leave animations can be specified as boolean (default or
       // disabled), string (preset name), or object (actual animation values).
       // Let's standardize this so that they're always objects
+      workingProps.appearAnimation = this.convertAnimationProp(
+        workingProps.appearAnimation, appearPresets
+      );
       workingProps.enterAnimation = this.convertAnimationProp(
         workingProps.enterAnimation, enterPresets
       );
@@ -158,6 +165,15 @@ function propConverter(ComposedComponent) {
     }
   }
 
+  const animationPropTypes = PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+    PropTypes.shape({
+      from: PropTypes.object,
+      to: PropTypes.object,
+    }),
+  ]);
+
   FlipMovePropConverter.propTypes = {
     children: PropTypes.node,
     easing: PropTypes.string,
@@ -182,22 +198,9 @@ function propConverter(ComposedComponent) {
     onStartAll: PropTypes.func,
     onFinishAll: PropTypes.func,
     typeName: PropTypes.string,
-    enterAnimation: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.bool,
-      PropTypes.shape({
-        from: PropTypes.object,
-        to: PropTypes.object,
-      }),
-    ]),
-    leaveAnimation: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.bool,
-      PropTypes.shape({
-        from: PropTypes.object,
-        to: PropTypes.object,
-      }),
-    ]),
+    appearAnimation: animationPropTypes,
+    enterAnimation: animationPropTypes,
+    leaveAnimation: animationPropTypes,
     disableAllAnimations: PropTypes.bool,
     getPosition: PropTypes.func,
     maintainContainerHeight: PropTypes.bool.isRequired,
