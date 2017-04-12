@@ -29,13 +29,15 @@ import {
 } from './enter-leave-presets';
 import { isElementAnSFC, omit } from './helpers';
 
+
 // Define `process` global in case the consumer hasn't defined
-// process.env.NODE_ENV
+// process.env.NODE_ENV. We use 'var' to escape block scoping.
 /* eslint-disable no-use-before-define, vars-on-top, no-var */
 if (typeof process === 'undefined') {
-  var process = { env: {} };  // Must use var to escape block scoping
+  var process = { env: {} };
 }
 /* eslint-enable */
+
 
 function propConverter(ComposedComponent) {
   class FlipMovePropConverter extends Component {
