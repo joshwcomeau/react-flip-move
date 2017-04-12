@@ -498,6 +498,7 @@ class FlipMove extends Component {
     };
   }
 
+  // eslint-disable-next-line class-methods-use-this
   isAnimationDisabled(props) {
     // If the component is explicitly passed a `disableAllAnimations` flag,
     // we can skip this whole process. Similarly, if all of the numbers have
