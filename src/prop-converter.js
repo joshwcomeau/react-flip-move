@@ -10,6 +10,7 @@
  *     be, if a single child is passed in.)
  *   - Resolving animation presets into their base CSS styles
  */
+/* eslint-disable block-scoped-var */
 
 import React, { Component, PropTypes } from 'react';
 
@@ -28,10 +29,13 @@ import {
 } from './enter-leave-presets';
 import { isElementAnSFC, omit } from './helpers';
 
-// Define process global in case the consumer hasn't defined process.env.NODE_ENV
+// Define `process` global in case the consumer hasn't defined
+// process.env.NODE_ENV
+/* eslint-disable no-use-before-define, vars-on-top, no-var */
 if (typeof process === 'undefined') {
   var process = { env: {} };  // Must use var to escape block scoping
 }
+/* eslint-enable */
 
 function propConverter(ComposedComponent) {
   class FlipMovePropConverter extends Component {
@@ -72,7 +76,7 @@ function propConverter(ComposedComponent) {
 
         if (isNaN(value)) {
           const defaultValue = defaultProps[prop];
-          
+
           if (process.env.NODE_ENV !== 'production') {
             console.error(invalidTypeForTimingProp({
               prop,
@@ -105,7 +109,7 @@ function propConverter(ComposedComponent) {
         if (process.env.NODE_ENV !== 'production') {
           console.warn(deprecatedDisableAnimations());
         }
-        
+
         workingProps.disableAnimations = undefined;
         workingProps.disableAllAnimations = props.disableAnimations;
       }
@@ -154,7 +158,7 @@ function propConverter(ComposedComponent) {
                 defaultValue: defaultPreset,
               }));
             }
-            
+
             newAnimation = presets[defaultPreset];
           } else {
             newAnimation = presets[animation];
