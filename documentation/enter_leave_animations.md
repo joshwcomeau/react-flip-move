@@ -19,20 +19,20 @@ FlipMove supports CSS-based enter/leave animations. For convenience, several pre
 <FlipMove enterAnimation="fade" leaveAnimation="fade" />
 ```
 
-#### Accordian (Vertical)
+#### Accordion (Vertical)
 
-![Accordian (Vertical)](https://s3.amazonaws.com/githubdocs/fm-accordian-vertical.gif)
+![Accordion (Vertical)](https://s3.amazonaws.com/githubdocs/fm-accordian-vertical.gif)
 
 ```jsx
-<FlipMove enterAnimation="accordianVertical" leaveAnimation="accordianVertical" />
+<FlipMove enterAnimation="accordionVertical" leaveAnimation="accordionVertical" />
 ```
 
-#### Accordian (Horizontal)
+#### Accordion (Horizontal)
 
-![Accordian (Horizontal)](https://s3.amazonaws.com/githubdocs/fm-accordian-horizontal.gif)
+![Accordion (Horizontal)](https://s3.amazonaws.com/githubdocs/fm-accordian-horizontal.gif)
 
 ```jsx
-<FlipMove enterAnimation="accordianHorizontal" leaveAnimation="accordianHorizontal" />
+<FlipMove enterAnimation="accordionHorizontal" leaveAnimation="accordionHorizontal" />
 ```
 
 #### Custom
