@@ -58,8 +58,6 @@ UMD builds are also available via CDN:
 
 Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ryanflorence/react-magic-move" target="_blank">_Magic Move_</a>, and offers:
 
-  * Full compatibility with React 0.13, 0.14, and 15. Will be maintained.
-
   * Exclusive use of hardware-accelerated CSS properties (`transform: translate`) instead of positioning properties (`top`, `left`). <a href="https://aerotwist.com/blog/pixels-are-expensive/" target="_blank">_Read why this matters_</a>.
 
   * Full support for enter/exit animations, including some spiffy presets, that all leverage hardware-accelerated CSS properties.
@@ -68,7 +66,7 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
   * Ability to provide `onStart` / `onFinish` callbacks.
 
-  * Implementation based on the [_FLIP technique_](https://medium.com/developers-writing/animating-the-unanimatable-1346a5aab3cd), a beautiful-in-its-simplicity method of tackling this problem. UMD build, when minified and gzipped, is only 6kb! ⚡
+  * Implementation based on the [_FLIP technique_](https://medium.com/developers-writing/animating-the-unanimatable-1346a5aab3cd), a beautiful-in-its-simplicity method of tackling this problem. UMD build, when minified and gzipped, is under 6kb! ⚡
 
 
 
