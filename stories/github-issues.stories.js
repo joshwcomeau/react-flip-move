@@ -4,6 +4,7 @@ import shuffle from 'lodash/shuffle';
 import sampleSize from 'lodash/sampleSize';
 import range from 'lodash/range';
 
+import FlipMoveWrapper from './helpers/FlipMoveWrapper';
 import FlipMove from '../src/FlipMove.js';
 
 const items = [
@@ -16,7 +17,27 @@ const items = [
 storiesOf('Github Issues', module)
   .add('#31', () => (
     <Controls duration={400} />
-  ));
+  ))
+  .add('#141' , () => {
+    let count = 0;
+    return (
+      <FlipMoveWrapper
+        items={range(100).map(i => {return {id: `${i}`, text: `Header ${i}`}})}
+        flipMoveContainerStyles={{
+          position: 'relative',
+          height: '500px',
+          overflow: 'scroll'
+        }}
+        listItemStyles={{
+          position: 'sticky',
+          top: 0,
+          height: 20,
+          backgroundColor: 'black',
+          color: 'white'
+        }}
+      />
+    )
+  });
 
 
 class Controls extends Component {
