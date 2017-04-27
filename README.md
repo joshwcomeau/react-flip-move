@@ -87,6 +87,15 @@ const TopArticles = ({ articles }) => (
 ```
 
 
+## API Reference
+
+View the [full API reference documentation](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/api_reference.md)
+
+
+## Enter/Leave Animations
+
+View the [enter/leave docs](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/enter_leave_animations.md)
+
 
 ## Compatibility
 
@@ -95,21 +104,9 @@ const TopArticles = ({ articles }) => (
 | Supported |  ✔ 10+ |   ✔ 4+  | ✔ 6.1+ | ✔ 10+ |   ✔  |       ✔ 6.1+      |        ✔       |
 
 
-
 ## How It Works
 
 Curious how this works, under the hood? [__Read the Medium post__](https://medium.com/@joshuawcomeau/animating-the-unanimatable-1346a5aab3cd).
-
-
-
-## Enter/Leave Animations
-
-View the [enter/leave docs](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/enter_leave_animations.md)
-
-
-## API Reference
-
-View the [full API reference documentation](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/api_reference.md)
 
 
 ---
@@ -150,6 +147,8 @@ This works for all HTML props - there's no validation.
   * Does not work with stateless functional component children. This is because Flip Move uses refs to identify and apply styles to children, and stateless functional components cannot be given refs.
 
   * All children **need a unique `key` property**. Even if Flip Move is only given a single child, it needs to have a unique `key` prop for Flip Move to track it.
+
+  * FlipMove clones the direct children passed to it and overwrites the `ref` prop. As a result, you won't be able to set a `ref` on the top-most elements passed to FlipMove. An easy workaround is just to wrap the elements you pass to FlipMove in a `<div>`.
 
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
