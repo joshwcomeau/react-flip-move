@@ -30,17 +30,35 @@ import {
 import { isElementAnSFC, omit } from './helpers';
 
 
-// Define `process` global in case the consumer hasn't defined
-// process.env.NODE_ENV. We use 'var' to escape block scoping.
-/* eslint-disable no-use-before-define, vars-on-top, no-var */
-if (typeof process === 'undefined') {
-  var process = { env: {} };
+let nodeEnv;
+try {
+  nodeEnv = process.env.NODE_ENV;
+} catch (e) {
+  nodeEnv = 'development';
 }
-/* eslint-enable */
-
 
 function propConverter(ComposedComponent) {
   class FlipMovePropConverter extends Component {
+    checkForStatelessFunctionalComponents(children) {
+      // Skip all console warnings in production.
+      // Bail early, to avoid unnecessary work.
+      if (nodeEnv === 'production') {
+        return;
+      }
+
+      // FlipMove does not support stateless functional components.
+      // Check to see if any supplied components won't work.
+      // If the child doesn't have a key, it means we aren't animating it.
+      // It's allowed to be an SFC, since we ignore it.
+      const noStateless = children.every(child =>
+         !isElementAnSFC(child) || typeof child.key === 'undefined'
+      );
+
+      if (!noStateless) {
+        console.warn(statelessFunctionalComponentSupplied());
+      }
+    }
+
     convertProps(props) {
       const { propTypes, defaultProps } = FlipMovePropConverter;
 
@@ -51,19 +69,7 @@ function propConverter(ComposedComponent) {
       // child is passed, as well as if the child is falsy.
       workingProps.children = React.Children.toArray(props.children);
 
-      if (process.env.NODE_ENV !== 'production') {
-        // FlipMove does not support stateless functional components.
-        // Check to see if any supplied components won't work.
-        // If the child doesn't have a key, it means we aren't animating it.
-        // It's allowed to be an SFC, since we ignore it.
-        const noStateless = workingProps.children.every(child =>
-           !isElementAnSFC(child) || typeof child.key === 'undefined'
-        );
-
-        if (!noStateless) {
-          console.warn(statelessFunctionalComponentSupplied());
-        }
-      }
+      this.checkForStatelessFunctionalComponents(workingProps.children);
 
       // Do string-to-int conversion for all timing-related props
       const timingPropNames = [
@@ -79,7 +85,7 @@ function propConverter(ComposedComponent) {
         if (isNaN(value)) {
           const defaultValue = defaultProps[prop];
 
-          if (process.env.NODE_ENV !== 'production') {
+          if (nodeEnv !== 'production') {
             console.error(invalidTypeForTimingProp({
               prop,
               value,
@@ -108,7 +114,7 @@ function propConverter(ComposedComponent) {
 
       // Accept `disableAnimations`, but add a deprecation warning
       if (typeof props.disableAnimations !== 'undefined') {
-        if (process.env.NODE_ENV !== 'production') {
+        if (nodeEnv !== 'production') {
           console.warn(deprecatedDisableAnimations());
         }
 
@@ -153,7 +159,7 @@ function propConverter(ComposedComponent) {
           const presetKeys = Object.keys(presets);
 
           if (presetKeys.indexOf(animation) === -1) {
-            if (process.env.NODE_ENV !== 'production') {
+            if (nodeEnv !== 'production') {
               console.error(invalidEnterLeavePreset({
                 value: animation,
                 acceptableValues: presetKeys.join(', '),
