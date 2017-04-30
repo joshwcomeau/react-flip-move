@@ -12,7 +12,7 @@
  */
 /* eslint-disable block-scoped-var */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes, Children } from 'react';
 
 import {
   statelessFunctionalComponentSupplied,
@@ -50,7 +50,7 @@ function propConverter(ComposedComponent) {
       // Check to see if any supplied components won't work.
       // If the child doesn't have a key, it means we aren't animating it.
       // It's allowed to be an SFC, since we ignore it.
-      const noStateless = children.every(child =>
+      const noStateless = Children.toArray(children).every(child =>
          !isElementAnSFC(child) || typeof child.key === 'undefined'
       );
 
@@ -64,10 +64,6 @@ function propConverter(ComposedComponent) {
 
       // Create a non-immutable working copy
       let workingProps = { ...props };
-
-      // Convert `children` to an array. This is to standardize when a single
-      // child is passed, as well as if the child is falsy.
-      workingProps.children = React.Children.toArray(props.children);
 
       this.checkForStatelessFunctionalComponents(workingProps.children);
 
