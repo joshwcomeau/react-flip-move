@@ -1,9 +1,10 @@
+// @flow
 /**
  * React Flip Move | propConverter
  * (c) 2016-present Joshua Comeau
  *
  * Abstracted away a bunch of the messy business with props.
- *   - propTypes and defaultProps
+ *   - props flow types and defaultProps
  *   - Type conversion (We accept 'string' and 'number' values for duration,
  *     delay, and other fields, but we actually need them to be ints.)
  *   - Children conversion (we need the children to be an array. May not always
@@ -12,7 +13,10 @@
  */
 /* eslint-disable block-scoped-var */
 
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  Element,
+} from 'react';
 
 import {
   statelessFunctionalComponentSupplied,
@@ -37,9 +41,59 @@ try {
   nodeEnv = 'development';
 }
 
-function propConverter(ComposedComponent) {
-  class FlipMovePropConverter extends Component {
-    checkForStatelessFunctionalComponents(children) {
+type Animation = string | boolean | {
+  from: Object,
+  to: Object
+}
+
+type ClientRect = {
+  top: number,
+  left: number
+}
+
+type FlipMoveProps = {
+  children: mixed,
+  easing: string,
+  duration: string | number,
+  delay: string | number,
+  staggerDurationBy: string | number,
+  staggerDelayBy: string | number,
+  onStart?: (Element<*>, Node) => mixed,
+  onFinish?: (Element<*>, Node) => mixed,
+  onStartAll?: (Array<Element<*>>, Array<Node>) => mixed,
+  onFinishAll?: (Array<Element<*>>, Array<Node>) => mixed,
+  typeName: string,
+  appearAnimation?: Animation,
+  enterAnimation: Animation,
+  leaveAnimation: Animation,
+  disableAnimations: boolean, // deprecated, use disableAllAnimations instead
+  disableAllAnimations: boolean,
+  getPosition: (Node) => ClientRect,
+  maintainContainerHeight: boolean,
+  verticalAlignment: 'top' | 'bottom',
+};
+
+function propConverter(ComposedComponent: Class<Component<*, *, *>>) {
+  return class FlipMovePropConverter extends Component {
+    props: FlipMoveProps
+
+    static defaultProps = {
+      easing: 'ease-in-out',
+      duration: 350,
+      delay: 0,
+      staggerDurationBy: 0,
+      staggerDelayBy: 0,
+      typeName: 'div',
+      enterAnimation: defaultPreset,
+      leaveAnimation: defaultPreset,
+      disableAllAnimations: false,
+      getPosition: node => node.getBoundingClientRect(),
+      maintainContainerHeight: false,
+      verticalAlignment: 'top',
+    };
+
+    // eslint-disable-next-line class-methods-use-this
+    checkForStatelessFunctionalComponents(children: Array<*>) {
       // Skip all console warnings in production.
       // Bail early, to avoid unnecessary work.
       if (nodeEnv === 'production') {
@@ -59,58 +113,47 @@ function propConverter(ComposedComponent) {
       }
     }
 
-    convertProps(props) {
-      const { propTypes, defaultProps } = FlipMovePropConverter;
+    convertProps(props: FlipMoveProps) {
+      const workingProps = {
+        // explicitly bypass the props that don't need conversion
+        easing: props.easing,
+        onStart: props.onStart,
+        onFinish: props.onFinish,
+        onStartAll: props.onStartAll,
+        onFinishAll: props.onFinishAll,
+        typeName: props.typeName,
+        disableAllAnimations: props.disableAllAnimations,
+        getPosition: props.getPosition,
+        maintainContainerHeight: props.maintainContainerHeight,
+        verticalAlignment: props.verticalAlignment,
 
-      // Create a non-immutable working copy
-      let workingProps = { ...props };
+        // Convert `children` to an array. This is to standardize when a single
+        // child is passed, as well as if the child is falsy.
+        children: React.Children.toArray(props.children),
 
-      // Convert `children` to an array. This is to standardize when a single
-      // child is passed, as well as if the child is falsy.
-      workingProps.children = React.Children.toArray(props.children);
+        // Do string-to-int conversion for all timing-related props
+        duration: this.convertTimingProp('duration'),
+        delay: this.convertTimingProp('delay'),
+        staggerDurationBy: this.convertTimingProp('staggerDurationBy'),
+        staggerDelayBy: this.convertTimingProp('staggerDelayBy'),
+
+        // Our enter/leave animations can be specified as boolean (default or
+        // disabled), string (preset name), or object (actual animation values).
+        // Let's standardize this so that they're always objects
+        appearAnimation: this.convertAnimationProp(
+          props.appearAnimation, appearPresets
+        ),
+        enterAnimation: this.convertAnimationProp(
+          props.enterAnimation, enterPresets
+        ),
+        leaveAnimation: this.convertAnimationProp(
+          props.leaveAnimation, leavePresets
+        ),
+
+        delegated: {},
+      };
 
       this.checkForStatelessFunctionalComponents(workingProps.children);
-
-      // Do string-to-int conversion for all timing-related props
-      const timingPropNames = [
-        'duration', 'delay', 'staggerDurationBy', 'staggerDelayBy',
-      ];
-
-      timingPropNames.forEach((prop) => {
-        const rawValue = workingProps[prop];
-        let value = typeof rawValue === 'string'
-          ? parseInt(rawValue, 10)
-          : rawValue;
-
-        if (isNaN(value)) {
-          const defaultValue = defaultProps[prop];
-
-          if (nodeEnv !== 'production') {
-            console.error(invalidTypeForTimingProp({
-              prop,
-              value,
-              defaultValue,
-            }));
-          }
-
-          value = defaultValue;
-        }
-
-        workingProps[prop] = value;
-      });
-
-      // Our enter/leave animations can be specified as boolean (default or
-      // disabled), string (preset name), or object (actual animation values).
-      // Let's standardize this so that they're always objects
-      workingProps.appearAnimation = this.convertAnimationProp(
-        workingProps.appearAnimation, appearPresets
-      );
-      workingProps.enterAnimation = this.convertAnimationProp(
-        workingProps.enterAnimation, enterPresets
-      );
-      workingProps.leaveAnimation = this.convertAnimationProp(
-        workingProps.leaveAnimation, leavePresets
-      );
 
       // Accept `disableAnimations`, but add a deprecation warning
       if (typeof props.disableAnimations !== 'undefined') {
@@ -118,13 +161,12 @@ function propConverter(ComposedComponent) {
           console.warn(deprecatedDisableAnimations());
         }
 
-        workingProps.disableAnimations = undefined;
         workingProps.disableAllAnimations = props.disableAnimations;
       }
 
       // Gather any additional props;
       // they will be delegated to the ReactElement created.
-      const primaryPropKeys = Object.keys(propTypes);
+      const primaryPropKeys = Object.keys(workingProps);
       const delegatedProps = omit(this.props, primaryPropKeys);
 
       // The FlipMove container element needs to have a non-static position.
@@ -135,14 +177,37 @@ function propConverter(ComposedComponent) {
         ...delegatedProps.style,
       };
 
-      workingProps = omit(workingProps, Object.keys(delegatedProps));
       workingProps.delegated = delegatedProps;
 
       return workingProps;
     }
 
+    convertTimingProp(prop: string) {
+      const rawValue: string | number = this.props[prop];
+
+      let value = typeof rawValue === 'number'
+        ? rawValue
+        : parseInt(rawValue, 10);
+
+      if (isNaN(value)) {
+        const defaultValue: number = FlipMovePropConverter.defaultProps[prop];
+
+        if (nodeEnv !== 'production') {
+          console.error(invalidTypeForTimingProp({
+            prop,
+            rawValue,
+            defaultValue,
+          }));
+        }
+
+        value = defaultValue;
+      }
+
+      return value;
+    }
+
     // eslint-disable-next-line class-methods-use-this
-    convertAnimationProp(animation, presets) {
+    convertAnimationProp(animation: ?Animation, presets: Object) {
       let newAnimation;
 
       switch (typeof animation) {
@@ -162,7 +227,7 @@ function propConverter(ComposedComponent) {
             if (nodeEnv !== 'production') {
               console.error(invalidEnterLeavePreset({
                 value: animation,
-                acceptableValues: presetKeys.join(', '),
+                acceptableValues: presetKeys.join(';, '),
                 defaultValue: defaultPreset,
               }));
             }
@@ -189,66 +254,7 @@ function propConverter(ComposedComponent) {
         <ComposedComponent {...this.convertProps(this.props)} />
       );
     }
-  }
-
-  const animationPropTypes = PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.bool,
-    PropTypes.shape({
-      from: PropTypes.object,
-      to: PropTypes.object,
-    }),
-  ]);
-
-  FlipMovePropConverter.propTypes = {
-    children: PropTypes.node,
-    easing: PropTypes.string,
-    duration: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-    ]),
-    delay: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-    ]),
-    staggerDurationBy: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-    ]),
-    staggerDelayBy: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-    ]),
-    onStart: PropTypes.func,
-    onFinish: PropTypes.func,
-    onStartAll: PropTypes.func,
-    onFinishAll: PropTypes.func,
-    typeName: PropTypes.string,
-    appearAnimation: animationPropTypes,
-    enterAnimation: animationPropTypes,
-    leaveAnimation: animationPropTypes,
-    disableAllAnimations: PropTypes.bool,
-    getPosition: PropTypes.func,
-    maintainContainerHeight: PropTypes.bool.isRequired,
-    verticalAlignment: PropTypes.oneOf(['top', 'bottom']).isRequired,
   };
-
-  FlipMovePropConverter.defaultProps = {
-    easing: 'ease-in-out',
-    duration: 350,
-    delay: 0,
-    staggerDurationBy: 0,
-    staggerDelayBy: 0,
-    typeName: 'div',
-    enterAnimation: defaultPreset,
-    leaveAnimation: defaultPreset,
-    disableAllAnimations: false,
-    getPosition: node => node.getBoundingClientRect(),
-    maintainContainerHeight: false,
-    verticalAlignment: 'top',
-  };
-
-  return FlipMovePropConverter;
 }
 
 export default propConverter;

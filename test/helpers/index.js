@@ -1,4 +1,4 @@
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 
 export function getContainerBox(renderedComponent) {
   const container = TestUtils.findRenderedDOMComponentWithTag(

@@ -1,7 +1,7 @@
 /* eslint-disable no-undef, react/prop-types, react/no-multi-comp, no-unused-expressions */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 
 import { getContainerBox, getTagPositions } from './helpers';
 import FlipMove from '../src/FlipMove';
@@ -228,20 +228,20 @@ describe('FlipMove', () => {
     });
   });
 
-  describe('duration propType', () => {
-    it('applies a string that can be converted to an int', () => {
-      renderedComponent.setState({ duration: '10' });
-      expect(consoleStub).to.not.have.been.called;
-    });
-
+  describe('duration prop runtime checking', () => {
     it('applies a bogus string', () => {
       renderedComponent.setState({ duration: 'hi' });
       expect(consoleStub).to.have.been.calledOnce;
     });
 
     it('applies an array prop and throws', () => {
-      renderedComponent.setState({ duration: [10] });
+      renderedComponent.setState({ duration: ['hi'] });
       expect(consoleStub).to.have.been.called;
+    });
+
+    it('applies a string that can be converted to an int', () => {
+      renderedComponent.setState({ duration: '10' });
+      expect(consoleStub).to.not.have.been.called;
     });
   });
 

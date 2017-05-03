@@ -1,14 +1,10 @@
 {
-  extends: 'airbnb',
-  parserOptions: {
-    ecmaVersion: 7,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-      impliedStrict: true,
-      experimentalObjectRestSpread: true
-    }
-  },
+  extends: [
+    'airbnb',
+    'plugin:flowtype/recommended',
+  ],
+  plugins: ['flowtype'],
+  parser: 'babel-eslint',
   rules: {
     "import/no-unresolved": 0,
     "import/no-extraneous-dependencies": 0,
