@@ -48,7 +48,11 @@ type Animation = string | boolean | {
 
 type ClientRect = {
   top: number,
-  left: number
+  right: number,
+  bottom: number,
+  left: number,
+  height: number,
+  width: number
 }
 
 type FlipMoveProps = {
