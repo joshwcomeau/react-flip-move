@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
-
+import createClass from 'create-react-class';
 
 // eslint-disable-next-line react/prefer-stateless-function
-const FlipMoveListItemLegacy = React.createClass({
+const FlipMoveListItemLegacy = createClass({
   render() {
     const { style, children } = this.props;
 
