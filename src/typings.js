@@ -1,9 +1,13 @@
 // @flow
 import type { Element } from 'react';
 
+export type Styles = {
+  [string]: string | number,
+};
+
 export type Animation = {
-  from: Object,
-  to: Object,
+  from: Styles,
+  to: Styles,
 };
 
 export type Presets = {
@@ -52,7 +56,11 @@ type Hooks = {
   onFinishAll?: ChildrenHook,
 };
 
-export type FlipMoveProps = FlipMoveDefaultProps & Hooks & {
+export type DelegatedProps = {
+  style?: Styles,
+};
+
+export type FlipMoveProps = FlipMoveDefaultProps & Hooks & DelegatedProps & {
   children?: mixed,
   appearAnimation?: AnimationProp,
   disableAnimations?: boolean, // deprecated, use disableAllAnimations instead
@@ -73,7 +81,7 @@ export type ConvertedProps = Hooks & {
   getPosition: (HTMLElement) => ClientRect,
   maintainContainerHeight: boolean,
   verticalAlignment: 'top' | 'bottom',
-  delegated: Object,
+  delegated: DelegatedProps,
 };
 
 export type ChildData = {

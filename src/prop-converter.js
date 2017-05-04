@@ -15,6 +15,7 @@
 
 import React, {
   Component,
+  Children,
   Element,
 } from 'react';
 
@@ -39,6 +40,7 @@ import type {
   FlipMoveProps,
   FlipMoveDefaultProps,
   ConvertedProps,
+  DelegatedProps,
 } from './typings';
 
 const nodeEnv: string = process && process.env && process.env.NODE_ENV
@@ -101,7 +103,7 @@ function propConverter(
 
         // Convert `children` to an array. This is to standardize when a single
         // child is passed, as well as if the child is falsy.
-        children: React.Children.toArray(props.children),
+        children: (Children.toArray(props.children)),
 
         // Do string-to-int conversion for all timing-related props
         duration: this.convertTimingProp('duration'),
@@ -139,7 +141,7 @@ function propConverter(
       // Gather any additional props;
       // they will be delegated to the ReactElement created.
       const primaryPropKeys = Object.keys(workingProps);
-      const delegatedProps = omit(this.props, primaryPropKeys);
+      const delegatedProps: DelegatedProps = omit(this.props, primaryPropKeys);
 
       // The FlipMove container element needs to have a non-static position.
       // We use `relative` by default, but it can be overridden by the user.
@@ -167,7 +169,7 @@ function propConverter(
         if (nodeEnv !== 'production') {
           console.error(invalidTypeForTimingProp({
             prop,
-            rawValue,
+            value: rawValue,
             defaultValue,
           }));
         }

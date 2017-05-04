@@ -32,6 +32,8 @@ import type {
   ChildrenHook,
   ChildData,
   NodeData,
+  DelegatedProps,
+  Styles,
 } from './typings';
 
 const transitionEnd = whichTransitionEvent();
@@ -472,7 +474,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     });
   }
 
-  computeInitialStyles(child: ChildData): Object {
+  computeInitialStyles(child: ChildData): Styles {
     if (child.appearing) {
       return this.props.appearAnimation
         ? this.props.appearAnimation.from
@@ -623,7 +625,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       maintainContainerHeight,
     } = this.props;
 
-    const props: Object = {
+    const props: DelegatedProps = {
       ...delegated,
       ref: (node: ?HTMLElement) => { this.parentData.domNode = node; },
     };
