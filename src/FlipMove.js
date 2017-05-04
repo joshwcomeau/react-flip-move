@@ -223,7 +223,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // that will take place in the next step (this.runAnimation).
     if (leaveAnimation) {
       const leavingChildren = this.state.children.filter(child => (
-        !!child.leaving
+        child.leaving
       ));
 
       leavingChildren.forEach((leavingChild) => {
@@ -236,7 +236,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
         }
       });
 
-      if (maintainContainerHeight) {
+      if (maintainContainerHeight && this.heightPlaceholderData.domNode) {
         updateHeightPlaceholder({
           domNode: this.heightPlaceholderData.domNode,
           parentData: this.parentData,
@@ -285,6 +285,9 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
 
   animateChild(child: ChildData, index: number) {
     const { domNode } = this.childrenData[getKey(child)];
+    if (!domNode) {
+      return;
+    }
 
     // Apply the relevant style for this DOM node
     // This is the offset from its actual DOM position.
@@ -350,7 +353,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
 
   bindTransitionEndHandler(child: ChildData) {
     const { domNode } = this.childrenData[getKey(child)];
-    if (domNode == null) {
+    if (!domNode) {
       return;
     }
 
@@ -407,7 +410,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
 
       // If the placeholder was holding the container open while elements were
       // leaving, we we can now set its height to zero.
-      if (this.heightPlaceholderData.domNode != null) {
+      if (this.heightPlaceholderData.domNode) {
         this.heightPlaceholderData.domNode.style.height = '0';
       }
     }
@@ -438,11 +441,15 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // bounding boxes are updated. They will be calculated at other times
     // to be compared to this value, but it's important that the cache is
     // updated once per update.
-    if (this.parentData.domNode) {
-      this.parentData.boundingBox = this.props.getPosition(
-        this.parentData.domNode
-      );
+    const parentDomNode = this.parentData.domNode;
+
+    if (!parentDomNode) {
+      return;
     }
+
+    this.parentData.boundingBox = this.props.getPosition(
+      parentDomNode
+    );
 
     this.state.children.forEach((child) => {
       // It is possible that a child does not have a `key` property;
@@ -462,13 +469,13 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
 
       // If the child element returns null, we need to avoid trying to
       // account for it
-      if (!childData.domNode) {
+      if (!childData.domNode || !child) {
         return;
       }
 
       childData.boundingBox = getRelativeBoundingBox({
-        childData,
-        parentData: this.parentData,
+        childDomNode: childData.domNode,
+        parentDomNode,
         getPosition: this.props.getPosition,
       });
     });
@@ -499,9 +506,19 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
         : {};
     }
 
+    const childData = this.childrenData[getKey(child)];
+    const childDomNode = childData.domNode;
+    const childBoundingBox = childData.boundingBox;
+    const parentBoundingBox = this.parentData.boundingBox;
+
+    if (!childDomNode || !parentBoundingBox) {
+      return {};
+    }
+
     const [dX, dY] = getPositionDelta({
-      childData: this.childrenData[getKey(child)],
-      parentData: this.parentData,
+      childDomNode,
+      childBoundingBox,
+      parentBoundingBox,
       getPosition: this.props.getPosition,
     });
 
@@ -537,8 +554,11 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     }
 
     const childData = this.childrenData[getKey(child)];
+    const childDomNode = childData.domNode;
+    const childBoundingBox = childData.boundingBox;
+    const parentBoundingBox = this.parentData.boundingBox;
 
-    if (!childData.domNode) {
+    if (!childDomNode || !parentBoundingBox) {
       return false;
     }
 
@@ -559,8 +579,9 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // If it isn't entering/leaving, we want to animate it if it's
     // on-screen position has changed.
     const [dX, dY] = getPositionDelta({
-      childData,
-      parentData: this.parentData,
+      childDomNode,
+      childBoundingBox,
+      parentBoundingBox,
       getPosition,
     });
 
@@ -596,7 +617,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // be able to do its calculations.
     return this.state.children.map(child => (
       React.cloneElement(child.element, {
-        ref: (element: mixed) => {
+        ref: (element: HTMLElement | Component<*, *, *>) => {
           // Stateless Functional Components are not supported by FlipMove,
           // because they don't have instances.
           if (!element) {

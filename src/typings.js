@@ -33,6 +33,10 @@ type ChildHook = (Element<*>, ?HTMLElement) => mixed;
 
 export type ChildrenHook = (Element<*>[], Array<?HTMLElement>) => mixed;
 
+export type GetPosition = (HTMLElement) => ClientRect;
+
+export type VerticalAlignment = 'top' | 'bottom';
+
 // this one cannot use intersection, see https://github.com/facebook/flow/issues/2904
 export type FlipMoveDefaultProps = {
   easing: string,
@@ -44,9 +48,9 @@ export type FlipMoveDefaultProps = {
   enterAnimation: AnimationProp,
   leaveAnimation: AnimationProp,
   disableAllAnimations: boolean,
-  getPosition: (HTMLElement) => ClientRect,
+  getPosition: GetPosition,
   maintainContainerHeight: boolean,
-  verticalAlignment: 'top' | 'bottom',
+  verticalAlignment: VerticalAlignment,
 };
 
 type Hooks = {
@@ -78,9 +82,9 @@ export type ConvertedProps = Hooks & {
   enterAnimation: ?Animation,
   leaveAnimation: ?Animation,
   disableAllAnimations: boolean,
-  getPosition: (HTMLElement) => ClientRect,
+  getPosition: GetPosition,
   maintainContainerHeight: boolean,
-  verticalAlignment: 'top' | 'bottom',
+  verticalAlignment: VerticalAlignment,
   delegated: DelegatedProps,
 };
 
