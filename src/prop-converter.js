@@ -32,56 +32,24 @@ import {
   disablePreset,
 } from './enter-leave-presets';
 import { isElementAnSFC, omit } from './helpers';
+import type {
+  Animation,
+  AnimationProp,
+  Presets,
+  FlipMoveProps,
+  ConvertedProps,
+} from './typings';
 
+const nodeEnv: string = process && process.env && process.env.NODE_ENV
+  ? process.env.NODE_ENV
+  : 'development';
 
-let nodeEnv;
-try {
-  nodeEnv = process.env.NODE_ENV;
-} catch (e) {
-  nodeEnv = 'development';
-}
-
-type Animation = string | boolean | {
-  from: Object,
-  to: Object
-}
-
-type ClientRect = {
-  top: number,
-  right: number,
-  bottom: number,
-  left: number,
-  height: number,
-  width: number
-}
-
-type FlipMoveProps = {
-  children: mixed,
-  easing: string,
-  duration: string | number,
-  delay: string | number,
-  staggerDurationBy: string | number,
-  staggerDelayBy: string | number,
-  onStart?: (Element<*>, Node) => mixed,
-  onFinish?: (Element<*>, Node) => mixed,
-  onStartAll?: (Array<Element<*>>, Array<Node>) => mixed,
-  onFinishAll?: (Array<Element<*>>, Array<Node>) => mixed,
-  typeName: string,
-  appearAnimation?: Animation,
-  enterAnimation: Animation,
-  leaveAnimation: Animation,
-  disableAnimations: boolean, // deprecated, use disableAllAnimations instead
-  disableAllAnimations: boolean,
-  getPosition: (Node) => ClientRect,
-  maintainContainerHeight: boolean,
-  verticalAlignment: 'top' | 'bottom',
-};
-
-function propConverter(ComposedComponent: Class<Component<*, *, *>>) {
+// eslint-disable-next-line flowtype/require-return-type
+function propConverter(ComposedComponent: Class<Component<*, ConvertedProps, *>>) {
   return class FlipMovePropConverter extends Component {
     props: FlipMoveProps
 
-    static defaultProps = {
+    static defaultProps: $Shape<FlipMoveProps> = {
       easing: 'ease-in-out',
       duration: 350,
       delay: 0,
@@ -97,7 +65,7 @@ function propConverter(ComposedComponent: Class<Component<*, *, *>>) {
     };
 
     // eslint-disable-next-line class-methods-use-this
-    checkForStatelessFunctionalComponents(children: Array<*>) {
+    checkForStatelessFunctionalComponents(children: Element<*>[]) {
       // Skip all console warnings in production.
       // Bail early, to avoid unnecessary work.
       if (nodeEnv === 'production') {
@@ -117,8 +85,8 @@ function propConverter(ComposedComponent: Class<Component<*, *, *>>) {
       }
     }
 
-    convertProps(props: FlipMoveProps) {
-      const workingProps = {
+    convertProps(props: FlipMoveProps): ConvertedProps {
+      const workingProps: ConvertedProps = {
         // explicitly bypass the props that don't need conversion
         easing: props.easing,
         onStart: props.onStart,
@@ -186,10 +154,10 @@ function propConverter(ComposedComponent: Class<Component<*, *, *>>) {
       return workingProps;
     }
 
-    convertTimingProp(prop: string) {
+    convertTimingProp(prop: string): number {
       const rawValue: string | number = this.props[prop];
 
-      let value = typeof rawValue === 'number'
+      const value = typeof rawValue === 'number'
         ? rawValue
         : parseInt(rawValue, 10);
 
@@ -204,24 +172,21 @@ function propConverter(ComposedComponent: Class<Component<*, *, *>>) {
           }));
         }
 
-        value = defaultValue;
+        return defaultValue;
       }
 
       return value;
     }
 
     // eslint-disable-next-line class-methods-use-this
-    convertAnimationProp(animation: ?Animation, presets: Object) {
-      let newAnimation;
-
+    convertAnimationProp(animation: ?AnimationProp, presets: Presets): ?Animation {
       switch (typeof animation) {
         case 'boolean': {
           // If it's true, we want to use the default preset.
           // If it's false, we want to use the 'none' preset.
-          newAnimation = presets[
+          return presets[
             animation ? defaultPreset : disablePreset
           ];
-          break;
         }
 
         case 'string': {
@@ -231,29 +196,24 @@ function propConverter(ComposedComponent: Class<Component<*, *, *>>) {
             if (nodeEnv !== 'production') {
               console.error(invalidEnterLeavePreset({
                 value: animation,
-                acceptableValues: presetKeys.join(';, '),
+                acceptableValues: presetKeys.join(', '),
                 defaultValue: defaultPreset,
               }));
             }
 
-            newAnimation = presets[defaultPreset];
-          } else {
-            newAnimation = presets[animation];
+            return presets[defaultPreset];
           }
-          break;
+
+          return presets[animation];
         }
 
         default: {
-          newAnimation = animation;
-          break;
+          return animation;
         }
       }
-
-      return newAnimation;
     }
 
-
-    render() {
+    render(): Element<*> {
       return (
         <ComposedComponent {...this.convertProps(this.props)} />
       );

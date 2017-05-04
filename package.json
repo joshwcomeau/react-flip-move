@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "lint": "eslint src",
-    "build:lib": "babel src --out-dir lib",
+    "build:lib": "babel src --out-dir lib && flow-copy-source -v src lib",
     "build:umd": "webpack src/index.js dist/react-flip-move.js --config webpack.config.production.js",
     "build:umd:min": "webpack src/index.js dist/react-flip-move.min.js --config webpack.config.production.min.js",
     "build": "npm run build:lib && npm run build:umd && npm run build:umd:min",
@@ -65,6 +65,7 @@
     "eslint-plugin-jsx-a11y": "2.2.3",
     "eslint-plugin-react": "6.10.3",
     "flow-bin": "0.45.0",
+    "flow-copy-source": "1.1.0",
     "karma": "0.13.19",
     "karma-chai": "0.1.0",
     "karma-chrome-launcher": "0.2.2",

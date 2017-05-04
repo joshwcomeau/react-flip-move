@@ -23,7 +23,7 @@
      from: { transform: 'scaleX(0)', transformOrigin: 'left center' },
      to: { transform: '', transformOrigin: 'left center' },
    },
-   none: false,
+   none: null,
  };
 
  export const leavePresets = {
@@ -43,7 +43,7 @@
      from: { transform: 'scaleX(1)', transformOrigin: 'left center' },
      to: { transform: 'scaleX(0)', transformOrigin: 'left center' },
    },
-   none: false,
+   none: null,
  };
 
  // For now, appearPresets will be identical to enterPresets.

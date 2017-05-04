@@ -1,3 +1,4 @@
+// @flow
 /**
  * React Flip Move
  * (c) 2016-present Joshua Comeau
@@ -7,7 +8,10 @@
 
  /* eslint-disable react/prop-types */
 
-import React, { Component } from 'react';
+import React, {
+  Component,
+  Element,
+} from 'react';
 
 import './polyfills';
 import propConverter from './prop-converter';
@@ -22,70 +26,36 @@ import {
   whichTransitionEvent,
 } from './dom-manipulation';
 import { arraysEqual } from './helpers';
+import type {
+  ConvertedProps,
+  FlipMoveState,
+  ChildrenHook,
+  ChildData,
+  NodeData,
+} from './typings';
 
 const transitionEnd = whichTransitionEvent();
 const noBrowserSupport = !transitionEnd;
 
+function getKey(childData: ChildData): string {
+  return childData.element.key || '';
+}
 
-class FlipMove extends Component {
-  constructor(props) {
-    super(props);
-
-    // FlipMove needs to know quite a bit about its children in order to do
-    // its job. We store these as a property on the instance. We're not using
-    // state, because we don't want changes to trigger re-renders, we just
-    // need a place to keep the data for reference, when changes happen.
-    this.childrenData = {
-      /* Populated via callback refs on render. eg
-      userSpecifiedKey1: {
-        domNode: <domNode>,
-        boundingBox: { top, left, right, bottom, width, height },
-      },
-      userSpecifiedKey2: { ... },
-      ...
-      */
-    };
-
-    // Similarly, track the dom node and box of our parent element.
-    this.parentData = {
-      domNode: null,
-      boundingBox: null,
-    };
-
-    // If `maintainContainerHeight` prop is set to true, we'll create a
-    // placeholder element which occupies space so that the parent height
-    // doesn't change when items are removed from the document flow (which
-    // happens during leave animations)
-    this.heightPlaceholderData = {
-      domNode: null,
-    };
-
-    // Copy props.children into state.
-    // To understand why this is important (and not an anti-pattern), consider
-    // how "leave" animations work. An item has "left" when the component
-    // receives a new set of props that do NOT contain the item.
-    // If we just render the props as-is, the item would instantly disappear.
-    // We want to keep the item rendered for a little while, until its animation
-    // can complete. Because we cannot mutate props, we make `state` the source
-    // of truth.
-    this.state = {
-      children: props.children.map(child => ({
-        ...child,
-        appearing: true,
-      })),
-    };
-
-    // Keep track of remaining animations so we know when to fire the
-    // all-finished callback, and clean up after ourselves.
-    // NOTE: we can't simply use childrenToAnimate.length to track remaining
-    // animations, because we need to maintain the list of animating children,
-    // to pass to the `onFinishAll` handler.
-    this.remainingAnimations = 0;
-    this.childrenToAnimate = [];
-
-    this.doesChildNeedToBeAnimated = this.doesChildNeedToBeAnimated.bind(this);
-    this.runAnimation = this.runAnimation.bind(this);
-  }
+class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
+  // Copy props.children into state.
+  // To understand why this is important (and not an anti-pattern), consider
+  // how "leave" animations work. An item has "left" when the component
+  // receives a new set of props that do NOT contain the item.
+  // If we just render the props as-is, the item would instantly disappear.
+  // We want to keep the item rendered for a little while, until its animation
+  // can complete. Because we cannot mutate props, we make `state` the source
+  // of truth.
+  state = {
+    children: this.props.children.map(element => ({
+      element,
+      appearing: true,
+    })),
+  };
 
   componentDidMount() {
     // Run our `appearAnimation` if it was requested, right after the
@@ -101,7 +71,7 @@ class FlipMove extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: ConvertedProps) {
     // When the component is handed new props, we need to figure out the
     // "resting" position of all currently-rendered DOM nodes.
     // We store that data in this.parent and this.children,
@@ -114,14 +84,14 @@ class FlipMove extends Component {
     // Assuming that we can animate, though, we have to do some work.
     // Essentially, we want to keep just-deleted nodes in the DOM for a bit
     // longer, so that we can animate them away.
-    const newChildren = this.isAnimationDisabled(nextProps)
-      ? nextProps.children
+    const newChildren: ChildData[] = this.isAnimationDisabled(nextProps)
+      ? nextProps.children.map(element => ({ element }))
       : this.calculateNextSetOfChildren(nextProps.children);
 
     this.setState({ children: newChildren });
   }
 
-  componentDidUpdate(previousProps) {
+  componentDidUpdate(previousProps: ConvertedProps) {
     // If the children have been re-arranged, moved, or added/removed,
     // trigger the main FLIP animation.
     //
@@ -143,7 +113,46 @@ class FlipMove extends Component {
     }
   }
 
-  calculateNextSetOfChildren(nextChildren) {
+  // FlipMove needs to know quite a bit about its children in order to do
+  // its job. We store these as a property on the instance. We're not using
+  // state, because we don't want changes to trigger re-renders, we just
+  // need a place to keep the data for reference, when changes happen.
+  childrenData: {
+    /* Populated via callback refs on render. eg
+    userSpecifiedKey1: {
+      domNode: <domNode>,
+      boundingBox: { top, left, right, bottom, width, height },
+    },
+    userSpecifiedKey2: { ... },
+    ...
+    */
+    [userSpecifiedKey: string]: NodeData,
+  } = {};
+
+  // Similarly, track the dom node and box of our parent element.
+  parentData: NodeData = {
+    domNode: null,
+    boundingBox: null,
+  };
+
+  // If `maintainContainerHeight` prop is set to true, we'll create a
+  // placeholder element which occupies space so that the parent height
+  // doesn't change when items are removed from the document flow (which
+  // happens during leave animations)
+  heightPlaceholderData: NodeData = {
+    domNode: null,
+  };
+
+
+  // Keep track of remaining animations so we know when to fire the
+  // all-finished callback, and clean up after ourselves.
+  // NOTE: we can't simply use childrenToAnimate.length to track remaining
+  // animations, because we need to maintain the list of animating children,
+  // to pass to the `onFinishAll` handler.
+  remainingAnimations = 0;
+  childrenToAnimate = [];
+
+  calculateNextSetOfChildren(nextChildren: Element<*>[]): ChildData[] {
     // We want to:
     //   - Mark all new children as `entering`
     //   - Pull in previous children that aren't in nextChildren, and mark them
@@ -153,14 +162,14 @@ class FlipMove extends Component {
     //
 
     // Start by marking new children as 'entering'
-    const updatedChildren = nextChildren.map((nextChild) => {
-      const child = this.findChildByKey(nextChild.key);
+    const updatedChildren: ChildData[] = nextChildren.map((nextChild) => {
+      const child = this.findChildByKey(nextChild.key || '');
 
       // If the current child did exist, but it was in the midst of leaving,
       // we want to treat it as though it's entering
       const isEntering = !child || child.leaving;
 
-      return { ...nextChild, entering: isEntering };
+      return { element: nextChild, entering: isEntering };
     });
 
     // This is tricky. We want to keep the nextChildren's ordering, but with
@@ -177,15 +186,15 @@ class FlipMove extends Component {
     // into the nextChildren in its ORIGINAL position. Note that, as we keep
     // inserting old items into the new list, the "original" position will
     // keep incrementing.
-    let numOfChildrenLeaving = 0;
+    let numOfChildrenLeaving: number = 0;
     this.state.children.forEach((child, index) => {
-      const isLeaving = !nextChildren.find(({ key }) => key === child.key);
+      const isLeaving = !nextChildren.find(({ key }) => key === getKey(child));
 
       // If the child isn't leaving (or, if there is no leave animation),
       // we don't need to add it into the state children.
       if (!isLeaving || !this.props.leaveAnimation) return;
 
-      const nextChild = { ...child, leaving: true };
+      const nextChild: ChildData = { ...child, leaving: true };
       const nextChildIndex = index + numOfChildrenLeaving;
 
       updatedChildren.splice(nextChildIndex, 0, nextChild);
@@ -216,7 +225,7 @@ class FlipMove extends Component {
       ));
 
       leavingChildren.forEach((leavingChild) => {
-        const childData = this.childrenData[leavingChild.key];
+        const childData = this.childrenData[getKey(leavingChild)];
 
         // We need to take the items out of the "flow" of the document, so that
         // its siblings can move to take its place.
@@ -238,7 +247,7 @@ class FlipMove extends Component {
     // we need to reset the transition, so that the NEW shuffle starts from
     // the right place.
     this.state.children.forEach((child) => {
-      const { domNode } = this.childrenData[child.key];
+      const { domNode } = this.childrenData[getKey(child)];
 
       // Ignore children that don't render DOM nodes (eg. by returning null)
       if (!domNode) {
@@ -256,25 +265,24 @@ class FlipMove extends Component {
     });
   }
 
-  runAnimation() {
+  runAnimation = () => {
     const dynamicChildren = this.state.children.filter(
       this.doesChildNeedToBeAnimated
     );
 
     dynamicChildren.forEach((child, n) => {
       this.remainingAnimations += 1;
-      this.childrenToAnimate.push(child.key);
+      this.childrenToAnimate.push(getKey(child));
       this.animateChild(child, n);
     });
 
-    if (this.props.onStartAll) {
-      const [elements, domNodes] = this.formatChildrenForHooks();
-      this.props.onStartAll(elements, domNodes);
+    if (typeof this.props.onStartAll === 'function') {
+      this.callChildrenHook(this.props.onStartAll);
     }
-  }
+  };
 
-  animateChild(child, index) {
-    const { domNode } = this.childrenData[child.key];
+  animateChild(child: ChildData, index: number) {
+    const { domNode } = this.childrenData[getKey(child)];
 
     // Apply the relevant style for this DOM node
     // This is the offset from its actual DOM position.
@@ -288,7 +296,7 @@ class FlipMove extends Component {
     });
 
     // Start by invoking the onStart callback for this child.
-    if (this.props.onStart) this.props.onStart(child, domNode);
+    if (this.props.onStart) this.props.onStart(child.element, domNode);
 
     // Next, animate the item from it's artificially-offset position to its
     // new, natural position.
@@ -305,6 +313,8 @@ class FlipMove extends Component {
         // previous frames, while also adding a `transition` property.
         // This way, the item will smoothly transition from its old position
         // to its new position.
+
+        // eslint-disable-next-line flowtype/require-variable-type
         let styles = {
           transition: createTransitionString(index, this.props),
           transform: '',
@@ -336,14 +346,17 @@ class FlipMove extends Component {
     this.bindTransitionEndHandler(child);
   }
 
-  bindTransitionEndHandler(child) {
-    const { domNode } = this.childrenData[child.key];
+  bindTransitionEndHandler(child: ChildData) {
+    const { domNode } = this.childrenData[getKey(child)];
+    if (domNode == null) {
+      return;
+    }
 
     // The onFinish callback needs to be bound to the transitionEnd event.
     // We also need to unbind it when the transition completes, so this ugly
     // inline function is required (we need it here so it closes over
     // dependent variables `child` and `domNode`)
-    const transitionEndHandler = (ev) => {
+    const transitionEndHandler = (ev: Event) => {
       // It's possible that this handler is fired not on our primary transition,
       // but on a nested transition (eg. a hover effect). Ignore these cases.
       if (ev.target !== domNode) return;
@@ -357,15 +370,15 @@ class FlipMove extends Component {
       domNode.removeEventListener(transitionEnd, transitionEndHandler);
 
       if (child.leaving) {
-        delete this.childrenData[child.key];
+        delete this.childrenData[getKey(child)];
       }
     };
 
     domNode.addEventListener(transitionEnd, transitionEndHandler);
   }
 
-  triggerFinishHooks(child, domNode) {
-    if (this.props.onFinish) this.props.onFinish(child, domNode);
+  triggerFinishHooks(child: ChildData, domNode: HTMLElement) {
+    if (this.props.onFinish) this.props.onFinish(child.element, domNode);
 
     // Reduce the number of children we need to animate by 1,
     // so that we can tell when all children have finished.
@@ -373,7 +386,7 @@ class FlipMove extends Component {
 
     if (this.remainingAnimations === 0) {
       // Remove any items from the DOM that have left, and reset `entering`.
-      const nextChildren = this.state.children
+      const nextChildren: ChildData[] = this.state.children
         .filter(({ leaving }) => !leaving)
         .map(item => ({
           ...item,
@@ -383,9 +396,7 @@ class FlipMove extends Component {
 
       this.setState({ children: nextChildren }, () => {
         if (typeof this.props.onFinishAll === 'function') {
-          const [elements, domNodes] = this.formatChildrenForHooks();
-
-          this.props.onFinishAll(elements, domNodes);
+          this.callChildrenHook(this.props.onFinishAll);
         }
 
         // Reset our variables for the next iteration
@@ -394,30 +405,30 @@ class FlipMove extends Component {
 
       // If the placeholder was holding the container open while elements were
       // leaving, we we can now set its height to zero.
-      if (this.heightPlaceholderData.domNode !== null) {
-        this.heightPlaceholderData.domNode.style.height = 0;
+      if (this.heightPlaceholderData.domNode != null) {
+        this.heightPlaceholderData.domNode.style.height = '0';
       }
     }
   }
 
-  formatChildrenForHooks() {
-    const elements = [];
-    const domNodes = [];
+  callChildrenHook(hook: ChildrenHook) {
+    const elements: Element<*>[] = [];
+    const domNodes: (?HTMLElement)[] = [];
 
     this.childrenToAnimate.forEach((childKey) => {
       // If this was an exit animation, the child may no longer exist.
       // If so, skip it.
-      const element = this.findChildByKey(childKey);
+      const child = this.findChildByKey(childKey);
 
-      if (!element) {
+      if (!child) {
         return;
       }
 
-      elements.push(element);
+      elements.push(child.element);
       domNodes.push(this.childrenData[childKey].domNode);
     });
 
-    return [elements, domNodes];
+    hook(elements, domNodes);
   }
 
   updateBoundingBoxCaches() {
@@ -425,18 +436,20 @@ class FlipMove extends Component {
     // bounding boxes are updated. They will be calculated at other times
     // to be compared to this value, but it's important that the cache is
     // updated once per update.
-    this.parentData.boundingBox = this.props.getPosition(
-      this.parentData.domNode
-    );
+    if (this.parentData.domNode) {
+      this.parentData.boundingBox = this.props.getPosition(
+        this.parentData.domNode
+      );
+    }
 
     this.state.children.forEach((child) => {
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
-      if (!child.key) {
+      if (!getKey(child)) {
         return;
       }
 
-      const childData = this.childrenData[child.key];
+      const childData = this.childrenData[getKey(child)];
 
       // In very rare circumstances, for reasons unknown, the ref is never
       // populated for certain children. In this case, avoid doing this update.
@@ -459,20 +472,15 @@ class FlipMove extends Component {
     });
   }
 
-  computeInitialStyles(child) {
-    const noAnimationRequestedForThisEvent = (
-      (child.appearing && !this.props.appearAnimation) ||
-      (child.entering && !this.props.enterAnimation) ||
-      (child.leaving && !this.props.leaveAnimation)
-    );
-
-    if (noAnimationRequestedForThisEvent) {
-      return {};
-    }
-
+  computeInitialStyles(child: ChildData): Object {
     if (child.appearing) {
-      return this.props.appearAnimation.from;
+      return this.props.appearAnimation
+        ? this.props.appearAnimation.from
+        : {};
     } else if (child.entering) {
+      if (!this.props.enterAnimation) {
+        return {};
+      }
       // If this child was in the middle of leaving, it still has its
       // absolute positioning styles applied. We need to undo those.
       return {
@@ -484,11 +492,13 @@ class FlipMove extends Component {
         ...this.props.enterAnimation.from,
       };
     } else if (child.leaving) {
-      return this.props.leaveAnimation.from;
+      return this.props.leaveAnimation
+        ? this.props.leaveAnimation.from
+        : {};
     }
 
     const [dX, dY] = getPositionDelta({
-      childData: this.childrenData[child.key],
+      childData: this.childrenData[getKey(child)],
       parentData: this.parentData,
       getPosition: this.props.getPosition,
     });
@@ -499,7 +509,7 @@ class FlipMove extends Component {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  isAnimationDisabled(props) {
+  isAnimationDisabled(props: ConvertedProps): boolean {
     // If the component is explicitly passed a `disableAllAnimations` flag,
     // we can skip this whole process. Similarly, if all of the numbers have
     // been set to 0, there is no point in trying to animate; doing so would
@@ -517,14 +527,14 @@ class FlipMove extends Component {
     );
   }
 
-  doesChildNeedToBeAnimated(child) {
+  doesChildNeedToBeAnimated = (child: ChildData) => {
     // If the child doesn't have a key, it's an immovable child (one that we
     // do not want to do FLIP stuff to.)
-    if (!child.key) {
+    if (!getKey(child)) {
       return false;
     }
 
-    const childData = this.childrenData[child.key];
+    const childData = this.childrenData[getKey(child)];
 
     if (!childData.domNode) {
       return false;
@@ -553,13 +563,13 @@ class FlipMove extends Component {
     });
 
     return dX !== 0 || dY !== 0;
+  };
+
+  findChildByKey(key: string): ?ChildData {
+    return this.state.children.find(child => getKey(child) === key);
   }
 
-  findChildByKey(key) {
-    return this.state.children.find(child => child.key === key);
-  }
-
-  createHeightPlaceholder() {
+  createHeightPlaceholder(): Element<*> {
     const { typeName } = this.props;
 
     // If requested, create an invisible element at the end of the list.
@@ -578,12 +588,12 @@ class FlipMove extends Component {
     );
   }
 
-  childrenWithRefs() {
+  childrenWithRefs(): Element<*>[] {
     // We need to clone the provided children, capturing a reference to the
     // underlying DOM node. Flip Move needs to use the React escape hatches to
     // be able to do its calculations.
     return this.state.children.map(child => (
-      React.cloneElement(child, {
+      React.cloneElement(child.element, {
         ref: (element) => {
           // Stateless Functional Components are not supported by FlipMove,
           // because they don't have instances.
@@ -591,20 +601,21 @@ class FlipMove extends Component {
             return;
           }
 
-          const domNode = getNativeNode(element);
+          const domNode: ?HTMLElement = getNativeNode(element);
 
           // If this is the first render, we need to create the data entry
-          if (!this.childrenData[child.key]) {
-            this.childrenData[child.key] = {};
+          const key = getKey(child);
+          if (!this.childrenData[key]) {
+            this.childrenData[key] = {};
           }
 
-          this.childrenData[child.key].domNode = domNode;
+          this.childrenData[key].domNode = domNode;
         },
       })
     ));
   }
 
-  render() {
+  render(): Element<*> {
     const {
       typeName,
       delegated,
