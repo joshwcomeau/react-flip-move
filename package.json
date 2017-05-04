@@ -16,7 +16,7 @@
     "build": "npm run build:lib && npm run build:umd && npm run build:umd:min",
     "flow": "flow",
     "prebuild": "npm run lint && npm run flow && npm run test",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "test": "./node_modules/.bin/karma start --single-run",
     "test:dev": "karma start karma.conf.js",
     "storybook": "start-storybook -p 9001"
