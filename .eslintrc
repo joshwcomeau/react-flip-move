@@ -17,15 +17,6 @@
     "flowtype/no-primitive-constructor-types": 2,
     "flowtype/no-weak-types": [2, { Object: false }],
     "flowtype/object-type-delimiter": [2, "comma"],
-    "flowtype/require-parameter-type": [1, {
-      excludeArrowFunctions: true,
-    }],
-    "flowtype/require-return-type": [1, "always", {
-      excludeArrowFunctions: true,
-    }],
-    "flowtype/require-variable-type": [1, {
-      excludeVariableTypes: { const: true },
-    }],
     "flowtype/semi": 2,
   },
   settings: {

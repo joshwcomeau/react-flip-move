@@ -29,39 +29,42 @@ type ChildHook = (Element<*>, ?HTMLElement) => mixed;
 
 export type ChildrenHook = (Element<*>[], Array<?HTMLElement>) => mixed;
 
-export type FlipMoveProps = {
-  children?: mixed,
+// this one cannot use intersection, see https://github.com/facebook/flow/issues/2904
+export type FlipMoveDefaultProps = {
   easing: string,
   duration: string | number,
   delay: string | number,
   staggerDurationBy: string | number,
   staggerDelayBy: string | number,
-  onStart?: ChildHook,
-  onFinish?: ChildHook,
-  onStartAll?: ChildrenHook,
-  onFinishAll?: ChildrenHook,
   typeName: string,
-  appearAnimation?: AnimationProp,
   enterAnimation: AnimationProp,
   leaveAnimation: AnimationProp,
-  disableAnimations?: boolean, // deprecated, use disableAllAnimations instead
   disableAllAnimations: boolean,
   getPosition: (HTMLElement) => ClientRect,
   maintainContainerHeight: boolean,
   verticalAlignment: 'top' | 'bottom',
 };
 
-export type ConvertedProps = {
+type Hooks = {
+  onStart?: ChildHook,
+  onFinish?: ChildHook,
+  onStartAll?: ChildrenHook,
+  onFinishAll?: ChildrenHook,
+};
+
+export type FlipMoveProps = FlipMoveDefaultProps & Hooks & {
+  children?: mixed,
+  appearAnimation?: AnimationProp,
+  disableAnimations?: boolean, // deprecated, use disableAllAnimations instead
+};
+
+export type ConvertedProps = Hooks & {
   children: Element<*>[],
   easing: string,
   duration: number,
   delay: number,
   staggerDurationBy: number,
   staggerDelayBy: number,
-  onStart?: ChildHook,
-  onFinish?: ChildHook,
-  onStartAll?: ChildrenHook,
-  onFinishAll?: ChildrenHook,
   typeName: string,
   appearAnimation: ?Animation,
   enterAnimation: ?Animation,

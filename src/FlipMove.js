@@ -582,7 +582,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       placeholderType,
       {
         key: 'height-placeholder',
-        ref: (domNode) => { this.heightPlaceholderData.domNode = domNode; },
+        ref: (domNode: ?HTMLElement) => { this.heightPlaceholderData.domNode = domNode; },
         style: { visibility: 'hidden', height: 0 },
       }
     );
@@ -594,7 +594,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // be able to do its calculations.
     return this.state.children.map(child => (
       React.cloneElement(child.element, {
-        ref: (element) => {
+        ref: (element: mixed) => {
           // Stateless Functional Components are not supported by FlipMove,
           // because they don't have instances.
           if (!element) {
@@ -615,7 +615,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     ));
   }
 
-  render(): Element<*> {
+  render() {
     const {
       typeName,
       delegated,
@@ -623,9 +623,9 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       maintainContainerHeight,
     } = this.props;
 
-    const props = {
+    const props: Object = {
       ...delegated,
-      ref: (node) => { this.parentData.domNode = node; },
+      ref: (node: ?HTMLElement) => { this.parentData.domNode = node; },
     };
 
     const children = this.childrenWithRefs();

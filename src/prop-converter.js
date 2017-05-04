@@ -37,6 +37,7 @@ import type {
   AnimationProp,
   Presets,
   FlipMoveProps,
+  FlipMoveDefaultProps,
   ConvertedProps,
 } from './typings';
 
@@ -44,12 +45,11 @@ const nodeEnv: string = process && process.env && process.env.NODE_ENV
   ? process.env.NODE_ENV
   : 'development';
 
-// eslint-disable-next-line flowtype/require-return-type
-function propConverter(ComposedComponent: Class<Component<*, ConvertedProps, *>>) {
+function propConverter(
+  ComposedComponent: Class<Component<*, ConvertedProps, *>>
+): Class<Component<FlipMoveDefaultProps, FlipMoveProps, void>> {
   return class FlipMovePropConverter extends Component {
-    props: FlipMoveProps
-
-    static defaultProps: $Shape<FlipMoveProps> = {
+    static defaultProps = {
       easing: 'ease-in-out',
       duration: 350,
       delay: 0,
@@ -213,7 +213,7 @@ function propConverter(ComposedComponent: Class<Component<*, ConvertedProps, *>>
       }
     }
 
-    render(): Element<*> {
+    render() {
       return (
         <ComposedComponent {...this.convertProps(this.props)} />
       );

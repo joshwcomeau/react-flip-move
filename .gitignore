@@ -5,3 +5,4 @@ coverage
 lib
 dist
 examples
+flow-coverage
