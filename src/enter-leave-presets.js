@@ -10,11 +10,11 @@ import type { Presets } from './typings';
 
 export const enterPresets: Presets = {
   elevator: {
-    from: { transform: 'scale(0)', opacity: 0 },
+    from: { transform: 'scale(0)', opacity: '0' },
     to: { transform: '', opacity: '' },
   },
   fade: {
-    from: { opacity: 0 },
+    from: { opacity: '0' },
     to: { opacity: '' },
   },
   accordionVertical: {
@@ -30,12 +30,12 @@ export const enterPresets: Presets = {
 
 export const leavePresets: Presets = {
   elevator: {
-    from: { transform: 'scale(1)', opacity: 1 },
-    to: { transform: 'scale(0)', opacity: 0 },
+    from: { transform: 'scale(1)', opacity: '1' },
+    to: { transform: 'scale(0)', opacity: '0' },
   },
   fade: {
-    from: { opacity: 1 },
-    to: { opacity: 0 },
+    from: { opacity: '1' },
+    to: { opacity: '0' },
   },
   accordionVertical: {
     from: { transform: 'scaleY(1)', transformOrigin: 'center top' },

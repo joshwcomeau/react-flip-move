@@ -2,6 +2,10 @@
 import type { Element } from 'react';
 
 export type Styles = {
+  [string]: string,
+};
+
+type ReactStyles = {
   [string]: string | number,
 };
 
@@ -29,9 +33,17 @@ export type ClientRect = {
   width: number,
 };
 
-type ChildHook = (Element<*>, ?HTMLElement) => mixed;
+// can't use $Shape<Element<*>> here, because we use it in intersection
+export type ElementShape = {
+  type: $PropertyType<Element<*>, 'type'>,
+  props: $PropertyType<Element<*>, 'props'>,
+  key: $PropertyType<Element<*>, 'key'>,
+  ref: $PropertyType<Element<*>, 'ref'>,
+};
 
-export type ChildrenHook = (Element<*>[], Array<?HTMLElement>) => mixed;
+type ChildHook = (ElementShape, ?HTMLElement) => mixed;
+
+export type ChildrenHook = (ElementShape[], Array<?HTMLElement>) => mixed;
 
 export type GetPosition = (HTMLElement) => ClientRect;
 
@@ -61,7 +73,7 @@ type Hooks = {
 };
 
 export type DelegatedProps = {
-  style?: Styles,
+  style?: ReactStyles,
 };
 
 export type FlipMoveProps = FlipMoveDefaultProps & Hooks & DelegatedProps & {
@@ -88,7 +100,7 @@ export type ConvertedProps = Hooks & {
   delegated: DelegatedProps,
 };
 
-export type ChildData = {
+export type ChildData = ElementShape & {
   element: Element<*>,
   appearing?: boolean,
   entering?: boolean,

@@ -30,6 +30,7 @@ import { arraysEqual } from './helpers';
 import type {
   ConvertedProps,
   FlipMoveState,
+  ElementShape,
   ChildrenHook,
   ChildData,
   NodeData,
@@ -41,7 +42,7 @@ const transitionEnd = whichTransitionEvent();
 const noBrowserSupport = !transitionEnd;
 
 function getKey(childData: ChildData): string {
-  return childData.element.key || '';
+  return childData.key || '';
 }
 
 class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
@@ -54,9 +55,10 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   // can complete. Because we cannot mutate props, we make `state` the source
   // of truth.
   state = {
-    children: Children.toArray(this.props.children).map(element => ({
+    children: Children.toArray(this.props.children).map((element: Element<*>) => ({
+      ...element,
       element,
-      appearing: true,
+      appearing: 3,
     })),
   };
 
@@ -92,7 +94,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // longer, so that we can animate them away.
     this.setState({
       children: this.isAnimationDisabled(nextProps)
-        ? nextChildren.map(element => ({ element }))
+        ? nextChildren.map(element => ({ ...element, element }))
         : this.calculateNextSetOfChildren(nextChildren),
     });
   }
@@ -175,7 +177,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       // we want to treat it as though it's entering
       const isEntering = !child || child.leaving;
 
-      return { element: nextChild, entering: isEntering };
+      return { ...nextChild, element: nextChild, entering: isEntering };
     });
 
     // This is tricky. We want to keep the nextChildren's ordering, but with
@@ -193,7 +195,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // inserting old items into the new list, the "original" position will
     // keep incrementing.
     let numOfChildrenLeaving: number = 0;
-    this.state.children.forEach((child, index) => {
+    this.state.children.forEach((child: ChildData, index) => {
       const isLeaving = !nextChildren.find(({ key }) => key === getKey(child));
 
       // If the child isn't leaving (or, if there is no leave animation),
@@ -305,7 +307,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     });
 
     // Start by invoking the onStart callback for this child.
-    if (this.props.onStart) this.props.onStart(child.element, domNode);
+    if (this.props.onStart) this.props.onStart(child, domNode);
 
     // Next, animate the item from it's artificially-offset position to its
     // new, natural position.
@@ -387,7 +389,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   }
 
   triggerFinishHooks(child: ChildData, domNode: HTMLElement) {
-    if (this.props.onFinish) this.props.onFinish(child.element, domNode);
+    if (this.props.onFinish) this.props.onFinish(child, domNode);
 
     // Reduce the number of children we need to animate by 1,
     // so that we can tell when all children have finished.
@@ -421,7 +423,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   }
 
   callChildrenHook(hook: ChildrenHook) {
-    const elements: Element<*>[] = [];
+    const elements: ElementShape[] = [];
     const domNodes: (?HTMLElement)[] = [];
 
     this.childrenToAnimate.forEach((childKey) => {
@@ -433,7 +435,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
         return;
       }
 
-      elements.push(child.element);
+      elements.push(child);
       domNodes.push(this.childrenData[childKey].domNode);
     });
 

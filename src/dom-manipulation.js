@@ -25,9 +25,7 @@ export function applyStylesToDOMNode({ domNode, styles }: {
   // Can't just do an object merge because domNode.styles is no regular object.
   // Need to do it this way for the engine to fire its `set` listeners.
   Object.keys(styles).forEach((key) => {
-    const value = styles[key];
-    const stringValue = typeof value === 'number' ? `${value}px` : value;
-    domNode.style.setProperty(key, stringValue);
+    domNode.style.setProperty(key, styles[key]);
   });
 }
 
@@ -166,11 +164,11 @@ export const removeNodeFromDOMFlow = (
     ? boundingBox.top - boundingBox.height
     : boundingBox.top;
 
-  const styles = {
+  const styles: Styles = {
     position: 'absolute',
-    top: topOffset - margins['margin-top'],
-    left: boundingBox.left - margins['margin-left'],
-    right: boundingBox.right - margins['margin-right'],
+    top: `${topOffset - margins['margin-top']}px`,
+    left: `${boundingBox.left - margins['margin-left']}px`,
+    right: `${boundingBox.right - margins['margin-right']}px`,
   };
 
   applyStylesToDOMNode({ domNode, styles });
@@ -203,7 +201,7 @@ export const updateHeightPlaceholder = ({
   // we first set its height to 0.
   // This allows the container to collapse down to the size of just its
   // content (plus container padding or borders if any).
-  applyStylesToDOMNode({ domNode, styles: { height: 0 } });
+  applyStylesToDOMNode({ domNode, styles: { height: '0' } });
 
   // Find the distance by which the container would be collapsed by elements
   // leaving. We compare the freshly-available parent height with the original,
@@ -215,8 +213,8 @@ export const updateHeightPlaceholder = ({
   // If the container has become shorter, update the padding element's
   // height to take up the difference. Otherwise set its height to zero,
   // so that it has no effect.
-  const styles = {
-    height: reductionInHeight > 0 ? reductionInHeight : 0,
+  const styles: Styles = {
+    height: reductionInHeight > 0 ? `${reductionInHeight}px` : '0',
   };
 
   applyStylesToDOMNode({ domNode, styles });

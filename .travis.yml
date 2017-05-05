@@ -9,6 +9,6 @@ before_script:
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-  - yarn global add babel-cli
+  - npm install -g babel-cli
 script:
-  - yarn build
+  - npm run build
