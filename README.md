@@ -66,6 +66,8 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
   * Ability to provide `onStart` / `onFinish` callbacks.
 
+  * Compatible with [Preact](https://preactjs.com/) (should work with other React-like libraries as well).
+
   * Implementation based on the [_FLIP technique_](https://medium.com/developers-writing/animating-the-unanimatable-1346a5aab3cd), a beautiful-in-its-simplicity method of tackling this problem. UMD build, when minified and gzipped, is under 6kb! ⚡
 
 
