@@ -11,6 +11,7 @@
 import React, {
   Component,
   Element,
+  Children,
 } from 'react';
 
 import './polyfills';
@@ -53,7 +54,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   // can complete. Because we cannot mutate props, we make `state` the source
   // of truth.
   state = {
-    children: this.props.children.map(element => ({
+    children: Children.toArray(this.props.children).map(element => ({
       element,
       appearing: true,
     })),
@@ -80,17 +81,20 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // so it can be used later to work out the animation.
     this.updateBoundingBoxCaches();
 
+    // Convert opaque children object to array.
+    const nextChildren: Element<*>[] = Children.toArray(nextProps.children);
+
     // Next, we need to update our state, so that it contains our new set of
     // children. If animation is disabled or unsupported, this is easy;
     // we just copy our props into state.
     // Assuming that we can animate, though, we have to do some work.
     // Essentially, we want to keep just-deleted nodes in the DOM for a bit
     // longer, so that we can animate them away.
-    const newChildren: ChildData[] = this.isAnimationDisabled(nextProps)
-      ? nextProps.children.map(element => ({ element }))
-      : this.calculateNextSetOfChildren(nextProps.children);
-
-    this.setState({ children: newChildren });
+    this.setState({
+      children: this.isAnimationDisabled(nextProps)
+        ? nextChildren.map(element => ({ element }))
+        : this.calculateNextSetOfChildren(nextChildren),
+    });
   }
 
   componentDidUpdate(previousProps: ConvertedProps) {
@@ -101,8 +105,8 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // At the end of the transition, we clean up nodes that need to be removed.
     // We DON'T want this cleanup to trigger another update.
 
-    const oldChildrenKeys = this.props.children.map(d => d.key);
-    const nextChildrenKeys = previousProps.children.map(d => d.key);
+    const oldChildrenKeys = Children.toArray(this.props.children).map(d => d.key);
+    const nextChildrenKeys = Children.toArray(previousProps.children).map(d => d.key);
 
     const shouldTriggerFLIP = (
       !arraysEqual(oldChildrenKeys, nextChildrenKeys) &&
@@ -249,7 +253,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // we need to reset the transition, so that the NEW shuffle starts from
     // the right place.
     this.state.children.forEach((child) => {
-      const { domNode } = this.childrenData[getKey(child)];
+      const { domNode } = this.childrenData[getKey(child)] || {};
 
       // Ignore children that don't render DOM nodes (eg. by returning null)
       if (!domNode) {
@@ -553,7 +557,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       return false;
     }
 
-    const childData = this.childrenData[getKey(child)];
+    const childData: NodeData = this.childrenData[getKey(child)] || {};
     const childDomNode = childData.domNode;
     const childBoundingBox = childData.boundingBox;
     const parentBoundingBox = this.parentData.boundingBox;
