@@ -13,7 +13,7 @@ export const isElementAnSFC = (element: Element<*>): boolean => {
 
 export function omit<R: {}, T: R>(obj: T, attrs: $Keys<T>[] = []): R {
   const result: $Shape<T> = {};
-  Object.keys(obj).forEach((key) => {
+  Object.keys(obj).forEach((key: $Keys<T>) => {
     if (attrs.indexOf(key) === -1) {
       result[key] = obj[key];
     }

@@ -71,7 +71,7 @@ export type FlipMoveProps = FlipMoveDefaultProps & Hooks & DelegatedProps & {
 };
 
 export type ConvertedProps = Hooks & {
-  children: Element<*>[],
+  children: mixed,
   easing: string,
   duration: number,
   delay: number,

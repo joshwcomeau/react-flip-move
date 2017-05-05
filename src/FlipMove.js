@@ -105,8 +105,8 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // At the end of the transition, we clean up nodes that need to be removed.
     // We DON'T want this cleanup to trigger another update.
 
-    const oldChildrenKeys = Children.toArray(this.props.children).map(d => d.key);
-    const nextChildrenKeys = Children.toArray(previousProps.children).map(d => d.key);
+    const oldChildrenKeys: string[] = Children.toArray(this.props.children).map(d => d.key);
+    const nextChildrenKeys: string[] = Children.toArray(previousProps.children).map(d => d.key);
 
     const shouldTriggerFLIP = (
       !arraysEqual(oldChildrenKeys, nextChildrenKeys) &&

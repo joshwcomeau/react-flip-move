@@ -67,7 +67,7 @@ function propConverter(
     };
 
     // eslint-disable-next-line class-methods-use-this
-    checkForStatelessFunctionalComponents(children: Element<*>[]) {
+    checkForStatelessFunctionalComponents(children: mixed) {
       // Skip all console warnings in production.
       // Bail early, to avoid unnecessary work.
       if (nodeEnv === 'production') {
@@ -78,7 +78,8 @@ function propConverter(
       // Check to see if any supplied components won't work.
       // If the child doesn't have a key, it means we aren't animating it.
       // It's allowed to be an SFC, since we ignore it.
-      const noStateless = Children.toArray(children).every(child =>
+      const clildArray: Element<*>[] = Children.toArray(children);
+      const noStateless = clildArray.every(child =>
          !isElementAnSFC(child) || typeof child.key === 'undefined'
       );
 
