@@ -1,6 +1,6 @@
 {
   "name": "react-flip-move",
-  "version": "2.9.5",
+  "version": "2.9.6",
   "description": "Effortless animation between DOM changes (eg. list reordering) using the FLIP technique.",
   "main": "lib/index.js",
   "files": [
