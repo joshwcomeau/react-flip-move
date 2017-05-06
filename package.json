@@ -37,7 +37,8 @@
   ],
   "peerDependencies": {
     "react": "0.13.x || 0.14.x || 15.x.x",
-    "react-dom": "0.13.x || 0.14.x || 15.x.x"
+    "react-dom": "0.13.x || 0.14.x || 15.x.x",
+    "prop-types": "15.x.x"
   },
   "devDependencies": {
     "@kadira/storybook": "2.30.1",
@@ -69,6 +70,7 @@
     "karma-webpack": "1.7.0",
     "lodash": "4.3.0",
     "mocha": "2.4.5",
+    "prop-types": "15.5.8",
     "react": "15.5.4",
     "react-addons-test-utils": "15.0.0",
     "react-dom": "15.5.4",
@@ -76,8 +78,5 @@
     "sinon-chai": "2.8.0",
     "style-loader": "0.13.1",
     "webpack": "1.12.11"
-  },
-  "dependencies": {
-    "prop-types": "15.5.8"
   }
 }
