@@ -341,15 +341,20 @@ class FlipMove extends Component {
 
   bindTransitionEndHandler(child) {
     const { domNode } = this.childrenData[child.key];
+    const {duration} = this.props;
+    let ended = false;
 
     // The onFinish callback needs to be bound to the transitionEnd event.
     // We also need to unbind it when the transition completes, so this ugly
     // inline function is required (we need it here so it closes over
     // dependent variables `child` and `domNode`)
-    const transitionEndHandler = (ev) => {
-      // It's possible that this handler is fired not on our primary transition,
-      // but on a nested transition (eg. a hover effect). Ignore these cases.
-      if (ev.target !== domNode) return;
+    const onTransitionEnd = () => {
+      //Make sure we don't get called twice
+      if (ended) {
+        return;
+      }
+
+      ended = true;
 
       // Remove the 'transition' inline style we added. This is cleanup.
       domNode.style.transition = '';
@@ -357,14 +362,22 @@ class FlipMove extends Component {
       // Trigger any applicable onFinish/onFinishAll hooks
       this.triggerFinishHooks(child, domNode);
 
-      domNode.removeEventListener(transitionEnd, transitionEndHandler);
-
       if (child.leaving) {
         delete this.childrenData[child.key];
+      }
+    }
+
+    const transitionEndHandler = (ev) => {
+      // It's possible that this handler is fired not on our primary transition,
+      // but on a nested transition (eg. a hover effect). Ignore these cases.
+      if (ev.target === domNode) {
+        onTransitionEnd();
       }
     };
 
     domNode.addEventListener(transitionEnd, transitionEndHandler);
+    //Add the setTimeout just in-case the transition end doesn't fire
+    setTimeout(onTransitionEnd, duration + 100);
   }
 
   triggerFinishHooks(child, domNode) {
