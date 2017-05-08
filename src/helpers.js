@@ -11,7 +11,7 @@ export const isElementAnSFC = (element: Element<*>): boolean => {
   return !element.type.prototype.isReactComponent;
 };
 
-export function omit<R: {}, T: R>(obj: T, attrs: $Keys<T>[] = []): R {
+export function omit<R: {}, T: R>(obj: T, attrs: Array<$Keys<T>> = []): R {
   const result: $Shape<T> = {};
   Object.keys(obj).forEach((key: $Keys<T>) => {
     if (attrs.indexOf(key) === -1) {
@@ -21,7 +21,7 @@ export function omit<R: {}, T: R>(obj: T, attrs: $Keys<T>[] = []): R {
   return result;
 }
 
-export function arraysEqual<T>(a: T[], b: T[]) {
+export function arraysEqual<T>(a: Array<T>, b: Array<T>) {
   const sameObject = a === b;
   if (sameObject) {
     return true;

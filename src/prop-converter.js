@@ -78,8 +78,8 @@ function propConverter(
       // Check to see if any supplied components won't work.
       // If the child doesn't have a key, it means we aren't animating it.
       // It's allowed to be an SFC, since we ignore it.
-      const clildArray: Element<*>[] = Children.toArray(children);
-      const noStateless = clildArray.every(child =>
+      const childArray: Array<Element<*>> = Children.toArray(children);
+      const noStateless = childArray.every(child =>
          !isElementAnSFC(child) || typeof child.key === 'undefined'
       );
 

@@ -10,6 +10,19 @@
     "import/no-extraneous-dependencies": 0,
     "react/jsx-filename-extension": 0,
     "react/no-unused-prop-types": 0,
+    "react/sort-comp": [2, {
+      order: [
+        'everything-else',
+        'componentWillMount',
+        'componentDidMount',
+        'componentWillReceiveProps',
+        'shouldComponentUpdate',
+        'componentWillUpdate',
+        'componentDidUpdate',
+        'componentWillUnmount',
+        'render',
+      ],
+    }],
     "no-console": [1, { allow: ["warn", "error"] }],
 
     "flowtype/delimiter-dangle": [2, "always-multiline"],

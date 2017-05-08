@@ -43,7 +43,7 @@ export type ElementShape = {
 
 type ChildHook = (ElementShape, ?HTMLElement) => mixed;
 
-export type ChildrenHook = (ElementShape[], Array<?HTMLElement>) => mixed;
+export type ChildrenHook = (Array<ElementShape>, Array<?HTMLElement>) => mixed;
 
 export type GetPosition = (HTMLElement) => ClientRect;
 
@@ -108,7 +108,7 @@ export type ChildData = ElementShape & {
 };
 
 export type FlipMoveState = {
-  children: ChildData[],
+  children: Array<ChildData>,
 };
 
 export type NodeData = {
