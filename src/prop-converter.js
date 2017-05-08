@@ -43,9 +43,18 @@ import type {
   DelegatedProps,
 } from './typings';
 
-const nodeEnv: string = process && process.env && process.env.NODE_ENV
-  ? process.env.NODE_ENV
-  : 'development';
+declare var process: {
+  env: {
+    NODE_ENV: 'production' | 'development',
+  },
+};
+
+let nodeEnv: string;
+try {
+  nodeEnv = process.env.NODE_ENV;
+} catch (e) {
+  nodeEnv = 'development';
+}
 
 function propConverter(
   ComposedComponent: Class<Component<*, ConvertedProps, *>>
