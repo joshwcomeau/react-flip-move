@@ -1,19 +1,23 @@
 {
-  "extends": "airbnb/base",
-  "env": {
-    "mocha": true,
-    "node": true
+  extends: 'airbnb',
+  parserOptions: {
+    ecmaVersion: 7,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+      impliedStrict: true,
+      experimentalObjectRestSpread: true
+    }
   },
-  "globals": {
-    "expect": true
+  rules: {
+    "import/no-unresolved": 0,
+    "import/no-extraneous-dependencies": 0,
+    "react/jsx-filename-extension": 0,
+    "react/no-unused-prop-types": 0,
+    "no-console": [1, {allow: ["warn", "error"] }],
   },
-  "rules": {
-    "space-in-parens": 0,
-    "padded-blocks": 0,
-    "no-console": 0,
-    "comma-dangle": [2, "never"],
-    "no-use-before-define": [2, "nofunc"],
-    "no-unused-vars": [2, {"vars": "all"}],
-    "no-unused-expressions": 0
+  env: {
+    browser: true,
+    node: true
   }
 }
