@@ -458,7 +458,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     const childBoundingBox = childData.boundingBox;
     const parentBoundingBox = this.parentData.boundingBox;
 
-    if (!childDomNode || !parentBoundingBox) {
+    if (!childDomNode) {
       return {};
     }
 
@@ -505,7 +505,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     const childBoundingBox = childData.boundingBox;
     const parentBoundingBox = this.parentData.boundingBox;
 
-    if (!childDomNode || !parentBoundingBox) {
+    if (!childDomNode) {
       return false;
     }
 

@@ -91,7 +91,7 @@ export const getPositionDelta = ({
 }: {
   childDomNode: HTMLElement,
   childBoundingBox: ?ClientRect,
-  parentBoundingBox: ClientRect,
+  parentBoundingBox: ?ClientRect,
   getPosition: GetPosition,
 }): [number, number] => {
   // TEMP: A mystery bug is sometimes causing unnecessary boundingBoxes to
@@ -101,6 +101,7 @@ export const getPositionDelta = ({
   // Our old box is its last calculated position, derived on mount or at the
   // start of the previous animation.
   const oldRelativeBox = childBoundingBox || defaultBox;
+  const parentBox = parentBoundingBox || defaultBox;
 
   // Our new box is the new final resting place: Where we expect it to wind up
   // after the animation. First we get the box in absolute terms (AKA relative
@@ -108,8 +109,8 @@ export const getPositionDelta = ({
   // parent container)
   const newAbsoluteBox = getPosition(childDomNode);
   const newRelativeBox = {
-    top: newAbsoluteBox.top - parentBoundingBox.top,
-    left: newAbsoluteBox.left - parentBoundingBox.left,
+    top: newAbsoluteBox.top - parentBox.top,
+    left: newAbsoluteBox.left - parentBox.left,
   };
 
   return [
