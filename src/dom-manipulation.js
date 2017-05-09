@@ -236,12 +236,12 @@ export const getNativeNode = (element: HTMLElement | Component<*, *, *>): ?HTMLE
   // composite components.
   const foundNode: ?(Element | Text) = findDOMNode(element);
 
-  if (foundNode instanceof HTMLElement) {
-    return foundNode;
+  if (!(foundNode instanceof HTMLElement)) {
+    // Text nodes are not supported
+    return null;
   }
 
-  // Text nodes are not supported
-  return null;
+  return foundNode;
 };
 
 export const createTransitionString = (index: number, props: ConvertedProps): string => {
