@@ -99,7 +99,125 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   // animations, because we need to maintain the list of animating children,
   // to pass to the `onFinishAll` handler.
   remainingAnimations = 0;
-  childrenToAnimate = [];
+  childrenToAnimate: Array<string> = [];
+
+  componentDidMount() {
+    // Run our `appearAnimation` if it was requested, right after the
+    // component mounts.
+    const shouldTriggerFLIP = (
+      this.props.appearAnimation &&
+      !this.isAnimationDisabled(this.props)
+    );
+
+    if (shouldTriggerFLIP) {
+      this.prepForAnimation();
+      this.runAnimation();
+    }
+  }
+
+  componentWillReceiveProps(nextProps: ConvertedProps) {
+    // When the component is handed new props, we need to figure out the
+    // "resting" position of all currently-rendered DOM nodes.
+    // We store that data in this.parent and this.children,
+    // so it can be used later to work out the animation.
+    this.updateBoundingBoxCaches();
+
+    // Convert opaque children object to array.
+    const nextChildren: Array<Element<*>> = Children.toArray(nextProps.children);
+
+    // Next, we need to update our state, so that it contains our new set of
+    // children. If animation is disabled or unsupported, this is easy;
+    // we just copy our props into state.
+    // Assuming that we can animate, though, we have to do some work.
+    // Essentially, we want to keep just-deleted nodes in the DOM for a bit
+    // longer, so that we can animate them away.
+    this.setState({
+      children: this.isAnimationDisabled(nextProps)
+        ? nextChildren.map(element => ({ ...element, element }))
+        : this.calculateNextSetOfChildren(nextChildren),
+    });
+  }
+
+  componentDidUpdate(previousProps: ConvertedProps) {
+    // If the children have been re-arranged, moved, or added/removed,
+    // trigger the main FLIP animation.
+    //
+    // IMPORTANT: We need to make sure that the children have actually changed.
+    // At the end of the transition, we clean up nodes that need to be removed.
+    // We DON'T want this cleanup to trigger another update.
+
+    const oldChildrenKeys: Array<string> = Children.toArray(this.props.children).map(d => d.key);
+    const nextChildrenKeys: Array<string> =
+        Children.toArray(previousProps.children).map(d => d.key);
+
+    const shouldTriggerFLIP = (
+      !arraysEqual(oldChildrenKeys, nextChildrenKeys) &&
+      !this.isAnimationDisabled(this.props)
+    );
+
+    if (shouldTriggerFLIP) {
+      this.prepForAnimation();
+      this.runAnimation();
+    }
+  }
+
+  runAnimation = () => {
+    const dynamicChildren = this.state.children.filter(
+      this.doesChildNeedToBeAnimated
+    );
+
+    dynamicChildren.forEach((child, n) => {
+      this.remainingAnimations += 1;
+      this.childrenToAnimate.push(getKey(child));
+      this.animateChild(child, n);
+    });
+
+    if (typeof this.props.onStartAll === 'function') {
+      this.callChildrenHook(this.props.onStartAll);
+    }
+  };
+
+  doesChildNeedToBeAnimated = (child: ChildData) => {
+    // If the child doesn't have a key, it's an immovable child (one that we
+    // do not want to do FLIP stuff to.)
+    if (!getKey(child)) {
+      return false;
+    }
+
+    const childData: NodeData = this.childrenData[getKey(child)] || {};
+    const childDomNode = childData.domNode;
+    const childBoundingBox = childData.boundingBox;
+    const parentBoundingBox = this.parentData.boundingBox;
+
+    if (!childDomNode) {
+      return false;
+    }
+
+    const { appearAnimation, enterAnimation, leaveAnimation, getPosition } = this.props;
+
+    const isAppearingWithAnimation = child.appearing && appearAnimation;
+    const isEnteringWithAnimation = child.entering && enterAnimation;
+    const isLeavingWithAnimation = child.leaving && leaveAnimation;
+
+    if (
+      isAppearingWithAnimation ||
+      isEnteringWithAnimation ||
+      isLeavingWithAnimation
+    ) {
+      return true;
+    }
+
+    // If it isn't entering/leaving, we want to animate it if it's
+    // on-screen position has changed.
+    const [dX, dY] = getPositionDelta({
+      childDomNode,
+      childBoundingBox,
+      parentBoundingBox,
+      getPosition,
+    });
+
+    return dX !== 0 || dY !== 0;
+  };
 
   calculateNextSetOfChildren(nextChildren: Array<Element<*>>): Array<ChildData> {
     // We want to:
@@ -213,22 +331,6 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       }
     });
   }
-
-  runAnimation = () => {
-    const dynamicChildren = this.state.children.filter(
-      this.doesChildNeedToBeAnimated
-    );
-
-    dynamicChildren.forEach((child, n) => {
-      this.remainingAnimations += 1;
-      this.childrenToAnimate.push(getKey(child));
-      this.animateChild(child, n);
-    });
-
-    if (typeof this.props.onStartAll === 'function') {
-      this.callChildrenHook(this.props.onStartAll);
-    }
-  };
 
   animateChild(child: ChildData, index: number) {
     const { domNode } = this.childrenData[getKey(child)];
@@ -493,48 +595,6 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     );
   }
 
-  doesChildNeedToBeAnimated = (child: ChildData) => {
-    // If the child doesn't have a key, it's an immovable child (one that we
-    // do not want to do FLIP stuff to.)
-    if (!getKey(child)) {
-      return false;
-    }
-
-    const childData: NodeData = this.childrenData[getKey(child)] || {};
-    const childDomNode = childData.domNode;
-    const childBoundingBox = childData.boundingBox;
-    const parentBoundingBox = this.parentData.boundingBox;
-
-    if (!childDomNode) {
-      return false;
-    }
-
-    const { appearAnimation, enterAnimation, leaveAnimation, getPosition } = this.props;
-
-    const isAppearingWithAnimation = child.appearing && appearAnimation;
-    const isEnteringWithAnimation = child.entering && enterAnimation;
-    const isLeavingWithAnimation = child.leaving && leaveAnimation;
-
-    if (
-      isAppearingWithAnimation ||
-      isEnteringWithAnimation ||
-      isLeavingWithAnimation
-    ) {
-      return true;
-    }
-
-    // If it isn't entering/leaving, we want to animate it if it's
-    // on-screen position has changed.
-    const [dX, dY] = getPositionDelta({
-      childDomNode,
-      childBoundingBox,
-      parentBoundingBox,
-      getPosition,
-    });
-
-    return dX !== 0 || dY !== 0;
-  };
-
   findChildByKey(key: string): ?ChildData {
     return this.state.children.find(child => getKey(child) === key);
   }
@@ -583,66 +643,6 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
         },
       })
     ));
-  }
-
-  componentDidMount() {
-    // Run our `appearAnimation` if it was requested, right after the
-    // component mounts.
-    const shouldTriggerFLIP = (
-      this.props.appearAnimation &&
-      !this.isAnimationDisabled(this.props)
-    );
-
-    if (shouldTriggerFLIP) {
-      this.prepForAnimation();
-      this.runAnimation();
-    }
-  }
-
-  componentWillReceiveProps(nextProps: ConvertedProps) {
-    // When the component is handed new props, we need to figure out the
-    // "resting" position of all currently-rendered DOM nodes.
-    // We store that data in this.parent and this.children,
-    // so it can be used later to work out the animation.
-    this.updateBoundingBoxCaches();
-
-    // Convert opaque children object to array.
-    const nextChildren: Array<Element<*>> = Children.toArray(nextProps.children);
-
-    // Next, we need to update our state, so that it contains our new set of
-    // children. If animation is disabled or unsupported, this is easy;
-    // we just copy our props into state.
-    // Assuming that we can animate, though, we have to do some work.
-    // Essentially, we want to keep just-deleted nodes in the DOM for a bit
-    // longer, so that we can animate them away.
-    this.setState({
-      children: this.isAnimationDisabled(nextProps)
-        ? nextChildren.map(element => ({ ...element, element }))
-        : this.calculateNextSetOfChildren(nextChildren),
-    });
-  }
-
-  componentDidUpdate(previousProps: ConvertedProps) {
-    // If the children have been re-arranged, moved, or added/removed,
-    // trigger the main FLIP animation.
-    //
-    // IMPORTANT: We need to make sure that the children have actually changed.
-    // At the end of the transition, we clean up nodes that need to be removed.
-    // We DON'T want this cleanup to trigger another update.
-
-    const oldChildrenKeys: Array<string> = Children.toArray(this.props.children).map(d => d.key);
-    const nextChildrenKeys: Array<string> =
-        Children.toArray(previousProps.children).map(d => d.key);
-
-    const shouldTriggerFLIP = (
-      !arraysEqual(oldChildrenKeys, nextChildrenKeys) &&
-      !this.isAnimationDisabled(this.props)
-    );
-
-    if (shouldTriggerFLIP) {
-      this.prepForAnimation();
-      this.runAnimation();
-    }
   }
 
   render() {
