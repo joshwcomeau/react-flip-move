@@ -1,3 +1,6 @@
+// @flow
+import type { Presets } from './typings';
+
 export const statelessFunctionalComponentSupplied = () => `
 >> Error, via react-flip-move <<
 
@@ -6,16 +9,16 @@ You provided a stateless functional component as a child to <FlipMove>. Unfortun
 Please wrap your components in a native element (eg. <div>), or a non-functional component.
 `;
 
-export const invalidTypeForTimingProp = ({
-  prop,
-  value,
-  defaultValue,
+export const invalidTypeForTimingProp = (args: {
+  prop: string,
+  value: string | number,
+  defaultValue: number,
 }) => `
 >> Error, via react-flip-move <<
 
-The prop you provided for '${prop}' is invalid. It needs to be a positive integer, or a string that can be resolved to a number. The value you provided is '${value}'.
+The prop you provided for '${args.prop}' is invalid. It needs to be a positive integer, or a string that can be resolved to a number. The value you provided is '${args.value}'.
 
-As a result,  the default value for this parameter will be used, which is '${defaultValue}'.
+As a result,  the default value for this parameter will be used, which is '${args.defaultValue}'.
 `;
 
 export const deprecatedDisableAnimations = () => `
@@ -26,14 +29,14 @@ The 'disableAnimations' prop you provided is deprecated. Please switch to use 'd
 This will become a silent error in future versions of react-flip-move.
 `;
 
-export const invalidEnterLeavePreset = ({
-  value,
-  acceptableValues,
-  defaultValue,
+export const invalidEnterLeavePreset = (args: {
+  value: string,
+  acceptableValues: string,
+  defaultValue: $Keys<Presets>,
 }) => `
 >> Error, via react-flip-move <<
 
-The enter/leave preset you provided is invalid. We don't currently have a '${value} preset.'
+The enter/leave preset you provided is invalid. We don't currently have a '${args.value} preset.'
 
-Acceptable values are ${acceptableValues}. The default value of '${defaultValue}' will be used.
+Acceptable values are ${args.acceptableValues}. The default value of '${args.defaultValue}' will be used.
 `;

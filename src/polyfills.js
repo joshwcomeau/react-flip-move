@@ -1,3 +1,4 @@
+// @noflow
 /**
  * React Flip Move - Polyfills
  * (c) 2016-present Joshua Comeau
