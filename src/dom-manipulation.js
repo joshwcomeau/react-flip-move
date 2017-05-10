@@ -9,6 +9,8 @@
  */
 import { findDOMNode } from 'react-dom';
 import type { Component } from 'react';
+
+import { hyphenate } from './helpers';
 import type {
   Styles,
   ClientRect,
@@ -25,7 +27,7 @@ export function applyStylesToDOMNode({ domNode, styles }: {
   // Can't just do an object merge because domNode.styles is no regular object.
   // Need to do it this way for the engine to fire its `set` listeners.
   Object.keys(styles).forEach((key) => {
-    domNode.style.setProperty(key, styles[key]);
+    domNode.style.setProperty(hyphenate(key), styles[key]);
   });
 }
 
@@ -34,9 +36,9 @@ export function applyStylesToDOMNode({ domNode, styles }: {
 export function whichTransitionEvent(): string {
   const transitions = {
     transition: 'transitionend',
-    OTransition: 'oTransitionEnd',
-    MozTransition: 'transitionend',
-    WebkitTransition: 'webkitTransitionEnd',
+    '-o-transition': 'oTransitionEnd',
+    '-moz-transition': 'transitionend',
+    '-webkit-transition': 'webkitTransitionEnd',
   };
 
   // If we're running in a browserless environment (eg. SSR), it doesn't apply.
