@@ -65,6 +65,7 @@
     "eslint-plugin-import": "1.16.0",
     "eslint-plugin-jsx-a11y": "2.2.3",
     "eslint-plugin-react": "6.10.3",
+    "eslint-plugin-sort-class-members": "1.1.1",
     "flow-bin": "0.45.0",
     "flow-copy-source": "1.1.0",
     "flow-coverage-report": "0.3.0",

@@ -3,16 +3,23 @@
     'airbnb',
     'plugin:flowtype/recommended',
   ],
-  plugins: ['flowtype'],
+  plugins: [
+    'flowtype',
+    'sort-class-members',
+  ],
   parser: 'babel-eslint',
   rules: {
     "import/no-unresolved": 0,
     "import/no-extraneous-dependencies": 0,
     "react/jsx-filename-extension": 0,
     "react/no-unused-prop-types": 0,
-    "react/sort-comp": [2, {
+    "react/sort-comp": 0,
+    "sort-class-members/sort-class-members": [2, {
       order: [
-        'everything-else',
+        '[static-properties]',
+        '[static-methods]',
+        '[properties]',
+        'constructor',
         'componentWillMount',
         'componentDidMount',
         'componentWillReceiveProps',
@@ -20,6 +27,8 @@
         'componentWillUpdate',
         'componentDidUpdate',
         'componentWillUnmount',
+        '[arrow-function-properties]',
+        '[methods]',
         'render',
       ],
     }],
