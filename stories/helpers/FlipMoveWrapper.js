@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react-impl';
 import PropTypes from 'prop-types';
 import { sample, shuffle, clone } from 'lodash';
 

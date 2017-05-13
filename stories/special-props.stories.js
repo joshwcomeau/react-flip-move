@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React from 'react';
+import React from 'react-impl';
 import { storiesOf } from '@kadira/storybook';
 
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
