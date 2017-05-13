@@ -182,6 +182,8 @@ Further reading: [CSS will-change Property](https://dev.opera.com/articles/css-w
 
 Contributors welcome! Please discuss new features with me ahead of time, and submit PRs for bug fixes with tests (Testing stack is Mocha/Chai/Sinon, tested in-browser by Karma).
 
+`npm run build` launches eslint, flow checks, tests, babel transpiling and webpack bundling. So if everything passes, you're good to go. 
+
 
 ## Development
 
