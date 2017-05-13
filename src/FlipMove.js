@@ -292,7 +292,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       ));
 
       leavingChildren.forEach((leavingChild) => {
-        const childData = this.childrenData[getKey(leavingChild)];
+        const childData = this.childrenData[getKey(leavingChild)] || {};
 
         // We need to take the items out of the "flow" of the document, so that
         // its siblings can move to take its place.
@@ -333,7 +333,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   }
 
   animateChild(child: ChildData, index: number) {
-    const { domNode } = this.childrenData[getKey(child)];
+    const { domNode } = this.childrenData[getKey(child)] || {};
     if (!domNode) {
       return;
     }
@@ -401,7 +401,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   }
 
   bindTransitionEndHandler(child: ChildData) {
-    const { domNode } = this.childrenData[getKey(child)];
+    const { domNode } = this.childrenData[getKey(child)] || {};
     if (!domNode) {
       return;
     }
@@ -479,7 +479,11 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       }
 
       elements.push(child);
-      domNodes.push(this.childrenData[childKey].domNode);
+
+      const childData = this.childrenData[childKey]
+      if (childData) {
+        domNodes.push(childData.domNode);
+      }
     });
 
     hook(elements, domNodes);
@@ -555,7 +559,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
         : {};
     }
 
-    const childData = this.childrenData[getKey(child)];
+    const childData = this.childrenData[getKey(child)] || {};
     const childDomNode = childData.domNode;
     const childBoundingBox = childData.boundingBox;
     const parentBoundingBox = this.parentData.boundingBox;
