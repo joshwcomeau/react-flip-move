@@ -93,7 +93,7 @@ function propConverter(
       );
 
       if (!noStateless) {
-        console.warn(statelessFunctionalComponentSupplied());
+        statelessFunctionalComponentSupplied();
       }
     }
 
@@ -139,7 +139,7 @@ function propConverter(
       // Accept `disableAnimations`, but add a deprecation warning
       if (typeof props.disableAnimations !== 'undefined') {
         if (nodeEnv !== 'production') {
-          console.warn(deprecatedDisableAnimations());
+          deprecatedDisableAnimations();
         }
 
         workingProps.disableAllAnimations = props.disableAnimations;
@@ -174,11 +174,11 @@ function propConverter(
         const defaultValue: number = FlipMovePropConverter.defaultProps[prop];
 
         if (nodeEnv !== 'production') {
-          console.error(invalidTypeForTimingProp({
+          invalidTypeForTimingProp({
             prop,
             value: rawValue,
             defaultValue,
-          }));
+          });
         }
 
         return defaultValue;
@@ -203,11 +203,11 @@ function propConverter(
 
           if (presetKeys.indexOf(animation) === -1) {
             if (nodeEnv !== 'production') {
-              console.error(invalidEnterLeavePreset({
+              invalidEnterLeavePreset({
                 value: animation,
                 acceptableValues: presetKeys.join(', '),
                 defaultValue: defaultPreset,
-              }));
+              });
             }
 
             return presets[defaultPreset];
