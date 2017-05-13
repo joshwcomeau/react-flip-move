@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react-impl';
 import { storiesOf, action } from '@kadira/storybook';
 import shuffle from 'lodash/shuffle';
 import sampleSize from 'lodash/sampleSize';

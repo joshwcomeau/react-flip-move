@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react-impl';
 import PropTypes from 'prop-types';
 import createClass from 'create-react-class';
 

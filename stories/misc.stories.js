@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react-impl';
 import { storiesOf } from '@kadira/storybook';
 
 import FlipMove from '../src';
