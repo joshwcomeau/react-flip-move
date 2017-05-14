@@ -1,6 +1,3 @@
-/* eslint-disable */
-const path = require('path');
-
 module.exports = {
   resolve: {
     alias: (process.env.REACT_IMPL === "preact") ? {
