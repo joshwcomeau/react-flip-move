@@ -529,7 +529,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
         return;
       }
 
-      this.putChildData(childKey, {
+      this.setChildData(childKey, {
         boundingBox: getRelativeBoundingBox({
           childDomNode: childData.domNode,
           parentDomNode,
@@ -609,18 +609,17 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   }
 
   hasChildData(key: string): boolean {
+    // Object has some built-in properties on its prototype, such as toString.  hasOwnProperty makes
+    // sure that key is present on childrenData itself, not on its prototype.
     return Object.prototype.hasOwnProperty.call(this.childrenData, key);
   }
 
   getChildData(key: string): NodeData {
-    return this.childrenData[key] || {};
+    return this.hasChildData(key) ? this.childrenData[key] : {};
   }
 
-  putChildData(key: string, data: NodeData): void {
-    this.childrenData[key] = {
-      ...this.childrenData[key] || {},
-      ...data,
-    };
+  setChildData(key: string, data: NodeData): void {
+    this.childrenData[key] = { ...this.getChildData(key), ...data };
   }
 
   removeChildData(key: string): void {
@@ -660,7 +659,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
           }
 
           const domNode: ?HTMLElement = getNativeNode(element);
-          this.putChildData(getKey(child), { domNode });
+          this.setChildData(getKey(child), { domNode });
         },
       })
     ));
