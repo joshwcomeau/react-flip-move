@@ -80,6 +80,7 @@
     "karma-webpack": "1.7.0",
     "lodash": "4.3.0",
     "mocha": "2.4.5",
+    "preact": "8.1.0",
     "preact-compat": "3.16.0",
     "prop-types": "15.5.8",
     "react": "15.5.4",
