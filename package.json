@@ -20,7 +20,8 @@
     "prepublishOnly": "npm run build",
     "test": "./node_modules/.bin/karma start --single-run",
     "test:dev": "karma start karma.conf.js",
-    "storybook": "start-storybook -p 9001"
+    "storybook": "start-storybook -p 9001",
+    "storybook-preact": "REACT_IMPL=preact-compat npm run storybook"
   },
   "author": "Joshua Comeau <joshwcomeau@gmail.com>",
   "license": "MIT",
@@ -79,6 +80,7 @@
     "karma-webpack": "1.7.0",
     "lodash": "4.3.0",
     "mocha": "2.4.5",
+    "preact-compat": "3.16.0",
     "prop-types": "15.5.8",
     "react": "15.5.4",
     "react-dom": "15.5.4",
