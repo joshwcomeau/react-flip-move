@@ -480,7 +480,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
 
       elements.push(child);
 
-      const childData = this.childrenData[childKey]
+      const childData = this.childrenData[childKey];
       if (childData) {
         domNodes.push(childData.domNode);
       }
