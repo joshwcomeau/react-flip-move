@@ -66,6 +66,8 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   // its job. We store these as a property on the instance. We're not using
   // state, because we don't want changes to trigger re-renders, we just
   // need a place to keep the data for reference, when changes happen.
+  // This field should not be accessed directly. Instead, use getChildData,
+  // putChildData, etc...
   childrenData: {
     /* Populated via callback refs on render. eg
     userSpecifiedKey1: {
@@ -184,7 +186,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       return false;
     }
 
-    const childData: NodeData = this.childrenData[getKey(child)] || {};
+    const childData: NodeData = this.getChildData(getKey(child));
     const childDomNode = childData.domNode;
     const childBoundingBox = childData.boundingBox;
     const parentBoundingBox = this.parentData.boundingBox;
@@ -292,7 +294,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       ));
 
       leavingChildren.forEach((leavingChild) => {
-        const childData = this.childrenData[getKey(leavingChild)];
+        const childData = this.getChildData(getKey(leavingChild));
 
         // We need to take the items out of the "flow" of the document, so that
         // its siblings can move to take its place.
@@ -314,7 +316,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // we need to reset the transition, so that the NEW shuffle starts from
     // the right place.
     this.state.children.forEach((child) => {
-      const { domNode } = this.childrenData[getKey(child)] || {};
+      const { domNode } = this.getChildData(getKey(child));
 
       // Ignore children that don't render DOM nodes (eg. by returning null)
       if (!domNode) {
@@ -333,7 +335,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   }
 
   animateChild(child: ChildData, index: number) {
-    const { domNode } = this.childrenData[getKey(child)];
+    const { domNode } = this.getChildData(getKey(child));
     if (!domNode) {
       return;
     }
@@ -401,7 +403,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   }
 
   bindTransitionEndHandler(child: ChildData) {
-    const { domNode } = this.childrenData[getKey(child)];
+    const { domNode } = this.getChildData(getKey(child));
     if (!domNode) {
       return;
     }
@@ -424,7 +426,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       domNode.removeEventListener(transitionEnd, transitionEndHandler);
 
       if (child.leaving) {
-        delete this.childrenData[getKey(child)];
+        this.removeChildData(getKey(child));
       }
     };
 
@@ -479,7 +481,10 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       }
 
       elements.push(child);
-      domNodes.push(this.childrenData[childKey].domNode);
+
+      if (this.hasChildData(childKey)) {
+        domNodes.push(this.getChildData(childKey).domNode);
+      }
     });
 
     hook(elements, domNodes);
@@ -501,20 +506,22 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     );
 
     this.state.children.forEach((child) => {
+      const childKey = getKey(child);
+
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
-      if (!getKey(child)) {
+      if (!childKey) {
         return;
       }
-
-      const childData = this.childrenData[getKey(child)];
 
       // In very rare circumstances, for reasons unknown, the ref is never
       // populated for certain children. In this case, avoid doing this update.
       // see: https://github.com/joshwcomeau/react-flip-move/pull/91
-      if (!childData) {
+      if (!this.hasChildData(childKey)) {
         return;
       }
+
+      const childData = this.getChildData(childKey);
 
       // If the child element returns null, we need to avoid trying to
       // account for it
@@ -522,10 +529,12 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
         return;
       }
 
-      childData.boundingBox = getRelativeBoundingBox({
-        childDomNode: childData.domNode,
-        parentDomNode,
-        getPosition: this.props.getPosition,
+      this.setChildData(childKey, {
+        boundingBox: getRelativeBoundingBox({
+          childDomNode: childData.domNode,
+          parentDomNode,
+          getPosition: this.props.getPosition,
+        }),
       });
     });
   }
@@ -555,7 +564,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
         : {};
     }
 
-    const childData = this.childrenData[getKey(child)];
+    const childData = this.getChildData(getKey(child));
     const childDomNode = childData.domNode;
     const childBoundingBox = childData.boundingBox;
     const parentBoundingBox = this.parentData.boundingBox;
@@ -599,6 +608,24 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     return this.state.children.find(child => getKey(child) === key);
   }
 
+  hasChildData(key: string): boolean {
+    // Object has some built-in properties on its prototype, such as toString.  hasOwnProperty makes
+    // sure that key is present on childrenData itself, not on its prototype.
+    return Object.prototype.hasOwnProperty.call(this.childrenData, key);
+  }
+
+  getChildData(key: string): NodeData {
+    return this.hasChildData(key) ? this.childrenData[key] : {};
+  }
+
+  setChildData(key: string, data: NodeData): void {
+    this.childrenData[key] = { ...this.getChildData(key), ...data };
+  }
+
+  removeChildData(key: string): void {
+    delete this.childrenData[key];
+  }
+
   createHeightPlaceholder(): Element<*> {
     const { typeName } = this.props;
 
@@ -632,14 +659,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
           }
 
           const domNode: ?HTMLElement = getNativeNode(element);
-
-          // If this is the first render, we need to create the data entry
-          const key = getKey(child);
-          if (!this.childrenData[key]) {
-            this.childrenData[key] = {};
-          }
-
-          this.childrenData[key].domNode = domNode;
+          this.setChildData(getKey(child), { domNode });
         },
       })
     ));

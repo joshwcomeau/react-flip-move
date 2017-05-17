@@ -21,7 +21,7 @@
     "test": "./node_modules/.bin/karma start --single-run",
     "test:dev": "karma start karma.conf.js",
     "storybook": "start-storybook -p 9001",
-    "storybook-preact": "REACT_IMPL=preact-compat npm run storybook"
+    "storybook:preact": "REACT_IMPL=preact npm run storybook"
   },
   "author": "Joshua Comeau <joshwcomeau@gmail.com>",
   "license": "MIT",
@@ -59,7 +59,6 @@
     "babel-preset-stage-0": "6.1.18",
     "chai": "3.5.0",
     "create-react-class": "15.5.2",
-    "css-loader": "0.23.1",
     "eslint": "3.10.0",
     "eslint-config-airbnb": "12.0.0",
     "eslint-plugin-flowtype": "2.32.1",
@@ -87,7 +86,6 @@
     "react-dom": "15.5.4",
     "sinon": "1.17.3",
     "sinon-chai": "2.8.0",
-    "style-loader": "0.13.1",
     "webpack": "1.12.11"
   }
 }
