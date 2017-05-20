@@ -3,6 +3,7 @@
   "version": "2.9.10",
   "description": "Effortless animation between DOM changes (eg. list reordering) using the FLIP technique.",
   "main": "lib/index.js",
+  "typings": "typings/react-flip-move.d.ts",
   "files": [
     "dist",
     "lib",
@@ -16,10 +17,12 @@
     "build": "npm run build:lib && npm run build:umd && npm run build:umd:min",
     "flow": "flow",
     "flow-coverage": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
-    "prebuild": "npm run lint && flow check && npm run test",
+    "prebuild": "npm run lint && flow check && npm run typescript && npm run test",
     "prepublishOnly": "npm run build",
     "test": "./node_modules/.bin/karma start --single-run",
     "test:dev": "karma start karma.conf.js",
+    "tslint": "tslint typings/*.tsx typings/*.ts",
+    "typescript": "npm run tslint && tsc typings/test.tsx --noEmit --jsx react --target es6 --module es2015 --moduleResolution node",
     "storybook": "start-storybook -p 9001",
     "storybook:preact": "REACT_IMPL=preact npm run storybook"
   },
@@ -45,6 +48,7 @@
   },
   "devDependencies": {
     "@kadira/storybook": "2.30.1",
+    "@types/react": "15.0.24",
     "babel": "6.1.18",
     "babel-cli": "6.2.0",
     "babel-core": "6.2.1",
@@ -86,6 +90,8 @@
     "react-dom": "15.5.4",
     "sinon": "1.17.3",
     "sinon-chai": "2.8.0",
+    "tslint": "5.2.0",
+    "typescript": "2.3.2",
     "webpack": "1.12.11"
   }
 }
