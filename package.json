@@ -3,6 +3,7 @@
   "version": "2.9.11",
   "description": "Effortless animation between DOM changes (eg. list reordering) using the FLIP technique.",
   "main": "lib/index.js",
+  "typings": "typings/react-flip-move.d.ts",
   "files": [
     "dist",
     "lib",
@@ -10,16 +11,18 @@
   ],
   "scripts": {
     "lint": "eslint src",
-    "build:lib": "babel src --out-dir lib && flow-copy-source -v src lib",
+    "build:lib": "babel src --out-dir lib",
     "build:umd": "webpack src/index.js dist/react-flip-move.js --config webpack.config.production.js",
     "build:umd:min": "webpack src/index.js dist/react-flip-move.min.js --config webpack.config.production.min.js",
     "build": "npm run build:lib && npm run build:umd && npm run build:umd:min",
     "flow": "flow",
     "flow-coverage": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
-    "prebuild": "npm run lint && flow check && npm run test",
+    "prebuild": "npm run lint && flow check && npm run typescript && npm run test",
     "prepublishOnly": "npm run build",
     "test": "./node_modules/.bin/karma start --single-run",
     "test:dev": "karma start karma.conf.js",
+    "tslint": "tslint typings/*.tsx typings/*.ts",
+    "typescript": "npm run tslint && tsc typings/test.tsx --noEmit --jsx react --target es6 --module es2015 --moduleResolution node",
     "storybook": "start-storybook -p 9001",
     "storybook:preact": "REACT_IMPL=preact npm run storybook"
   },
@@ -45,6 +48,7 @@
   },
   "devDependencies": {
     "@kadira/storybook": "2.30.1",
+    "@types/react": "15.0.24",
     "babel": "6.1.18",
     "babel-cli": "6.2.0",
     "babel-core": "6.2.1",
@@ -67,7 +71,6 @@
     "eslint-plugin-react": "6.10.3",
     "eslint-plugin-sort-class-members": "1.1.1",
     "flow-bin": "0.45.0",
-    "flow-copy-source": "1.1.0",
     "flow-coverage-report": "0.3.0",
     "karma": "0.13.19",
     "karma-chai": "0.1.0",
@@ -86,6 +89,8 @@
     "react-dom": "15.5.4",
     "sinon": "1.17.3",
     "sinon-chai": "2.8.0",
+    "tslint": "5.2.0",
+    "typescript": "2.3.2",
     "webpack": "1.12.11"
   }
 }
