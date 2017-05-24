@@ -36,6 +36,7 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
 * [Known Issues](#known-issues)
 * [Contributions](#contributions)
 * [Development](#development)
+* [Flow support](#flow-support)
 * [License](#license)
 
 
@@ -191,6 +192,21 @@ This project uses [React Storybook](https://github.com/kadirahq/react-storybook)
 
 After installing dependencies, launch the Storybook dev server with `npm run storybook`.
 
+## Flow support
+
+Flip Move's sources are type-checked with [Flow](https://flow.org/). If your project uses it too, you may want to install typings for our public API from [flow-typed](https://github.com/flowtype/flow-typed) repo.
+
+```bash
+npm install --global flow-typed # if not already
+flow-typed install react-flip-move@<version>
+```
+
+If you're getting some flow errors coming from `node_modules/react-flip-move/src` path, you should add this to your `.flowconfig` file:
+
+```
+[ignore]
+.*/node_modules/react-flip-move/.*
+```
 
 
 ## License
