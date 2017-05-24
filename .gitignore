@@ -6,3 +6,4 @@ lib
 dist
 examples
 flow-coverage
+.idea
