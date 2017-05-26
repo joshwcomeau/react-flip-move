@@ -7,7 +7,8 @@
   "files": [
     "dist",
     "lib",
-    "src"
+    "src",
+    "typings"
   ],
   "scripts": {
     "lint": "eslint src",
