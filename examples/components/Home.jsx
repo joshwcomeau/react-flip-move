@@ -16,7 +16,7 @@ const Home = () => (
 
       <p>DOM nodes can't actually reorder themselves; brand new nodes are created instead. Because of this, simple CSS transitions don't work.</p>
 
-      <p><em>Flip move</em> uses the <a href="https://github.com/joshwcomeau/react-flip-move/blob/master/docs/how-it-works.md">FLIP technique</a> to work out what such a transition would look like, and fakes it using hardware-accelerated CSS transforms.</p>
+      <p><em>Flip move</em> uses the <a href="https://aerotwist.com/blog/flip-your-animations/#the-general-approach">FLIP technique</a> to work out what such a transition would look like, and fakes it using hardware-accelerated CSS transforms.</p>
 
       <p>Oh, and it does some other cool stuff too.</p>
     </section>
