@@ -11,7 +11,7 @@
     "typings"
   ],
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint src test",
     "build:lib": "babel src --out-dir lib",
     "build:umd": "webpack src/index.js dist/react-flip-move.js --config webpack.config.production.js",
     "build:umd:min": "webpack src/index.js dist/react-flip-move.min.js --config webpack.config.production.min.js",
@@ -93,5 +93,8 @@
     "tslint": "5.2.0",
     "typescript": "2.3.2",
     "webpack": "1.12.11"
+  },
+  "dependencies": {
+    "eslint-plugin-bdd": "^2.1.1"
   }
 }

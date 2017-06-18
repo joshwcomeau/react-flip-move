@@ -15,7 +15,10 @@ describe('FlipMove', () => {
     consoleStub = sinon.stub(console, 'error');
     finishAllStub = sinon.stub();
   });
-  afterEach(() => consoleStub.reset());
+  afterEach(() => {
+    consoleStub.reset();
+    finishAllStub.reset();
+  });
   after(() => consoleStub.restore());
 
   // To test this, here is our setup:
@@ -92,12 +95,19 @@ describe('FlipMove', () => {
   };
 
   let renderedComponent;
+  let container;
 
-  before(() => {
+  beforeEach(() => {
+    container = document.createElement('div');
     renderedComponent = ReactDOM.render(
       <ListParent />,
-      document.getElementsByTagName('body')[0]
+      container
     );
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    document.body.removeChild(container);
   });
 
   it('renders the children components', () => {
@@ -121,7 +131,7 @@ describe('FlipMove', () => {
   describe('updating state', () => {
     let originalPositions;
 
-    before(() => {
+    beforeEach(() => {
       const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
         renderedComponent, 'li'
       );
@@ -135,7 +145,7 @@ describe('FlipMove', () => {
       renderedComponent.setState({ articles: articles.reverse() });
     });
 
-    it('has rearranged the components and DOM nodes', () => {
+    it('rearranges the components and DOM nodes', () => {
       const outputComponents = TestUtils.scryRenderedComponentsWithType(
         renderedComponent, ListItem
       );
@@ -152,7 +162,7 @@ describe('FlipMove', () => {
       expect(outputTags[2].id).to.equal('a');
     });
 
-    it('has not actually moved the elements on-screen', () => {
+    it('doesn\'t actually move the elements on-screen synchronously', () => {
       // The animation has not started yet.
       // While the DOM nodes might have changed places, their on-screen
       // positions should be consistent with where they started.
@@ -163,7 +173,7 @@ describe('FlipMove', () => {
       expect(newPositions).to.deep.equal(originalPositions);
     });
 
-    it('has stacked them all on top of each other after 250ms', (done) => {
+    it('stacks all the elements on top of each other after 250ms', (done) => {
       // We know the total duration of the animation is 500ms.
       // Three items are being re-arranged; top and bottom changing places.
       // Therefore, if we wait 250ms, all 3 items should be stacked.
@@ -185,8 +195,8 @@ describe('FlipMove', () => {
       }, 250);
     });
 
-    it('has finished the animation after another 500ms', (done) => {
-      // Waiting 500ms, for a total of 750ms. Giving a buffer because
+    it('finishes the animation after 750ms', (done) => {
+      // Waiting 750ms. Giving a buffer because
       // Travis is slowwww
       setTimeout(() => {
         const newPositions = getTagPositions(renderedComponent);
@@ -199,13 +209,12 @@ describe('FlipMove', () => {
         expect(newPositions.c).to.deep.equal(originalPositions.a);
 
         done();
-      }, 500);
+      }, 750);
     });
   });
 
   describe('callbacks', () => {
-    before(() => {
-      finishAllStub.reset();
+    beforeEach(() => {
       renderedComponent.setState({
         articles: articles.reverse(),
       });
@@ -222,9 +231,11 @@ describe('FlipMove', () => {
       }, 750);
     });
 
-    it('should have fired the onFinishAll stub only once', () => {
-      expect(finishAllStub).to.have.been.calledOnce;
-      finishAllStub.reset();
+    it('should fire the onFinishAll stub only once', (done) => {
+      setTimeout(() => {
+        expect(finishAllStub).to.have.been.calledOnce;
+        done();
+      }, 750);
     });
   });
 
@@ -248,7 +259,7 @@ describe('FlipMove', () => {
   describe('disabling animation', () => {
     let originalPositions;
 
-    before(() => {
+    beforeEach(() => {
       const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
         renderedComponent, 'li'
       );
@@ -264,10 +275,6 @@ describe('FlipMove', () => {
       });
     });
 
-    after(() => {
-      renderedComponent.setState({ disableAllAnimations: false });
-    });
-
     it('should transition immediately', () => {
       const newPositions = getTagPositions(renderedComponent);
 
@@ -278,8 +285,11 @@ describe('FlipMove', () => {
   });
 
   describe('falsy children', () => {
-    it('adds a false child to the articles', () => {
+    beforeEach(() => {
       renderedComponent.setState({ articles: [null, ...articles.slice(1)] });
+    });
+
+    it('adds a false child to the articles', () => {
       expect(consoleStub).to.not.have.been.called;
     });
 
@@ -294,7 +304,7 @@ describe('FlipMove', () => {
   describe('container height', () => {
     let containerBox = null;
 
-    before(() => {
+    beforeEach(() => {
       containerBox = getContainerBox(renderedComponent);
 
       renderedComponent.setState({
