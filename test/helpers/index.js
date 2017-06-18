@@ -11,10 +11,11 @@ export function getTagPositions(renderedComponent) {
   const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
     renderedComponent, 'li'
   );
-  const [tagC, tagB, tagA] = outputTags;
-  return {
-    a: tagA.getBoundingClientRect(),
-    b: tagB.getBoundingClientRect(),
-    c: tagC.getBoundingClientRect(),
-  };
+
+  // returns { a: ClientRect, b: ClientRect, c: ClientRect }
+  return ['a', 'b', 'c'].reduce((acc, key) => {
+    // eslint-disable-next-line no-param-reassign
+    acc[key] = outputTags.find(el => el.id === key).getBoundingClientRect();
+    return acc;
+  }, {});
 }

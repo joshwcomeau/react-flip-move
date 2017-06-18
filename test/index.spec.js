@@ -132,17 +132,9 @@ describe('FlipMove', () => {
     let originalPositions;
 
     beforeEach(() => {
-      const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
-        renderedComponent, 'li'
-      );
+      originalPositions = getTagPositions(renderedComponent);
 
-      originalPositions = {
-        a: outputTags[0].getBoundingClientRect(),
-        b: outputTags[1].getBoundingClientRect(),
-        c: outputTags[2].getBoundingClientRect(),
-      };
-
-      renderedComponent.setState({ articles: articles.reverse() });
+      renderedComponent.setState({ articles: [...articles].reverse() });
     });
 
     it('rearranges the components and DOM nodes', () => {
@@ -216,7 +208,7 @@ describe('FlipMove', () => {
   describe('callbacks', () => {
     beforeEach(() => {
       renderedComponent.setState({
-        articles: articles.reverse(),
+        articles: [...articles].reverse(),
       });
     });
 
@@ -260,18 +252,10 @@ describe('FlipMove', () => {
     let originalPositions;
 
     beforeEach(() => {
-      const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
-        renderedComponent, 'li'
-      );
-
-      originalPositions = {
-        a: outputTags[0].getBoundingClientRect(),
-        b: outputTags[1].getBoundingClientRect(),
-        c: outputTags[2].getBoundingClientRect(),
-      };
+      originalPositions = getTagPositions(renderedComponent);
 
       renderedComponent.setState({ disableAllAnimations: true }, () => {
-        renderedComponent.setState({ articles: articles.reverse() });
+        renderedComponent.setState({ articles: [...articles].reverse() });
       });
     });
 
