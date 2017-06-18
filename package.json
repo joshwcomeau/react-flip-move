@@ -66,6 +66,7 @@
     "create-react-class": "15.5.2",
     "eslint": "3.10.0",
     "eslint-config-airbnb": "12.0.0",
+    "eslint-plugin-bdd": "^2.1.1",
     "eslint-plugin-flowtype": "2.32.1",
     "eslint-plugin-import": "1.16.0",
     "eslint-plugin-jsx-a11y": "2.2.3",
@@ -93,8 +94,5 @@
     "tslint": "5.2.0",
     "typescript": "2.3.2",
     "webpack": "1.12.11"
-  },
-  "dependencies": {
-    "eslint-plugin-bdd": "^2.1.1"
   }
 }
