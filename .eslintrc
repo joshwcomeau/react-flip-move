@@ -6,6 +6,7 @@
   plugins: [
     'flowtype',
     'sort-class-members',
+    'bdd',
   ],
   parser: 'babel-eslint',
   rules: {
@@ -40,6 +41,9 @@
     "flowtype/no-weak-types": 1,
     "flowtype/object-type-delimiter": [2, "comma"],
     "flowtype/semi": 2,
+
+    "bdd/focus": 2,
+    "bdd/exclude": 2,
   },
   settings: {
     flowtype: {
