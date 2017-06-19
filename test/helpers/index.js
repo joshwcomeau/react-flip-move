@@ -13,9 +13,8 @@ export function getTagPositions(renderedComponent) {
   );
 
   // returns { a: ClientRect, b: ClientRect, c: ClientRect }
-  return ['a', 'b', 'c'].reduce((acc, key) => {
-    // eslint-disable-next-line no-param-reassign
-    acc[key] = outputTags.find(el => el.id === key).getBoundingClientRect();
-    return acc;
-  }, {});
+  return ['a', 'b', 'c'].reduce((acc, key) => ({
+    ...acc,
+    [key]: outputTags.find(el => el.id === key).getBoundingClientRect(),
+  }), {});
 }
