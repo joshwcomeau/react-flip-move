@@ -36,6 +36,14 @@ module.exports = function(config) {
             exclude:  /node_modules/
           }
         ]
+      },
+
+      externals: {
+        cheerio: 'window',
+        'react/addons': true,
+        'react/lib/ExecutionEnvironment': true,
+        'react/lib/ReactContext': true,
+        'react-addons-test-utils': true,
       }
     },
 
