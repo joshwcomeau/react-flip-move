@@ -1,11 +1,14 @@
-/* eslint-disable no-undef, react/prop-types, react/no-multi-comp, no-unused-expressions */
+/* global chai, expect, sinon */
+/* eslint-env mocha */
+/* eslint-disable react/prop-types, react/no-multi-comp, no-unused-expressions */
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import TestUtils from 'react-dom/test-utils';
+import { shallow, mount } from 'enzyme';
+import chaiEnzyme from 'chai-enzyme';
 
 import { getContainerBox, getTagPositions } from './helpers';
 import FlipMove from '../src/FlipMove';
 
+chai.use(chaiEnzyme());
 
 describe('FlipMove', () => {
   let consoleStub;
@@ -42,16 +45,17 @@ describe('FlipMove', () => {
   // We need our list parent, which contains our FlipMove as well as
   // all the list items.
   const ListParent = class ListParent extends Component {
+    static defaultProps = {
+      duration: 500,
+      staggerDelayBy: 0,
+      staggerDurationBy: 0,
+      disableAllAnimations: false,
+      maintainContainerHeight: false,
+      articles,
+    };
+
     constructor(props) {
       super(props);
-      this.state = {
-        duration: 500,
-        staggerDelayBy: 0,
-        staggerDurationBy: 0,
-        disableAllAnimations: false,
-        maintainContainerHeight: false,
-        articles,
-      };
       this.count = 0;
 
       this.onStartHandler = this.onStartHandler.bind(this);
@@ -65,7 +69,7 @@ describe('FlipMove', () => {
       this.count -= 1;
     }
     renderArticles() {
-      return this.state.articles.map(article => (
+      return this.props.articles.map(article => (
         <ListItem
           key={article ? article.id : null}
           id={article ? article.id : null}
@@ -78,11 +82,11 @@ describe('FlipMove', () => {
       return (
         <ul>
           <FlipMove
-            duration={this.state.duration}
-            staggerDelayBy={this.state.staggerDelayBy}
-            staggerDurationBy={this.state.staggerDurationBy}
-            disableAllAnimations={this.state.disableAllAnimations}
-            maintainContainerHeight={this.state.maintainContainerHeight}
+            duration={this.props.duration}
+            staggerDelayBy={this.props.staggerDelayBy}
+            staggerDurationBy={this.props.staggerDurationBy}
+            disableAllAnimations={this.props.disableAllAnimations}
+            maintainContainerHeight={this.props.maintainContainerHeight}
             onStart={this.onStartHandler}
             onFinish={this.onFinishHandler}
             onFinishAll={finishAllStub}
@@ -94,71 +98,64 @@ describe('FlipMove', () => {
     }
   };
 
-  let renderedComponent;
-  let container;
-
-  beforeEach(() => {
-    container = document.createElement('div');
-    renderedComponent = ReactDOM.render(
-      <ListParent />,
-      container
+  let attachedWrapper;
+  const container = document.createElement('div');
+  document.body.appendChild(container);
+  function mountAttached(props) {
+    attachedWrapper = mount(
+      <ListParent {...props} />,
+      { attachTo: container }
     );
-    document.body.appendChild(container);
-  });
+  }
 
   afterEach(() => {
-    document.body.removeChild(container);
+    if (attachedWrapper) {
+      attachedWrapper.detach();
+      attachedWrapper = null;
+    }
   });
 
   it('renders the children components', () => {
-    const outputComponents = TestUtils.scryRenderedComponentsWithType(
-      renderedComponent, ListItem
-    );
+    const wrapper = mount(<ListParent />);
+    expect(wrapper).to.have.exactly(3).descendants(ListItem);
+    expect(wrapper).to.have.exactly(3).descendants('li');
 
-    const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
-      renderedComponent, 'li'
-    );
-
-    expect(outputComponents).to.have.length.of(3);
-    expect(outputTags).to.have.length.of(3);
+    const outputComponents = wrapper.find(ListItem);
 
     // Check that they're rendered in order
-    expect(outputComponents[0].props.id).to.equal('a');
-    expect(outputComponents[1].props.id).to.equal('b');
-    expect(outputComponents[2].props.id).to.equal('c');
+    expect(outputComponents.at(0)).to.have.id('a');
+    expect(outputComponents.at(1)).to.have.id('b');
+    expect(outputComponents.at(2)).to.have.id('c');
   });
 
   describe('updating state', () => {
     let originalPositions;
 
     beforeEach(() => {
-      originalPositions = getTagPositions(renderedComponent);
+      mountAttached();
+      originalPositions = getTagPositions(attachedWrapper);
 
-      renderedComponent.setState({ articles: [...articles].reverse() });
+      attachedWrapper.setProps({ articles: articles.reverse() });
     });
 
     it('rearranges the components and DOM nodes', () => {
-      const outputComponents = TestUtils.scryRenderedComponentsWithType(
-        renderedComponent, ListItem
-      );
-      const outputTags = TestUtils.scryRenderedDOMComponentsWithTag(
-        renderedComponent, 'li'
-      );
+      const outputComponents = attachedWrapper.find(ListItem);
+      const outputTags = attachedWrapper.find('li');
 
-      expect(outputComponents[0].props.id).to.equal('c');
-      expect(outputComponents[1].props.id).to.equal('b');
-      expect(outputComponents[2].props.id).to.equal('a');
+      expect(outputComponents.at(0)).to.have.id('c');
+      expect(outputComponents.at(1)).to.have.id('b');
+      expect(outputComponents.at(2)).to.have.id('a');
 
-      expect(outputTags[0].id).to.equal('c');
-      expect(outputTags[1].id).to.equal('b');
-      expect(outputTags[2].id).to.equal('a');
+      expect(outputTags.at(0)).to.have.id('c');
+      expect(outputTags.at(1)).to.have.id('b');
+      expect(outputTags.at(2)).to.have.id('a');
     });
 
     it('doesn\'t actually move the elements on-screen synchronously', () => {
       // The animation has not started yet.
       // While the DOM nodes might have changed places, their on-screen
       // positions should be consistent with where they started.
-      const newPositions = getTagPositions(renderedComponent);
+      const newPositions = getTagPositions(attachedWrapper);
 
       // Even though, in terms of the DOM, tag C is at the top,
       // its bounding box should still be the lowest
@@ -170,8 +167,7 @@ describe('FlipMove', () => {
       // Three items are being re-arranged; top and bottom changing places.
       // Therefore, if we wait 250ms, all 3 items should be stacked.
       setTimeout(() => {
-        const newPositions = getTagPositions(renderedComponent);
-
+        const newPositions = getTagPositions(attachedWrapper);
         // B should not move at all
         expect(newPositions.b).to.deep.equal(originalPositions.b);
 
@@ -191,7 +187,7 @@ describe('FlipMove', () => {
       // Waiting 750ms. Giving a buffer because
       // Travis is slowwww
       setTimeout(() => {
-        const newPositions = getTagPositions(renderedComponent);
+        const newPositions = getTagPositions(attachedWrapper);
 
         // B should still be in the same place.
         expect(newPositions.b).to.deep.equal(originalPositions.b);
@@ -207,18 +203,19 @@ describe('FlipMove', () => {
 
   describe('callbacks', () => {
     beforeEach(() => {
-      renderedComponent.setState({
+      mountAttached();
+      attachedWrapper.setProps({
         articles: [...articles].reverse(),
       });
     });
 
     it('should fire the onStart handler immediately', () => {
-      expect(renderedComponent.count).to.equal(-2);
+      expect(attachedWrapper.instance().count).to.equal(-2);
     });
 
     it('should fire onFinish after the animation', (done) => {
       setTimeout(() => {
-        expect(renderedComponent.count).to.equal(0);
+        expect(attachedWrapper.instance().count).to.equal(0);
         done();
       }, 750);
     });
@@ -232,18 +229,23 @@ describe('FlipMove', () => {
   });
 
   describe('duration prop runtime checking', () => {
+    let wrapper;
+    beforeEach(() => {
+      wrapper = shallow(<FlipMove />);
+    });
+
     it('applies a bogus string', () => {
-      renderedComponent.setState({ duration: 'hi' });
+      wrapper.setProps({ duration: 'hi' });
       expect(consoleStub).to.have.been.calledOnce;
     });
 
     it('applies an array prop and throws', () => {
-      renderedComponent.setState({ duration: ['hi'] });
+      wrapper.setProps({ duration: ['hi'] });
       expect(consoleStub).to.have.been.called;
     });
 
     it('applies a string that can be converted to an int', () => {
-      renderedComponent.setState({ duration: '10' });
+      wrapper.setProps({ duration: '10' });
       expect(consoleStub).to.not.have.been.called;
     });
   });
@@ -252,15 +254,15 @@ describe('FlipMove', () => {
     let originalPositions;
 
     beforeEach(() => {
-      originalPositions = getTagPositions(renderedComponent);
+      mountAttached({ disableAllAnimations: true });
 
-      renderedComponent.setState({ disableAllAnimations: true }, () => {
-        renderedComponent.setState({ articles: [...articles].reverse() });
-      });
+      originalPositions = getTagPositions(attachedWrapper);
+
+      attachedWrapper.setProps({ articles: [...articles].reverse() });
     });
 
     it('should transition immediately', () => {
-      const newPositions = getTagPositions(renderedComponent);
+      const newPositions = getTagPositions(attachedWrapper);
 
       expect(newPositions.a).to.deep.equal(originalPositions.c);
       expect(newPositions.b).to.deep.equal(originalPositions.b);
@@ -270,7 +272,8 @@ describe('FlipMove', () => {
 
   describe('falsy children', () => {
     beforeEach(() => {
-      renderedComponent.setState({ articles: [null, ...articles.slice(1)] });
+      mountAttached();
+      attachedWrapper.setProps({ articles: [null, ...articles.slice(1)] });
     });
 
     it('adds a false child to the articles', () => {
@@ -289,16 +292,14 @@ describe('FlipMove', () => {
     let containerBox = null;
 
     beforeEach(() => {
-      containerBox = getContainerBox(renderedComponent);
+      mountAttached({ maintainContainerHeight: true });
+      containerBox = getContainerBox(attachedWrapper);
 
-      renderedComponent.setState({
-        maintainContainerHeight: true,
-        articles: articles.slice(-1),
-      });
+      attachedWrapper.setProps({ articles: articles.slice(-1) });
     });
 
     it('should be maintained', () => {
-      expect(containerBox.height).to.equal(getContainerBox(renderedComponent).height);
+      expect(containerBox.height).to.equal(getContainerBox(attachedWrapper).height);
     });
   });
 });
