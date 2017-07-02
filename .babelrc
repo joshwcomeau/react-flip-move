@@ -3,5 +3,16 @@
    "plugins": [
       "transform-decorators-legacy",
       "add-module-exports"
-   ]
+   ],
+   "env": {
+      "test": {
+         "plugins": [
+            ["istanbul", {
+               "exclude": [
+                  "test/**/*.js"
+               ]
+            }]
+         ]
+      }
+   }
 }
