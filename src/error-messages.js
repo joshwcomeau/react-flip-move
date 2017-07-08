@@ -19,6 +19,14 @@ You provided a stateless functional component as a child to <FlipMove>. Unfortun
 Please wrap your components in a native element (eg. <div>), or a non-functional component.
 `);
 
+export const textNodeSupplied = warnOnce(`
+>> Error, via react-flip-move <<
+
+You provided a plain text node as a child to <FlipMove>. Flip Move needs containers with unique keys to move children around.
+
+Please wrap your text in a native element (eg. <span>), or a component.
+`);
+
 export const invalidTypeForTimingProp = (args: {
   prop: string,
   value: string | number,

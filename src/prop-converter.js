@@ -21,6 +21,7 @@ import React, {
 
 import {
   statelessFunctionalComponentSupplied,
+  textNodeSupplied,
   invalidTypeForTimingProp,
   invalidEnterLeavePreset,
   deprecatedDisableAnimations,
@@ -49,11 +50,12 @@ declare var process: {
   },
 };
 
-let nodeEnv: string;
-try {
-  nodeEnv = process.env.NODE_ENV;
-} catch (e) {
-  nodeEnv = 'development';
+function isProduction(): boolean {
+  try {
+    return process.env.NODE_ENV === 'production';
+  } catch (e) {
+    return false;
+  }
 }
 
 function propConverter(
@@ -76,10 +78,10 @@ function propConverter(
     };
 
     // eslint-disable-next-line class-methods-use-this
-    checkForStatelessFunctionalComponents(children: mixed) {
+    checkChildren(children: mixed) {
       // Skip all console warnings in production.
       // Bail early, to avoid unnecessary work.
-      if (nodeEnv === 'production') {
+      if (isProduction()) {
         return;
       }
 
@@ -87,14 +89,13 @@ function propConverter(
       // Check to see if any supplied components won't work.
       // If the child doesn't have a key, it means we aren't animating it.
       // It's allowed to be an SFC, since we ignore it.
-      const childArray: Array<Element<*>> = Children.toArray(children);
-      const noStateless = childArray.every(child =>
-         !isElementAnSFC(child) || typeof child.key === 'undefined'
-      );
-
-      if (!noStateless) {
-        statelessFunctionalComponentSupplied();
-      }
+      Children.forEach(children, (child: Element<*> | string) => {
+        if (typeof child === 'string') {
+          textNodeSupplied();
+        } else if (isElementAnSFC(child) && child.key != null) {
+          statelessFunctionalComponentSupplied();
+        }
+      });
     }
 
     convertProps(props: FlipMoveProps): ConvertedProps {
@@ -134,15 +135,15 @@ function propConverter(
         delegated: {},
       };
 
-      this.checkForStatelessFunctionalComponents(workingProps.children);
+      this.checkChildren(workingProps.children);
 
       // Accept `disableAnimations`, but add a deprecation warning
       if (typeof props.disableAnimations !== 'undefined') {
-        if (nodeEnv !== 'production') {
+        workingProps.disableAllAnimations = props.disableAnimations;
+
+        if (!isProduction()) {
           deprecatedDisableAnimations();
         }
-
-        workingProps.disableAllAnimations = props.disableAnimations;
       }
 
       // Gather any additional props;
@@ -173,7 +174,7 @@ function propConverter(
       if (isNaN(value)) {
         const defaultValue: number = FlipMovePropConverter.defaultProps[prop];
 
-        if (nodeEnv !== 'production') {
+        if (!isProduction()) {
           invalidTypeForTimingProp({
             prop,
             value: rawValue,
@@ -202,10 +203,12 @@ function propConverter(
           const presetKeys = Object.keys(presets);
 
           if (presetKeys.indexOf(animation) === -1) {
-            if (nodeEnv !== 'production') {
+            if (!isProduction()) {
               invalidEnterLeavePreset({
                 value: animation,
-                acceptableValues: presetKeys.join(', '),
+                acceptableValues: presetKeys
+                  .filter(key => key.indexOf('accordian') === -1)
+                  .join(', '),
                 defaultValue: defaultPreset,
               });
             }
