@@ -237,7 +237,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     //
 
     // Start by marking new children as 'entering'
-    const updatedChildren: Array<ChildData> = nextChildren.map(nextChild => {
+    const updatedChildren: Array<ChildData> = nextChildren.map((nextChild) => {
       const child = this.findChildByKey(nextChild.key || '');
 
       // If the current child did exist, but it was in the midst of leaving,
@@ -295,7 +295,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
         child => child.leaving,
       );
 
-      leavingChildren.forEach(leavingChild => {
+      leavingChildren.forEach((leavingChild) => {
         const childData = this.getChildData(getKey(leavingChild));
 
         // We need to take the items out of the "flow" of the document, so that
@@ -317,7 +317,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // For all children not in the middle of entering or leaving,
     // we need to reset the transition, so that the NEW shuffle starts from
     // the right place.
-    this.state.children.forEach(child => {
+    this.state.children.forEach((child) => {
       const { domNode } = this.getChildData(getKey(child));
 
       // Ignore children that don't render DOM nodes (eg. by returning null)
@@ -419,7 +419,6 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       // but on a nested transition (eg. a hover effect). Ignore these cases.
       if (ev.target !== domNode) return;
 
-      if (getKey(child) === '.$item151')
       // Remove the 'transition' inline style we added. This is cleanup.
       domNode.style.transition = '';
 
@@ -474,7 +473,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     const elements: Array<ElementShape> = [];
     const domNodes: Array<?HTMLElement> = [];
 
-    this.childrenToAnimate.forEach(childKey => {
+    this.childrenToAnimate.forEach((childKey) => {
       // If this was an exit animation, the child may no longer exist.
       // If so, skip it.
       const child = this.findChildByKey(childKey);
@@ -506,7 +505,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
 
     this.parentData.boundingBox = this.props.getPosition(parentDomNode);
 
-    this.state.children.forEach(child => {
+    this.state.children.forEach((child) => {
       const childKey = getKey(child);
 
       // It is possible that a child does not have a `key` property;
@@ -619,12 +618,10 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
 
   removeChildData(key: string): void {
     delete this.childrenData[key];
-    this.setState(prevState => {
-      return {
-        ...prevState,
-        children: prevState.children.filter(child => child.key !== key),
-      };
-    });
+    this.setState(prevState => ({
+      ...prevState,
+      children: prevState.children.filter(child => child.key !== key),
+    }));
   }
 
   createHeightPlaceholder(): Element<*> {
