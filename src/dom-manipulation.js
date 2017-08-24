@@ -169,6 +169,7 @@ export const removeNodeFromDOMFlow = (
 
   const styles: Styles = {
     position: 'absolute',
+    zIndex: '-1',
     top: `${topOffset - margins['margin-top']}px`,
     left: `${boundingBox.left - margins['margin-left']}px`,
     right: `${boundingBox.right - margins['margin-right']}px`,
