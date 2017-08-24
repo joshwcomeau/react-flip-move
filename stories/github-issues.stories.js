@@ -46,14 +46,6 @@ storiesOf('Github Issues', module)
         this.setState(prevState => ({
           items,
         }));
-        setTimeout(() => {
-          this.setState(prevState => ({
-            items: prevState.items.slice(
-              0,
-              Math.floor((prevState.items.length - 1) / 2),
-            ),
-          }));
-        }, 50);
       };
 
       onAddItems = () => {

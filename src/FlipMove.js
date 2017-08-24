@@ -420,7 +420,6 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       if (ev.target !== domNode) return;
 
       if (getKey(child) === '.$item151')
-        console.log('triggering tranitionEnd listener for 151');
       // Remove the 'transition' inline style we added. This is cleanup.
       domNode.style.transition = '';
 
@@ -430,7 +429,6 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       domNode.removeEventListener(transitionEnd, transitionEndHandler);
 
       if (child.leaving) {
-        if (getKey(child) === '.$item151') console.log('removing child 151');
         this.removeChildData(getKey(child));
       }
     };
@@ -620,14 +618,13 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   }
 
   removeChildData(key: string): void {
-    if (key === '.$item151') console.log("removing item151 from this.childrenData")
     delete this.childrenData[key];
-    /*this.setState(prevState => {
+    this.setState(prevState => {
       return {
         ...prevState,
         children: prevState.children.filter(child => child.key !== key),
       };
-    });*/
+    });
   }
 
   createHeightPlaceholder(): Element<*> {
@@ -685,8 +682,6 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
 
     const children = this.childrenWithRefs();
 
-    const Item151StillInChildren = children.find(child => child.key === '.$item151');
-    console.log(Item151StillInChildren ? "rerendering with 151 in children" : "rendering without 151")
     if (leaveAnimation && maintainContainerHeight) {
       children.push(this.createHeightPlaceholder());
     }
