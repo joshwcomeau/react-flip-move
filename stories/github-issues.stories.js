@@ -129,8 +129,9 @@ storiesOf('Github Issues', module)
           color: 'white'
         }}
       />
-    );
-  })
+    )
+  });
+
 
 class Controls extends Component {
   constructor() {
@@ -167,15 +168,15 @@ class Controls extends Component {
     const answerStyle = {
       fontSize: '16px'
     }
-    return this.state.items.map(item =>
+    return this.state.items.map( item => (
       <div
         style={answerWrapperStyle}
         key={item.name}
         onClick={() => this.listItemClickHandler(item)}
       >
         <div style={answerStyle}>{item.name}</div>
-      </div>,
-    );
+      </div>
+    ))
   }
 
   render() {
@@ -184,7 +185,7 @@ class Controls extends Component {
         display: 'flex',
         alignItems: 'center',
         minHeight: '600px',
-        background: '#DDD',
+        background: '#DDD'
       }}>
         <div style={{marginBottom: '50px'}}>
           <button onClick={::this.buttonClickHandler}>Remove</button>
