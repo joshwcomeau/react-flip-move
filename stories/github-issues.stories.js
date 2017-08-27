@@ -9,11 +9,13 @@ const items = [
   { name: 'Potent Potables' },
   { name: 'The Pen is Mightier' },
   { name: 'Famous Horsemen' },
-  { name: 'A Petit Déjeuner' },
-];
+  { name: 'A Petit Déjeuner' }
+]
 
 storiesOf('Github Issues', module)
-  .add('#31', () => <Controls duration={400} />)
+  .add('#31', () => (
+    <Controls duration={400} />
+  ))
   .add('#120', () => {
     class Example extends React.Component {
       counter = 0;
@@ -113,29 +115,27 @@ storiesOf('Github Issues', module)
     let count = 0;
     return (
       <FlipMoveWrapper
-        items={range(100).map(i => {
-          return { id: `${i}`, text: `Header ${i}` };
-        })}
+        items={range(100).map(i => {return {id: `${i}`, text: `Header ${i}`}})}
         flipMoveContainerStyles={{
           position: 'relative',
           height: '500px',
-          overflow: 'scroll',
+          overflow: 'scroll'
         }}
         listItemStyles={{
           position: 'sticky',
           top: 0,
           height: 20,
           backgroundColor: 'black',
-          color: 'white',
+          color: 'white'
         }}
       />
     );
-  });
+  })
 
 class Controls extends Component {
   constructor() {
     super();
-    this.state = { items: items.slice() };
+    this.state = { items: items.slice() }
   }
 
   buttonClickHandler() {
@@ -147,12 +147,12 @@ class Controls extends Component {
 
   listItemClickHandler(clickedItem) {
     this.setState({
-      items: this.state.items.filter(item => item !== clickedItem),
+      items: this.state.items.filter( item => item !== clickedItem )
     });
   }
 
   restore() {
-    this.setState({ items });
+    this.setState({ items })
   }
 
   renderItems() {
@@ -161,41 +161,37 @@ class Controls extends Component {
       borderRadius: '20px',
       padding: '1em 2em',
       marginBottom: '1em',
-      minWidth: 400,
-    };
+      minWidth: 400
+    }
 
     const answerStyle = {
-      fontSize: '16px',
-    };
+      fontSize: '16px'
+    }
     return this.state.items.map(item =>
       <div
         style={answerWrapperStyle}
         key={item.name}
         onClick={() => this.listItemClickHandler(item)}
       >
-        <div style={answerStyle}>
-          {item.name}
-        </div>
+        <div style={answerStyle}>{item.name}</div>
       </div>,
     );
   }
 
   render() {
     return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          minHeight: '600px',
-          background: '#DDD',
-        }}
-      >
-        <div style={{ marginBottom: '50px' }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        minHeight: '600px',
+        background: '#DDD',
+      }}>
+        <div style={{marginBottom: '50px'}}>
           <button onClick={::this.buttonClickHandler}>Remove</button>
           <button onClick={::this.restore}>add</button>
         </div>
         <FlipMove enterAnimation="elevator" leaveAnimation="elevator">
-          {this.renderItems()}
+          { this.renderItems() }
         </FlipMove>
       </div>
     );

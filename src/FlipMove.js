@@ -6,7 +6,7 @@
  * For information on how this code is laid out, check out CODE_TOUR.md
  */
 
-/* eslint-disable react/prop-types */
+ /* eslint-disable react/prop-types */
 
 import React, {
   Component,
@@ -150,7 +150,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
 
     const oldChildrenKeys: Array<string> = Children.toArray(this.props.children).map(d => d.key);
     const nextChildrenKeys: Array<string> =
-      Children.toArray(previousProps.children).map(d => d.key);
+        Children.toArray(previousProps.children).map(d => d.key);
 
     const shouldTriggerFLIP = (
       !arraysEqual(oldChildrenKeys, nextChildrenKeys) &&
@@ -443,12 +443,12 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     if (this.remainingAnimations === 0) {
       // Remove any items from the DOM that have left, and reset `entering`.
       const nextChildren: Array<ChildData> = this.state.children
-      .filter(({ leaving }) => !leaving)
-      .map(item => ({
-        ...item,
-        appearing: false,
-        entering: false,
-      }));
+        .filter(({ leaving }) => !leaving)
+        .map(item => ({
+          ...item,
+          appearing: false,
+          entering: false,
+        }));
 
       this.setState({ children: nextChildren }, () => {
         if (typeof this.props.onFinishAll === 'function') {
