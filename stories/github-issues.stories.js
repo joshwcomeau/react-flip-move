@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { storiesOf } from '@kadira/storybook';
+import { storiesOf, action } from '@kadira/storybook';
+import shuffle from 'lodash/shuffle';
+import sampleSize from 'lodash/sampleSize';
 import range from 'lodash/range';
 
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
