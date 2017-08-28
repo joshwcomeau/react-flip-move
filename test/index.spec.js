@@ -15,6 +15,7 @@ describe('FlipMove', () => {
   let finishAllStub;
 
   before(() => {
+    sinon.stub(window, 'requestAnimationFrame', cb => setTimeout(cb, 0));
     consoleStub = sinon.stub(console, 'error');
     finishAllStub = sinon.stub();
   });
@@ -22,7 +23,10 @@ describe('FlipMove', () => {
     consoleStub.reset();
     finishAllStub.reset();
   });
-  after(() => consoleStub.restore());
+  after(() => {
+    window.requestAnimationFrame.restore();
+    consoleStub.restore();
+  });
 
   // To test this, here is our setup:
   // We're making a simple list of news articles, with the ability to
