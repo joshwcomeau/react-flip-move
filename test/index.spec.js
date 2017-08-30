@@ -19,10 +19,14 @@ describe('FlipMove', () => {
   let finishAllStub;
 
   before(() => {
+    sinon.stub(window, 'requestAnimationFrame', cb => setTimeout(cb, 0));
     finishAllStub = sinon.stub();
   });
   afterEach(() => {
     finishAllStub.reset();
+  });
+  after(() => {
+    window.requestAnimationFrame.restore();
   });
 
   // To test this, here is our setup:

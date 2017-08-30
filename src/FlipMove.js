@@ -624,6 +624,10 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
 
   removeChildData(key: string): void {
     delete this.childrenData[key];
+    this.setState(prevState => ({
+      ...prevState,
+      children: prevState.children.filter(child => child.key !== key),
+    }));
   }
 
   createHeightPlaceholder(): Element<*> {

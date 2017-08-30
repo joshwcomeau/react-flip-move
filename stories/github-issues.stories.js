@@ -18,7 +18,102 @@ storiesOf('Github Issues', module)
   .add('#31', () => (
     <Controls duration={400} />
   ))
-  .add('#141' , () => {
+  .add('#120', () => {
+    class Example extends React.Component {
+      counter = 0;
+
+      constructor(props) {
+        super(props);
+        this.state = {
+          items: [],
+        };
+      }
+
+      onRemoveItem = () => {
+        const { items } = this.state;
+        this.setState({
+          items: items.slice(0, items.length - 1),
+        });
+      };
+
+      onAddItem = () => {
+        this.setState({
+          items: this.state.items.concat(['item' + ++this.counter]),
+        });
+      };
+
+      handleAddItems = calls => {
+        let items = [];
+        for (let i = 0; i < calls; i++) {
+          items.push('item' + ++this.counter);
+        }
+        this.setState(prevState => ({
+          items,
+        }));
+      };
+
+      onAddItems = () => {
+        setTimeout(this.handleAddItems(50), 0);
+        setTimeout(this.handleAddItems(50), 20);
+      };
+
+      render() {
+        const { items } = this.state;
+
+        return (
+          <div>
+            <section>
+              <button onClick={this.onRemoveItem}>Remove item</button>
+              <button onClick={this.onAddItem}>Add item</button>
+              <button onClick={() => this.onAddItems()}>Add many items</button>
+            </section>
+            <FlipMove
+              typeName={'ul'}
+              duration="200"
+              enterAnimation={{
+                from: {
+                  transform: 'translateX(-10%)',
+                  opacity: 0.1,
+                },
+                to: {
+                  transform: 'translateX(0)',
+                  opacity: 1,
+                },
+              }}
+              leaveAnimation={{
+                from: {
+                  transform: 'translateX(0)',
+                  opacity: 1,
+                },
+                to: {
+                  transform: 'translateX(-10%)',
+                  opacity: 0.0,
+                },
+              }}
+            >
+              {items.map(item =>
+                <li key={item} id={item}>
+                  {item}
+                </li>,
+              )}
+            </FlipMove>
+          </div>
+        );
+      }
+    }
+
+    return (
+      <div>
+        <legend>
+          Spam "add many items" button, then inspect first element. it will be
+          overlayed by a zombie element that wasnt correctle removed from the
+          DOM
+        </legend>
+        <Example />
+      </div>
+    );
+  })
+  .add('#141', () => {
     let count = 0;
     return (
       <FlipMoveWrapper
