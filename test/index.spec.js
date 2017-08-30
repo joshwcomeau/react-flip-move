@@ -236,15 +236,18 @@ describe('FlipMove', () => {
   describe('prop runtime checking and conversion', () => {
     let errorStub;
     let warnStub;
+    let env;
     const SFC = () => null;
 
     before(() => {
       errorStub = sinon.stub(console, 'error');
       warnStub = sinon.stub(console, 'warn');
+      env = process.env;
     });
     afterEach(() => {
       errorStub.reset();
       warnStub.reset();
+      process.env = env;
     });
     after(() => {
       errorStub.restore();
@@ -252,7 +255,6 @@ describe('FlipMove', () => {
     });
 
     it('doesn\'t run checks in production environment', () => {
-      const env = process.env;
       process.env = { NODE_ENV: 'production' };
 
       shallow(<FlipMove><SFC key="hi" /></FlipMove>);
@@ -263,7 +265,6 @@ describe('FlipMove', () => {
 
       expect(errorStub).to.not.have.been.called;
       expect(warnStub).to.not.have.been.called;
-      process.env = env;
     });
 
     describe('timing props', () => {
