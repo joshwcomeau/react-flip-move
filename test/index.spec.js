@@ -7,25 +7,26 @@ import chaiEnzyme from 'chai-enzyme';
 
 import { getContainerBox, getTagPositions } from './helpers';
 import FlipMove from '../src/FlipMove';
+import {
+  defaultPreset,
+  disablePreset,
+  appearPresets,
+} from '../src/enter-leave-presets';
 
 chai.use(chaiEnzyme());
 
 describe('FlipMove', () => {
-  let consoleStub;
   let finishAllStub;
 
   before(() => {
     sinon.stub(window, 'requestAnimationFrame', cb => setTimeout(cb, 0));
-    consoleStub = sinon.stub(console, 'error');
     finishAllStub = sinon.stub();
   });
   afterEach(() => {
-    consoleStub.reset();
     finishAllStub.reset();
   });
   after(() => {
     window.requestAnimationFrame.restore();
-    consoleStub.restore();
   });
 
   // To test this, here is our setup:
@@ -232,25 +233,194 @@ describe('FlipMove', () => {
     });
   });
 
-  describe('duration prop runtime checking', () => {
-    let wrapper;
-    beforeEach(() => {
-      wrapper = shallow(<FlipMove />);
+  describe('prop runtime checking and conversion', () => {
+    let errorStub;
+    let warnStub;
+    let env;
+    const SFC = () => null;
+
+    before(() => {
+      errorStub = sinon.stub(console, 'error');
+      warnStub = sinon.stub(console, 'warn');
+      env = process.env;
+    });
+    afterEach(() => {
+      errorStub.reset();
+      warnStub.reset();
+      process.env = env;
+    });
+    after(() => {
+      errorStub.restore();
+      warnStub.restore();
     });
 
-    it('applies a bogus string', () => {
-      wrapper.setProps({ duration: 'hi' });
-      expect(consoleStub).to.have.been.calledOnce;
+    it('doesn\'t run checks in production environment', () => {
+      process.env = { NODE_ENV: 'production' };
+
+      shallow(<FlipMove><SFC key="hi" /></FlipMove>);
+      shallow(<FlipMove>hi</FlipMove>);
+      shallow(<FlipMove disableAnimations />);
+      shallow(<FlipMove duration="hi" />);
+      shallow(<FlipMove appearAnimation="unknown" />);
+
+      expect(errorStub).to.not.have.been.called;
+      expect(warnStub).to.not.have.been.called;
     });
 
-    it('applies an array prop and throws', () => {
-      wrapper.setProps({ duration: ['hi'] });
-      expect(consoleStub).to.have.been.called;
+    describe('timing props', () => {
+      it('applies a bogus string', () => {
+        shallow(<FlipMove duration="hi" />);
+        expect(errorStub).to.have.been.calledWith(`
+>> Error, via react-flip-move <<
+
+The prop you provided for 'duration' is invalid. It needs to be a positive integer, or a string that can be resolved to a number. The value you provided is 'hi'.
+
+As a result,  the default value for this parameter will be used, which is '350'.
+`);
+      });
+
+      it('applies an array prop and throws', () => {
+        shallow(<FlipMove duration={['hi']} />);
+        expect(errorStub).to.have.been.calledWith(`
+>> Error, via react-flip-move <<
+
+The prop you provided for 'duration' is invalid. It needs to be a positive integer, or a string that can be resolved to a number. The value you provided is 'hi'.
+
+As a result,  the default value for this parameter will be used, which is '350'.
+`);
+      });
+
+      it('applies a string that can be converted to an int', () => {
+        shallow(<FlipMove duration="10" />);
+        expect(errorStub).to.not.have.been.called;
+      });
     });
 
-    it('applies a string that can be converted to an int', () => {
-      wrapper.setProps({ duration: '10' });
-      expect(consoleStub).to.not.have.been.called;
+    describe('unsupported children', () => {
+      it('doesn\'t warn about SFC without key', () => {
+        shallow(<FlipMove><SFC /></FlipMove>);
+        expect(warnStub).to.not.have.been.called;
+      });
+
+      it('warns once about SFC with key', () => {
+        shallow(
+          <FlipMove>
+            <SFC key="foo" />
+            <SFC key="bar" />
+          </FlipMove>
+        );
+        expect(warnStub).to.have.been.calledOnce;
+        expect(warnStub).to.have.been.calledWith(`
+>> Error, via react-flip-move <<
+
+You provided a stateless functional component as a child to <FlipMove>. Unfortunately, SFCs aren't supported, because Flip Move needs access to the backing instances via refs, and SFCs don't have a public instance that holds that info.
+
+Please wrap your components in a native element (eg. <div>), or a non-functional component.
+`);
+      });
+
+      it('warns once about plain text children', () => {
+        shallow(
+          <FlipMove>
+            hi
+            <div key="foo" />
+            hi
+          </FlipMove>
+        );
+        expect(warnStub).to.have.been.calledOnce;
+        expect(warnStub).to.have.been.calledWith(`
+>> Error, via react-flip-move <<
+
+You provided a plain text node as a child to <FlipMove>. Flip Move needs containers with unique keys to move children around.
+
+Please wrap your text in a native element (eg. <span>), or a component.
+`);
+      });
+
+      it('doesn\'t warn when key is present', () => {
+        shallow(<FlipMove><div key="hi" /></FlipMove>);
+        expect(warnStub).to.not.have.been.called;
+      });
+    });
+
+    describe('falsy children', () => {
+      beforeEach(() => {
+        mountAttached();
+        attachedWrapper.setProps({ articles: [null, ...articles.slice(1)] });
+      });
+
+      it('adds a falsy child to the articles', () => {
+        expect(errorStub).to.not.have.been.called;
+      });
+
+      it('transitions without issue', (done) => {
+        setTimeout(() => {
+          expect(errorStub).to.not.have.been.called;
+          done();
+        }, 750);
+      });
+    });
+
+    it('warns once about deprecated disableAnimations prop', () => {
+      shallow(<FlipMove disableAnimations />);
+      const wrapper = shallow(<FlipMove disableAnimations />);
+      expect(warnStub).to.have.been.calledOnce;
+      expect(warnStub).to.have.been.calledWith(`
+>> Warning, via react-flip-move <<
+
+The 'disableAnimations' prop you provided is deprecated. Please switch to use 'disableAllAnimations'.
+
+This will become a silent error in future versions of react-flip-move.
+`);
+      expect(wrapper).to.have.prop('disableAllAnimations', true);
+    });
+
+    describe('animation props', () => {
+      it('accepts animation object', () => {
+        const wrapper = shallow(
+          <FlipMove
+            appearAnimation={{
+              from: { opacity: '0' },
+              to: { opacity: '0.5' },
+            }}
+          />
+        );
+        expect(errorStub).to.not.have.been.called;
+        expect(wrapper.prop('appearAnimation')).to.deep.equal({
+          from: { opacity: '0' },
+          to: { opacity: '0.5' },
+        });
+      });
+
+      it('uses default preset when value is `true`', () => {
+        const wrapper = shallow(<FlipMove appearAnimation />);
+        expect(errorStub).to.not.have.been.called;
+        expect(wrapper.prop('appearAnimation')).to.deep.equal(appearPresets[defaultPreset]);
+      });
+
+      it('uses empty preset when value is `false`', () => {
+        const wrapper = shallow(<FlipMove appearAnimation={false} />);
+        expect(errorStub).to.not.have.been.called;
+        expect(wrapper.prop('appearAnimation')).to.deep.equal(appearPresets[disablePreset]);
+      });
+
+      it('finds a preset by name', () => {
+        const wrapper = shallow(<FlipMove appearAnimation="fade" />);
+        expect(errorStub).to.not.have.been.called;
+        expect(wrapper.prop('appearAnimation')).to.deep.equal(appearPresets.fade);
+      });
+
+      it('throws on an unknown preset', () => {
+        const wrapper = shallow(<FlipMove appearAnimation="unknown" />);
+        expect(errorStub).to.have.been.calledWith(`
+>> Error, via react-flip-move <<
+
+The enter/leave preset you provided is invalid. We don't currently have a 'unknown preset.'
+
+Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, none. The default value of 'elevator' will be used.
+`);
+        expect(wrapper.prop('appearAnimation')).to.deep.equal(appearPresets[defaultPreset]);
+      });
     });
   });
 
@@ -271,24 +441,6 @@ describe('FlipMove', () => {
       expect(newPositions.a).to.deep.equal(originalPositions.c);
       expect(newPositions.b).to.deep.equal(originalPositions.b);
       expect(newPositions.c).to.deep.equal(originalPositions.a);
-    });
-  });
-
-  describe('falsy children', () => {
-    beforeEach(() => {
-      mountAttached();
-      attachedWrapper.setProps({ articles: [null, ...articles.slice(1)] });
-    });
-
-    it('adds a false child to the articles', () => {
-      expect(consoleStub).to.not.have.been.called;
-    });
-
-    it('transitions without issue', (done) => {
-      setTimeout(() => {
-        expect(consoleStub).to.not.have.been.called;
-        done();
-      }, 750);
     });
   });
 
