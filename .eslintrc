@@ -2,8 +2,12 @@
   extends: [
     'airbnb',
     'plugin:flowtype/recommended',
+    'prettier',
+    'prettier/flowtype',
+    'prettier/react',
   ],
   plugins: [
+    'prettier',
     'flowtype',
     'sort-class-members',
     'bdd',
@@ -44,6 +48,14 @@
 
     "bdd/focus": 2,
     "bdd/exclude": 2,
+
+    "prettier/prettier": [
+      "error",
+      {
+        trailingComma: "all",
+        singleQuote: true,
+      },
+    ],
   },
   settings: {
     flowtype: {
