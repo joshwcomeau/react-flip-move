@@ -48,8 +48,8 @@ export const leavePresets: Presets = {
   none: null,
 };
 
- // For now, appearPresets will be identical to enterPresets.
- // Assigning a custom export in case we ever want to add appear-specific ones.
+// For now, appearPresets will be identical to enterPresets.
+// Assigning a custom export in case we ever want to add appear-specific ones.
 export const appearPresets = enterPresets;
 
 // Embarrassingly enough, v2.0 launched with typo'ed preset names.
@@ -64,7 +64,6 @@ enterPresets.accordianHorizontal = enterPresets.accordionHorizontal;
 leavePresets.accordianVertical = leavePresets.accordionVertical;
 // $FlowFixMe
 leavePresets.accordianHorizontal = leavePresets.accordionHorizontal;
-
 
 export const defaultPreset = 'elevator';
 export const disablePreset = 'none';

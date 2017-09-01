@@ -13,11 +13,7 @@
  */
 /* eslint-disable block-scoped-var */
 
-import React, {
-  Component,
-  Children,
-  Element,
-} from 'react';
+import React, { Component, Children, Element } from 'react';
 
 import {
   statelessFunctionalComponentSupplied,
@@ -59,7 +55,7 @@ function isProduction(): boolean {
 }
 
 function propConverter(
-  ComposedComponent: Class<Component<*, ConvertedProps, *>>
+  ComposedComponent: Class<Component<*, ConvertedProps, *>>,
 ): Class<Component<FlipMoveDefaultProps, FlipMoveProps, void>> {
   return class FlipMovePropConverter extends Component {
     static defaultProps = {
@@ -123,13 +119,16 @@ function propConverter(
         // disabled), string (preset name), or object (actual animation values).
         // Let's standardize this so that they're always objects
         appearAnimation: this.convertAnimationProp(
-          props.appearAnimation, appearPresets
+          props.appearAnimation,
+          appearPresets,
         ),
         enterAnimation: this.convertAnimationProp(
-          props.enterAnimation, enterPresets
+          props.enterAnimation,
+          enterPresets,
         ),
         leaveAnimation: this.convertAnimationProp(
-          props.leaveAnimation, leavePresets
+          props.leaveAnimation,
+          leavePresets,
         ),
 
         delegated: {},
@@ -167,9 +166,8 @@ function propConverter(
     convertTimingProp(prop: string): number {
       const rawValue: string | number = this.props[prop];
 
-      const value = typeof rawValue === 'number'
-        ? rawValue
-        : parseInt(rawValue, 10);
+      const value =
+        typeof rawValue === 'number' ? rawValue : parseInt(rawValue, 10);
 
       if (isNaN(value)) {
         const defaultValue: number = FlipMovePropConverter.defaultProps[prop];
@@ -189,14 +187,15 @@ function propConverter(
     }
 
     // eslint-disable-next-line class-methods-use-this
-    convertAnimationProp(animation: ?AnimationProp, presets: Presets): ?Animation {
+    convertAnimationProp(
+      animation: ?AnimationProp,
+      presets: Presets,
+    ): ?Animation {
       switch (typeof animation) {
         case 'boolean': {
           // If it's true, we want to use the default preset.
           // If it's false, we want to use the 'none' preset.
-          return presets[
-            animation ? defaultPreset : disablePreset
-          ];
+          return presets[animation ? defaultPreset : disablePreset];
         }
 
         case 'string': {
@@ -226,9 +225,7 @@ function propConverter(
     }
 
     render() {
-      return (
-        <ComposedComponent {...this.convertProps(this.props)} />
-      );
+      return <ComposedComponent {...this.convertProps(this.props)} />;
     }
   };
 }

@@ -37,10 +37,10 @@ export function arraysEqual<T>(a: Array<T>, b: Array<T>) {
   return a.every((element, index) => element === b[index]);
 }
 
-function memoizeString<T>(fn: (string) => T): (string) => T {
-  const cache: {[string]: T} = {};
+function memoizeString<T>(fn: string => T): string => T {
+  const cache: { [string]: T } = {};
 
-  return (str) => {
+  return str => {
     if (!cache[str]) {
       cache[str] = fn(str);
     }
@@ -49,4 +49,5 @@ function memoizeString<T>(fn: (string) => T): (string) => T {
 }
 
 export const hyphenate = memoizeString(str =>
-  str.replace(/([A-Z])/g, '-$1').toLowerCase());
+  str.replace(/([A-Z])/g, '-$1').toLowerCase(),
+);
