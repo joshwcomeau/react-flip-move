@@ -192,6 +192,8 @@ This project uses [React Storybook](https://github.com/kadirahq/react-storybook)
 
 After installing dependencies, launch the Storybook dev server with `npm run storybook`.
 
+This project adheres to the formatting established by [airbnb's style guide](https://github.com/airbnb/javascript/tree/master/react). When contributing, you can make use of the autoformatter [prettier](https://github.com/prettier/prettier) to apply these rules by running the eslint script `npm run lint:fix`. If there are conflicts, the linter triggered by the prepush hook will inform you of those as well. To check your code by hand, run `npm run lint`.
+
 ## Flow support
 
 Flip Move's sources are type-checked with [Flow](https://flow.org/). If your project uses it too, you may want to install typings for our public API from [flow-typed](https://github.com/flowtype/flow-typed) repo.
