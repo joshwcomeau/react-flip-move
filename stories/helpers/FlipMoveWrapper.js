@@ -5,7 +5,6 @@ import { sample, shuffle, clone } from 'lodash';
 import FlipMove from '../../src';
 import Controls from './Controls';
 
-
 const baseStyles = {
   bodyContainerStyles: {
     background: '#F3F3F3',
@@ -133,7 +132,7 @@ class FlipMoveWrapper extends Component {
       return items;
     }
 
-    return items.map((item) => {
+    return items.map(item => {
       let text = item.text;
 
       if (item.count) {
@@ -151,7 +150,7 @@ class FlipMoveWrapper extends Component {
             // zIndex: item.id.charCodeAt(0),
           },
         },
-        text
+        text,
       );
     });
   }
@@ -173,7 +172,9 @@ class FlipMoveWrapper extends Component {
           onRestartSequence={this.restartSequence}
           numOfCurrentItems={this.state.items ? this.state.items.length : 0}
           numOfTotalItems={this.props.items ? this.props.items.length : 0}
-          numOfStepsInSequence={this.props.sequence ? this.props.sequence.length : 0}
+          numOfStepsInSequence={
+            this.props.sequence ? this.props.sequence.length : 0
+          }
         />
         <FlipMove
           style={{
@@ -192,10 +193,12 @@ class FlipMoveWrapper extends Component {
 
 /* eslint-disable react/forbid-prop-types */
 FlipMoveWrapper.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    text: PropTypes.string,
-  })),
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      text: PropTypes.string,
+    }),
+  ),
   flipMoveProps: PropTypes.object,
   itemType: PropTypes.oneOfType([
     PropTypes.string, // for DOM types like 'div'
@@ -205,20 +208,38 @@ FlipMoveWrapper.propTypes = {
   flipMoveContainerStyles: PropTypes.object,
   listItemStyles: PropTypes.object,
   applyContinuousItemUpdates: PropTypes.bool,
-  sequence: PropTypes.arrayOf(PropTypes.shape({
-    eventName: PropTypes.string,
-    delay: PropTypes.number,
-    args: PropTypes.array,
-  })),
+  sequence: PropTypes.arrayOf(
+    PropTypes.shape({
+      eventName: PropTypes.string,
+      delay: PropTypes.number,
+      args: PropTypes.array,
+    }),
+  ),
 };
 
 FlipMoveWrapper.defaultProps = {
   items: [
-    { id: 'a', text: "7 Insecticides You Don't Know You're Consuming", count: 0 },
+    {
+      id: 'a',
+      text: "7 Insecticides You Don't Know You're Consuming",
+      count: 0,
+    },
     { id: 'b', text: '11 Ways To Style Your Hair', count: 0 },
-    { id: 'c', text: 'The 200 Countries You Have To Visit Before The Apocalypse', count: 0 },
-    { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product', count: 0 },
-    { id: 'e', text: 'Divine Intervention: Fashion Tips For The Vatican', count: 0 },
+    {
+      id: 'c',
+      text: 'The 200 Countries You Have To Visit Before The Apocalypse',
+      count: 0,
+    },
+    {
+      id: 'd',
+      text: 'Turtles: The Unexpected Miracle Anti-Aging Product',
+      count: 0,
+    },
+    {
+      id: 'e',
+      text: 'Divine Intervention: Fashion Tips For The Vatican',
+      count: 0,
+    },
   ],
   itemType: 'div',
 };

@@ -1,106 +1,103 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { Component } from 'react';
-import { storiesOf, action } from '@kadira/storybook';
+import { storiesOf } from '@kadira/storybook';
 import shuffle from 'lodash/shuffle';
-import sampleSize from 'lodash/sampleSize';
 import range from 'lodash/range';
-import _ from 'lodash';
+import PropTypes from 'prop-types';
 
 import FlipMove from '../src';
 
+const getPosition = node =>
+  Object.values(node.getBoundingClientRect()).reduce(
+    (newRect, prop) => ({ ...newRect, [prop]: prop / 0.5 }),
+    {},
+  );
+
 storiesOf('Legacy Stories', module)
-  .add('simple transition', () => (
-    <Controls duration={400} />
-  ))
-  .add('when animation is disabled', () => (
-    <Controls disableAllAnimations={true} />
-  ))
+  .add('simple transition', () => <Controls duration={400} />)
+  .add('when animation is disabled', () => <Controls disableAllAnimations />)
   .add('when removing items - elevator (default)', () => (
-    <Controls
-      mode='remove'
-    />
+    <Controls mode="remove" />
   ))
   .add('when removing items - fade', () => (
-    <Controls
-      mode='remove'
-      enterAnimation="fade"
-      leaveAnimation="fade"
-    />
+    <Controls mode="remove" enterAnimation="fade" leaveAnimation="fade" />
   ))
   .add('when removing items - accordionVertical', () => (
     <Controls
-      mode='remove'
+      mode="remove"
       enterAnimation="accordionVertical"
       leaveAnimation="accordionVertical"
     />
   ))
   .add('when removing items - accordionHorizontal', () => (
     <Controls
-      mode='remove'
+      mode="remove"
       enterAnimation="accordionHorizontal"
       leaveAnimation="accordionHorizontal"
     />
   ))
   .add('when removing items - none', () => (
-    <Controls
-      mode='remove'
-      enterAnimation={false}
-      leaveAnimation={false}
-    />
+    <Controls mode="remove" enterAnimation={false} leaveAnimation={false} />
   ))
-  .add('when adding/removing items - custom object with default "leave"', () => (
-    <Controls
-      mode='remove'
-      enterAnimation={{
-        from: {
-          transform: 'translateY(-100px)',
-        },
-        to: {
-          transform: '',
-        }
-      }}
-    />
-  ))
+  .add(
+    'when adding/removing items - custom object with default "leave"',
+    () => (
+      <Controls
+        mode="remove"
+        enterAnimation={{
+          from: {
+            transform: 'translateY(-100px)',
+          },
+          to: {
+            transform: '',
+          },
+        }}
+      />
+    ),
+  )
   .add('when adding/removing items - custom object with rotate', () => (
     <Controls
-      mode='remove'
+      mode="remove"
       enterAnimation={{
         from: { transform: 'translateY(-100px) rotate(90deg) scale(0)' },
-        to: { transform: '' }
+        to: { transform: '' },
       }}
       leaveAnimation={{
         from: { transform: '' },
-        to: { transform: 'translateY(100px) rotate(-90deg) scale(0)' }
+        to: { transform: 'translateY(100px) rotate(-90deg) scale(0)' },
       }}
     />
   ))
   .add('when adding/removing items - custom object with 3D rotate', () => (
     <Controls
-      mode='remove'
+      mode="remove"
       enterAnimation={{
         from: { transform: 'rotateX(135deg)' },
-        to: { transform: '' }
+        to: { transform: '' },
       }}
       leaveAnimation={{
         from: { transform: '' },
-        to: { transform: 'rotateX(-120deg)',   opacity: 0.6 }
+        to: { transform: 'rotateX(-120deg)', opacity: 0.6 },
       }}
     />
   ))
   .add('with centered flex content', () => (
-    <Controls style={{display: 'flex', justifyContent: 'center'}} />
+    <Controls style={{ display: 'flex', justifyContent: 'center' }} />
   ))
   .add('with transition on child', () => (
     <Controls
-      styleFirstChild={true}
+      styleFirstChild
       firstChildInnerStyles={{
         transition: '100ms',
-        backgroundColor: '#F00'
+        backgroundColor: '#F00',
       }}
     />
   ))
   .add('with onStartAll callback', () => (
     <Controls
-      onStartAll={(elements, nodes) => console.log("Started with", elements, nodes)}
+      onStartAll={(elements, nodes) =>
+        // eslint-disable-next-line no-console
+        console.log('Started with', elements, nodes)}
     />
   ))
   .add('when prop keys do not change, but items rearrange', () => (
@@ -110,7 +107,7 @@ storiesOf('Legacy Stories', module)
     <Controls typeName="table" width="50%" />
   ))
   .add('inside a scaled container', () => (
-    <Controls style={{transform: 'scale(0.5)'}} getPosition={getPosition} />
+    <Controls style={{ transform: 'scale(0.5)' }} getPosition={getPosition} />
   ))
   .add('empty', () => {
     class HandleEmpty extends Component {
@@ -125,9 +122,7 @@ storiesOf('Legacy Stories', module)
       render() {
         return (
           <div>
-            <button
-              onClick={() => this.setState({ empty: !this.state.empty })}
-            >
+            <button onClick={() => this.setState({ empty: !this.state.empty })}>
               Toggle!
             </button>
 
@@ -135,38 +130,26 @@ storiesOf('Legacy Stories', module)
               {this.state.empty ? null : <div>Not empty!</div>}
             </FlipMove>
           </div>
-        )
+        );
       }
     }
 
-    return <HandleEmpty />
+    return <HandleEmpty />;
   })
   .add('maintain container height', () => (
     <Controls
-      maintainContainerHeight={true}
-      style={{border: 'solid 2px magenta', padding: '7px' }}
+      maintainContainerHeight
+      style={{ border: 'solid 2px magenta', padding: '7px' }}
       childOuterStyles={{ margin: '20px' }}
     />
   ))
   .add('maintain container height with <ul>', () => (
     <Controls
       typeName="ul"
-      maintainContainerHeight={true}
-      style={{border: 'solid 2px magenta' }}
+      maintainContainerHeight
+      style={{ border: 'solid 2px magenta' }}
     />
-  ))
-
-function getPosition(node) {
-  const rect = node.getBoundingClientRect();
-  const newRect = {};
-
-  for (const prop in rect) {
-    newRect[prop] = rect[prop] / 0.5;
-  }
-
-  return newRect;
-}
-
+  ));
 
 // Controlling component
 const items = [
@@ -174,8 +157,8 @@ const items = [
   { name: 'The Pen is Mightier' },
   { name: 'Famous Horsemen' },
   { name: 'A Petit Déjeuner' },
-
-]
+];
+// eslint-disable-next-line react/no-multi-comp
 class Controls extends Component {
   static defaultProps = {
     firstChildOuterStyles: {},
@@ -186,13 +169,14 @@ class Controls extends Component {
 
   constructor() {
     super();
-    this.state = { items: items.slice() }
+    this.state = { items: items.slice() };
   }
 
-  buttonClickHandler() {
+  buttonClickHandler = () => {
     let newItems;
+    let newTopItem;
 
-    switch ( this.props.mode ) {
+    switch (this.props.mode) {
       case 'remove':
         newItems = this.state.items.slice();
         newItems.splice(1, 1);
@@ -200,9 +184,9 @@ class Controls extends Component {
 
       case 'rotate':
         newItems = this.state.items.slice();
-        let newTopItem = newItems.pop();
+        newTopItem = newItems.pop();
         newTopItem.name += Math.random();
-        newItems.unshift( newTopItem );
+        newItems.unshift(newTopItem);
         break;
 
       default:
@@ -211,19 +195,19 @@ class Controls extends Component {
     }
 
     this.setState({ items: newItems });
-  }
+  };
 
-  listItemClickHandler(clickedItem) {
+  listItemClickHandler = clickedItem => {
     this.setState({
-      items: this.state.items.filter( item => item !== clickedItem )
+      items: this.state.items.filter(item => item !== clickedItem),
     });
-  }
+  };
 
-  restore() {
+  restore = () => {
     this.setState({
-      items
-    })
-  }
+      items,
+    });
+  };
 
   renderItems() {
     const stylesOuter = {
@@ -231,67 +215,83 @@ class Controls extends Component {
       display: 'block',
       padding: '6px',
       listStyleType: 'none',
-    }
+    };
 
     const stylesInner = {
       padding: '8px',
       background: '#FFFFFF',
       color: '#F34D93',
       fontFamily: 'sans-serif',
-      borderRadius: '4px'
-    }
+      borderRadius: '4px',
+    };
 
-    return this.state.items.map( (item, i) => {
+    return this.state.items.map(item => {
       // Make a working copy of styles
       let stylesOuterCopy = { ...stylesOuter, ...this.props.childOuterStyles };
       let stylesInnerCopy = { ...stylesInner, ...this.props.childInnerStyles };
 
-      if ( this.props.styleFirstChild && item.name === 'Potent Potables' ) {
+      if (this.props.styleFirstChild && item.name === 'Potent Potables') {
         stylesOuterCopy = {
           ...stylesOuterCopy,
-          ...this.props.firstChildOuterStyles
+          ...this.props.firstChildOuterStyles,
         };
 
         stylesInnerCopy = {
           ...stylesInnerCopy,
-          ...this.props.firstChildInnerStyles
+          ...this.props.firstChildInnerStyles,
         };
       }
 
-      return <li
-        key={item.name}
-        style={stylesOuterCopy}
-        onClick={() => this.listItemClickHandler(item)}
-      >
-        <div style={stylesInnerCopy}><button style={{transition: '0.1s background-color'}}>{item.name}</button></div>
-      </li>
+      return (
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+        <li
+          key={item.name}
+          style={stylesOuterCopy}
+          onClick={() => this.listItemClickHandler(item)}
+        >
+          <div style={stylesInnerCopy}>
+            <button style={{ transition: '0.1s background-color' }}>
+              {item.name}
+            </button>
+          </div>
+        </li>
+      );
     });
   }
 
   render() {
     return (
-      <div style={{
-        padding: '50px',
-        backgroundColor: '#333636',
-        minHeight: '600px'
-      }}>
-        <div style={{marginBottom: '50px'}}>
-          <button onClick={::this.buttonClickHandler}>Remove</button>
-          <button onClick={::this.restore}>Restore</button>
+      <div
+        style={{
+          padding: '50px',
+          backgroundColor: '#333636',
+          minHeight: '600px',
+        }}
+      >
+        <div style={{ marginBottom: '50px' }}>
+          <button onClick={this.buttonClickHandler}>Remove</button>
+          <button onClick={this.restore}>Restore</button>
         </div>
-        <FlipMove {...this.props}>
-          { this.renderItems() }
-        </FlipMove>
+        <FlipMove {...this.props}>{this.renderItems()}</FlipMove>
       </div>
     );
   }
 }
+Controls.propTypes = {
+  mode: PropTypes.string,
+  childOuterStyles: PropTypes.object,
+  childInnerStyles: PropTypes.object,
+  styleFirstChild: PropTypes.object,
+  firstChildOuterStyles: PropTypes.object,
+  firstChildInnerStyles: PropTypes.object,
+};
 
+// eslint-disable-next-line react/no-multi-comp
 class StaticItems extends Component {
-  renderItems() {
-    return range(4).map( i => {
-      let left = Math.floor(Math.random() * 100) + 'px';
-      let top  = Math.floor(Math.random() * 100) + 'px';
+  static renderItems() {
+    return range(4).map(i => {
+      const left = `${Math.floor(Math.random() * 100)}px`;
+      const top = `${Math.floor(Math.random() * 100)}px`;
 
       return (
         <div
@@ -301,13 +301,13 @@ class StaticItems extends Component {
             padding: '1rem',
             background: '#F00',
             left,
-            top
+            top,
           }}
         >
           Item!
         </div>
       );
-    })
+    });
   }
 
   render() {
@@ -316,9 +316,7 @@ class StaticItems extends Component {
         <button onClick={() => this.forceUpdate.call(this, null)}>
           UPDATE
         </button>
-        <FlipMove>
-          { this.renderItems() }
-        </FlipMove>
+        <FlipMove>{StaticItems.renderItems()}</FlipMove>
       </div>
     );
   }

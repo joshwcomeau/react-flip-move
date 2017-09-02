@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { storiesOf } from '@kadira/storybook';
 
-import FlipMove from '../src';
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
 import FlipMoveListItem from './helpers/FlipMoveListItem';
 
-['div', FlipMoveListItem].forEach((type) => {
+['div', FlipMoveListItem].forEach(type => {
   const typeLabel = type === 'div' ? 'native' : 'composite';
 
   storiesOf(`Sequencing - ${typeLabel}`, module)
@@ -87,5 +86,5 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
           { eventName: 'removeItem', delay: 200 },
         ]}
       />
-    ))
+    ));
 });
