@@ -16,12 +16,16 @@
 import React, {
   Component,
   Children,
+} from 'react';
+// eslint-disable-next-line no-duplicate-imports
+import type {
+  ComponentType,
   Element,
 } from 'react';
 
 import {
   statelessFunctionalComponentSupplied,
-  textNodeSupplied,
+  primitiveNodeSupplied,
   invalidTypeForTimingProp,
   invalidEnterLeavePreset,
   deprecatedDisableAnimations,
@@ -39,7 +43,6 @@ import type {
   AnimationProp,
   Presets,
   FlipMoveProps,
-  FlipMoveDefaultProps,
   ConvertedProps,
   DelegatedProps,
 } from './typings';
@@ -59,9 +62,9 @@ function isProduction(): boolean {
 }
 
 function propConverter(
-  ComposedComponent: Class<Component<*, ConvertedProps, *>>
-): Class<Component<FlipMoveDefaultProps, FlipMoveProps, void>> {
-  return class FlipMovePropConverter extends Component {
+  ComposedComponent: ComponentType<ConvertedProps>
+): ComponentType<FlipMoveProps> {
+  return class FlipMovePropConverter extends Component<FlipMoveProps> {
     static defaultProps = {
       easing: 'ease-in-out',
       duration: 350,
@@ -72,27 +75,43 @@ function propConverter(
       enterAnimation: defaultPreset,
       leaveAnimation: defaultPreset,
       disableAllAnimations: false,
-      getPosition: node => node.getBoundingClientRect(),
+      getPosition: (node: HTMLElement) => node.getBoundingClientRect(),
       maintainContainerHeight: false,
       verticalAlignment: 'top',
     };
 
     // eslint-disable-next-line class-methods-use-this
-    checkChildren(children: mixed) {
+    checkChildren(children) {
       // Skip all console warnings in production.
       // Bail early, to avoid unnecessary work.
       if (isProduction()) {
         return;
       }
 
+      // same as React.Node, but without fragments, see https://github.com/facebook/flow/issues/4781
+      type Child =
+        | void
+        | null
+        | boolean
+        | number
+        | string
+        | Element<*>;
+
       // FlipMove does not support stateless functional components.
       // Check to see if any supplied components won't work.
       // If the child doesn't have a key, it means we aren't animating it.
       // It's allowed to be an SFC, since we ignore it.
-      Children.forEach(children, (child: Element<*> | string) => {
-        if (typeof child === 'string') {
-          textNodeSupplied();
-        } else if (isElementAnSFC(child) && child.key != null) {
+      Children.forEach(children, (child: Child) => {
+        if (child == null) {
+          return;
+        }
+
+        if (typeof child !== 'object') {
+          primitiveNodeSupplied();
+          return;
+        }
+
+        if (isElementAnSFC(child) && child.key != null) {
           statelessFunctionalComponentSupplied();
         }
       });

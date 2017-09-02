@@ -8,10 +8,17 @@
 
  /* eslint-disable react/prop-types */
 
-import React, {
-  Component,
-  Element,
+import {
   Children,
+  cloneElement,
+  createElement,
+  Component,
+} from 'react';
+// eslint-disable-next-line no-duplicate-imports
+import type {
+  Element,
+  ElementRef,
+  Key,
 } from 'react';
 
 import './polyfills';
@@ -41,11 +48,11 @@ import type {
 const transitionEnd = whichTransitionEvent();
 const noBrowserSupport = !transitionEnd;
 
-function getKey(childData: ChildData): string {
+function getKey(childData: ChildData): Key {
   return childData.key || '';
 }
 
-class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
+class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   // Copy props.children into state.
   // To understand why this is important (and not an anti-pattern), consider
   // how "leave" animations work. An item has "left" when the component
@@ -77,7 +84,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     userSpecifiedKey2: { ... },
     ...
     */
-    [userSpecifiedKey: string]: NodeData,
+    [userSpecifiedKey: Key]: NodeData,
   } = {};
 
   // Similarly, track the dom node and box of our parent element.
@@ -101,7 +108,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
   // animations, because we need to maintain the list of animating children,
   // to pass to the `onFinishAll` handler.
   remainingAnimations = 0;
-  childrenToAnimate: Array<string> = [];
+  childrenToAnimate: Array<Key> = [];
 
   componentDidMount() {
     // Run our `appearAnimation` if it was requested, right after the
@@ -148,9 +155,10 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // At the end of the transition, we clean up nodes that need to be removed.
     // We DON'T want this cleanup to trigger another update.
 
-    const oldChildrenKeys: Array<string> = Children.toArray(this.props.children).map(d => d.key);
-    const nextChildrenKeys: Array<string> =
-        Children.toArray(previousProps.children).map(d => d.key);
+    const oldChildrenKeys: Array<?Key> =
+      Children.toArray(this.props.children).map((d: Element<*>) => d.key);
+    const nextChildrenKeys: Array<?Key> =
+      Children.toArray(previousProps.children).map((d: Element<*>) => d.key);
 
     const shouldTriggerFLIP = (
       !arraysEqual(oldChildrenKeys, nextChildrenKeys) &&
@@ -444,7 +452,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       // Remove any items from the DOM that have left, and reset `entering`.
       const nextChildren: Array<ChildData> = this.state.children
         .filter(({ leaving }) => !leaving)
-        .map(item => ({
+        .map((item: ChildData) => ({
           ...item,
           appearing: false,
           entering: false,
@@ -604,29 +612,29 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     );
   }
 
-  findChildByKey(key: string): ?ChildData {
+  findChildByKey(key: Key): ?ChildData {
     return this.state.children.find(child => getKey(child) === key);
   }
 
-  hasChildData(key: string): boolean {
+  hasChildData(key: Key): boolean {
     // Object has some built-in properties on its prototype, such as toString.  hasOwnProperty makes
     // sure that key is present on childrenData itself, not on its prototype.
     return Object.prototype.hasOwnProperty.call(this.childrenData, key);
   }
 
-  getChildData(key: string): NodeData {
+  getChildData(key: Key): NodeData {
     return this.hasChildData(key) ? this.childrenData[key] : {};
   }
 
-  setChildData(key: string, data: NodeData): void {
+  setChildData(key: Key, data: NodeData): void {
     this.childrenData[key] = { ...this.getChildData(key), ...data };
   }
 
-  removeChildData(key: string): void {
+  removeChildData(key: Key): void {
     delete this.childrenData[key];
     this.setState(prevState => ({
       ...prevState,
-      children: prevState.children.filter(child => child.key !== key),
+      children: prevState.children.filter(child => child.element.key !== key),
     }));
   }
 
@@ -639,7 +647,7 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     const isContainerAList = typeName === 'ul' || typeName === 'ol';
     const placeholderType = isContainerAList ? 'li' : 'div';
 
-    return React.createElement(
+    return createElement(
       placeholderType,
       {
         key: 'height-placeholder',
@@ -654,8 +662,8 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
     // underlying DOM node. Flip Move needs to use the React escape hatches to
     // be able to do its calculations.
     return this.state.children.map(child => (
-      React.cloneElement(child.element, {
-        ref: (element: HTMLElement | Component<*, *, *>) => {
+      cloneElement(child.element, {
+        ref: (element: ?ElementRef<*>) => {
           // Stateless Functional Components are not supported by FlipMove,
           // because they don't have instances.
           if (!element) {
@@ -677,20 +685,20 @@ class FlipMove extends Component<void, ConvertedProps, FlipMoveState> {
       maintainContainerHeight,
     } = this.props;
 
-    const props: DelegatedProps = {
-      ...delegated,
-      ref: (node: ?HTMLElement) => { this.parentData.domNode = node; },
-    };
-
     const children = this.childrenWithRefs();
     if (leaveAnimation && maintainContainerHeight) {
       children.push(this.createHeightPlaceholder());
     }
 
-    return React.createElement(
+    const props: DelegatedProps = {
+      ...delegated,
+      children,
+      ref: (node: ?HTMLElement) => { this.parentData.domNode = node; },
+    };
+
+    return createElement(
       typeName,
       props,
-      children
     );
   }
 }

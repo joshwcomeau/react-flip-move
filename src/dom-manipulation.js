@@ -8,7 +8,7 @@
  * only spot in the codebase with impure functions.
  */
 import { findDOMNode } from 'react-dom';
-import type { Component } from 'react';
+import type { ElementRef } from 'react';
 
 import { hyphenate } from './helpers';
 import type {
@@ -223,7 +223,7 @@ export const updateHeightPlaceholder = ({
   applyStylesToDOMNode({ domNode, styles });
 };
 
-export const getNativeNode = (element: HTMLElement | Component<*, *, *>): ?HTMLElement => {
+export const getNativeNode = (element: ElementRef<*>): ?HTMLElement => {
   // When running in a windowless environment, abort!
   if (typeof HTMLElement === 'undefined') {
     return null;
