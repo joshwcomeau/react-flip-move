@@ -20,17 +20,19 @@ import type {
   ConvertedProps,
 } from './typings';
 
-export function applyStylesToDOMNode({ domNode, styles }: {
+export function applyStylesToDOMNode({
+  domNode,
+  styles,
+}: {
   domNode: HTMLElement,
   styles: Styles,
 }) {
   // Can't just do an object merge because domNode.styles is no regular object.
   // Need to do it this way for the engine to fire its `set` listeners.
-  Object.keys(styles).forEach((key) => {
+  Object.keys(styles).forEach(key => {
     domNode.style.setProperty(hyphenate(key), styles[key]);
   });
 }
-
 
 // Modified from Modernizr
 export function whichTransitionEvent(): string {
@@ -47,15 +49,14 @@ export function whichTransitionEvent(): string {
 
   const el = document.createElement('fakeelement');
 
-  const match = Object.keys(transitions).find(t => (
-    el.style.getPropertyValue(t) !== undefined
-  ));
+  const match = Object.keys(transitions).find(
+    t => el.style.getPropertyValue(t) !== undefined,
+  );
 
   // If no `transition` is found, we must be running in a browser so ancient,
   // React itself won't run. Return an empty string, for consistent type return
   return match ? transitions[match] : '';
 }
-
 
 export const getRelativeBoundingBox = ({
   childDomNode,
@@ -79,7 +80,6 @@ export const getRelativeBoundingBox = ({
   };
 };
 
-
 /** getPositionDelta
  * This method returns the delta between two bounding boxes, to figure out
  * how many pixels on each axis the element has moved.
@@ -98,7 +98,14 @@ export const getPositionDelta = ({
 }): [number, number] => {
   // TEMP: A mystery bug is sometimes causing unnecessary boundingBoxes to
   // remain. Until this bug can be solved, this band-aid fix does the job:
-  const defaultBox: ClientRect = { top: 0, left: 0, right: 0, bottom: 0, height: 0, width: 0 };
+  const defaultBox: ClientRect = {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 0,
+    width: 0,
+  };
 
   // Our old box is its last calculated position, derived on mount or at the
   // start of the previous animation.
@@ -121,7 +128,6 @@ export const getPositionDelta = ({
   ];
 };
 
-
 /** removeNodeFromDOMFlow
  * This method does something very sneaky: it removes a DOM node from the
  * document flow, but without actually changing its on-screen position.
@@ -134,7 +140,7 @@ export const getPositionDelta = ({
  */
 export const removeNodeFromDOMFlow = (
   childData: NodeData,
-  verticalAlignment: VerticalAlignment
+  verticalAlignment: VerticalAlignment,
 ) => {
   const { domNode, boundingBox } = childData;
 
@@ -163,9 +169,10 @@ export const removeNodeFromDOMFlow = (
   // top offset. This is because, when the container is bottom-aligned, its
   // height shrinks from the top, not the bottom. We're removing this node
   // from the flow, so the top is going to drop by its height.
-  const topOffset = verticalAlignment === 'bottom'
-    ? boundingBox.top - boundingBox.height
-    : boundingBox.top;
+  const topOffset =
+    verticalAlignment === 'bottom'
+      ? boundingBox.top - boundingBox.height
+      : boundingBox.top;
 
   const styles: Styles = {
     position: 'absolute',
@@ -247,7 +254,10 @@ export const getNativeNode = (element: ElementRef<*>): ?HTMLElement => {
   return foundNode;
 };
 
-export const createTransitionString = (index: number, props: ConvertedProps): string => {
+export const createTransitionString = (
+  index: number,
+  props: ConvertedProps,
+): string => {
   let { delay, duration } = props;
   const { staggerDurationBy, staggerDelayBy, easing } = props;
 
