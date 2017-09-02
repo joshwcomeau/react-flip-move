@@ -4,15 +4,11 @@ import { storiesOf } from '@kadira/storybook';
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
 import FlipMoveListItem from './helpers/FlipMoveListItem';
 
-['div', FlipMoveListItem].forEach((type) => {
+['div', FlipMoveListItem].forEach(type => {
   const typeLabel = type === 'div' ? 'native' : 'composite';
 
   storiesOf(`Appear Animations - ${typeLabel}`, module)
-    .add('Default (disabled)', () => (
-      <FlipMoveWrapper
-        itemType={type}
-      />
-    ))
+    .add('Default (disabled)', () => <FlipMoveWrapper itemType={type} />)
     .add('preset - elevator', () => (
       <FlipMoveWrapper
         itemType={type}

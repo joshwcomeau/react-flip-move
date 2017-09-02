@@ -3,13 +3,8 @@ import { storiesOf } from '@kadira/storybook';
 
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
 
-storiesOf('Invalid', module)
-  .add('Stateless Functional Components', () => {
-    const MyComponent = () => <div>Hello there!</div>;
+storiesOf('Invalid', module).add('Stateless Functional Components', () => {
+  const MyComponent = () => <div>Hello there!</div>;
 
-    return (
-      <FlipMoveWrapper
-        itemType={MyComponent}
-      />
-    );
-  });
+  return <FlipMoveWrapper itemType={MyComponent} />;
+});

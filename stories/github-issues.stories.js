@@ -1,23 +1,20 @@
+/* eslint-disable no-plusplus */
 import React, { Component } from 'react';
-import { storiesOf, action } from '@kadira/storybook';
-import shuffle from 'lodash/shuffle';
-import sampleSize from 'lodash/sampleSize';
+import { storiesOf } from '@kadira/storybook';
 import range from 'lodash/range';
 
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
-import FlipMove from '../src/FlipMove.js';
+import FlipMove from '../src/FlipMove';
 
-const items = [
+const sampleItems = [
   { name: 'Potent Potables' },
   { name: 'The Pen is Mightier' },
   { name: 'Famous Horsemen' },
-  { name: 'A Petit Déjeuner' }
-]
+  { name: 'A Petit Déjeuner' },
+];
 
 storiesOf('Github Issues', module)
-  .add('#31', () => (
-    <Controls duration={400} />
-  ))
+  .add('#31', () => <Controls duration={400} />)
   .add('#120', () => {
     class Example extends React.Component {
       counter = 0;
@@ -32,22 +29,22 @@ storiesOf('Github Issues', module)
       onRemoveItem = () => {
         const { items } = this.state;
         this.setState({
-          items: items.slice(0, items.length - 1),
+          items: sampleItems.slice(0, items.length - 1),
         });
       };
 
       onAddItem = () => {
         this.setState({
-          items: this.state.items.concat(['item' + ++this.counter]),
+          items: this.state.items.concat([`item${++this.counter}`]),
         });
       };
 
       handleAddItems = calls => {
-        let items = [];
+        const items = [];
         for (let i = 0; i < calls; i++) {
-          items.push('item' + ++this.counter);
+          items.push(`item${++this.counter}`);
         }
-        this.setState(prevState => ({
+        this.setState(() => ({
           items,
         }));
       };
@@ -91,11 +88,11 @@ storiesOf('Github Issues', module)
                 },
               }}
             >
-              {items.map(item =>
+              {items.map(item => (
                 <li key={item} id={item}>
                   {item}
-                </li>,
-              )}
+                </li>
+              ))}
             </FlipMove>
           </div>
         );
@@ -105,58 +102,55 @@ storiesOf('Github Issues', module)
     return (
       <div>
         <legend>
-          Spam "add many items" button, then inspect first element. it will be
-          overlayed by a zombie element that wasnt correctle removed from the
-          DOM
+          Spam &quot;add many items&quot; button, then inspect first element. it
+          will be overlayed by a zombie element that wasnt correctle removed
+          from the DOM
         </legend>
         <Example />
       </div>
     );
   })
-  .add('#141', () => {
-    let count = 0;
-    return (
-      <FlipMoveWrapper
-        items={range(100).map(i => {return {id: `${i}`, text: `Header ${i}`}})}
-        flipMoveContainerStyles={{
-          position: 'relative',
-          height: '500px',
-          overflow: 'scroll'
-        }}
-        listItemStyles={{
-          position: 'sticky',
-          top: 0,
-          height: 20,
-          backgroundColor: 'black',
-          color: 'white'
-        }}
-      />
-    )
-  });
+  .add('#141', () => (
+    <FlipMoveWrapper
+      items={range(100).map(i => ({ id: `${i}`, text: `Header ${i}` }))}
+      flipMoveContainerStyles={{
+        position: 'relative',
+        height: '500px',
+        overflow: 'scroll',
+      }}
+      listItemStyles={{
+        position: 'sticky',
+        top: 0,
+        height: 20,
+        backgroundColor: 'black',
+        color: 'white',
+      }}
+    />
+  ));
 
-
+// eslint-disable-next-line react/no-multi-comp
 class Controls extends Component {
   constructor() {
     super();
-    this.state = { items: items.slice() }
+    this.state = { items: [...sampleItems] };
   }
 
-  buttonClickHandler() {
-    let newItems = this.state.items.slice();
+  buttonClickHandler = () => {
+    const newItems = this.state.items.slice();
     newItems.splice(1, 1);
 
     this.setState({ items: newItems });
-  }
+  };
 
-  listItemClickHandler(clickedItem) {
+  listItemClickHandler = clickedItem => {
     this.setState({
-      items: this.state.items.filter( item => item !== clickedItem )
+      items: this.state.items.filter(item => item !== clickedItem),
     });
-  }
+  };
 
-  restore() {
-    this.setState({ items })
-  }
+  restore = () => {
+    this.setState({ items: sampleItems });
+  };
 
   renderItems() {
     const answerWrapperStyle = {
@@ -164,13 +158,14 @@ class Controls extends Component {
       borderRadius: '20px',
       padding: '1em 2em',
       marginBottom: '1em',
-      minWidth: 400
-    }
+      minWidth: 400,
+    };
 
     const answerStyle = {
-      fontSize: '16px'
-    }
-    return this.state.items.map( item => (
+      fontSize: '16px',
+    };
+    return this.state.items.map(item => (
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
         style={answerWrapperStyle}
         key={item.name}
@@ -178,23 +173,25 @@ class Controls extends Component {
       >
         <div style={answerStyle}>{item.name}</div>
       </div>
-    ))
+    ));
   }
 
   render() {
     return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        minHeight: '600px',
-        background: '#DDD'
-      }}>
-        <div style={{marginBottom: '50px'}}>
-          <button onClick={::this.buttonClickHandler}>Remove</button>
-          <button onClick={::this.restore}>add</button>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          minHeight: '600px',
+          background: '#DDD',
+        }}
+      >
+        <div style={{ marginBottom: '50px' }}>
+          <button onClick={this.buttonClickHandler}>Remove</button>
+          <button onClick={this.restore}>add</button>
         </div>
         <FlipMove enterAnimation="elevator" leaveAnimation="elevator">
-          { this.renderItems() }
+          {this.renderItems()}
         </FlipMove>
       </div>
     );

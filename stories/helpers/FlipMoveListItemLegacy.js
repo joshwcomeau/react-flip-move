@@ -2,16 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import createClass from 'create-react-class';
 
-// eslint-disable-next-line react/prefer-stateless-function
+// eslint-disable-next-line
 const FlipMoveListItemLegacy = createClass({
   render() {
+    // eslint-disable-next-line react/prop-types
     const { style, children } = this.props;
 
-    return (
-      <div style={style}>
-        {children}
-      </div>
-    );
+    return <div style={style}>{children}</div>;
   },
 });
 

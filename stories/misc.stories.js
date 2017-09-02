@@ -5,7 +5,7 @@ import FlipMove from '../src';
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
 import FlipMoveListItem from './helpers/FlipMoveListItem';
 
-['div', FlipMoveListItem].forEach((type) => {
+['div', FlipMoveListItem].forEach(type => {
   const typeLabel = type === 'div' ? 'native' : 'composite';
 
   storiesOf(`Misc - ${typeLabel}`, module)
@@ -49,8 +49,14 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
           { id: 'a', text: "7 Insecticides You Don't Know You're Consuming" },
           { id: 'b', text: '11 Ways To Style Your Hair' },
           { text: 'This item has no key' },
-          { id: 'c', text: 'The 200 Countries You Have To Visit Before The Apocalypse' },
-          { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product' },
+          {
+            id: 'c',
+            text: 'The 200 Countries You Have To Visit Before The Apocalypse',
+          },
+          {
+            id: 'd',
+            text: 'Turtles: The Unexpected Miracle Anti-Aging Product',
+          },
         ]}
       />
     ))
@@ -61,8 +67,14 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
           { id: 'a', text: "7 Insecticides You Don't Know You're Consuming" },
           { id: 'b', text: '11 Ways To Style Your Hair' },
           null,
-          { id: 'c', text: 'The 200 Countries You Have To Visit Before The Apocalypse' },
-          { id: 'd', text: 'Turtles: The Unexpected Miracle Anti-Aging Product' },
+          {
+            id: 'c',
+            text: 'The 200 Countries You Have To Visit Before The Apocalypse',
+          },
+          {
+            id: 'd',
+            text: 'Turtles: The Unexpected Miracle Anti-Aging Product',
+          },
         ]}
       />
     ))
@@ -74,9 +86,7 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
             return null;
           }
 
-          return (
-            <div>{this.props.children}</div>
-          );
+          return <div>{this.props.children}</div>;
         }
       }
       /* eslint-enable */

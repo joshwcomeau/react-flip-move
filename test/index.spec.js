@@ -96,7 +96,7 @@ describe('FlipMove', () => {
             onFinish={this.onFinishHandler}
             onFinishAll={finishAllStub}
           >
-            { this.renderArticles() }
+            {this.renderArticles()}
           </FlipMove>
         </ul>
       );
@@ -107,10 +107,7 @@ describe('FlipMove', () => {
   const container = document.createElement('div');
   document.body.appendChild(container);
   function mountAttached(props) {
-    attachedWrapper = mount(
-      <ListParent {...props} />,
-      { attachTo: container }
-    );
+    attachedWrapper = mount(<ListParent {...props} />, { attachTo: container });
   }
 
   afterEach(() => {
@@ -122,8 +119,12 @@ describe('FlipMove', () => {
 
   it('renders the children components', () => {
     const wrapper = mount(<ListParent />);
-    expect(wrapper).to.have.exactly(3).descendants(ListItem);
-    expect(wrapper).to.have.exactly(3).descendants('li');
+    expect(wrapper)
+      .to.have.exactly(3)
+      .descendants(ListItem);
+    expect(wrapper)
+      .to.have.exactly(3)
+      .descendants('li');
 
     const outputComponents = wrapper.find(ListItem);
 
@@ -156,7 +157,7 @@ describe('FlipMove', () => {
       expect(outputTags.at(2)).to.have.id('a');
     });
 
-    it('doesn\'t actually move the elements on-screen synchronously', () => {
+    it("doesn't actually move the elements on-screen synchronously", () => {
       // The animation has not started yet.
       // While the DOM nodes might have changed places, their on-screen
       // positions should be consistent with where they started.
@@ -167,7 +168,7 @@ describe('FlipMove', () => {
       expect(newPositions).to.deep.equal(originalPositions);
     });
 
-    it('stacks all the elements on top of each other after 250ms', (done) => {
+    it('stacks all the elements on top of each other after 250ms', done => {
       // We know the total duration of the animation is 500ms.
       // Three items are being re-arranged; top and bottom changing places.
       // Therefore, if we wait 250ms, all 3 items should be stacked.
@@ -188,7 +189,7 @@ describe('FlipMove', () => {
       }, 250);
     });
 
-    it('finishes the animation after 750ms', (done) => {
+    it('finishes the animation after 750ms', done => {
       // Waiting 750ms. Giving a buffer because
       // Travis is slowwww
       setTimeout(() => {
@@ -218,14 +219,14 @@ describe('FlipMove', () => {
       expect(attachedWrapper.instance().count).to.equal(-2);
     });
 
-    it('should fire onFinish after the animation', (done) => {
+    it('should fire onFinish after the animation', done => {
       setTimeout(() => {
         expect(attachedWrapper.instance().count).to.equal(0);
         done();
       }, 750);
     });
 
-    it('should fire the onFinishAll stub only once', (done) => {
+    it('should fire the onFinishAll stub only once', done => {
       setTimeout(() => {
         expect(finishAllStub).to.have.been.calledOnce;
         done();
@@ -254,10 +255,14 @@ describe('FlipMove', () => {
       warnStub.restore();
     });
 
-    it('doesn\'t run checks in production environment', () => {
+    it("doesn't run checks in production environment", () => {
       process.env = { NODE_ENV: 'production' };
 
-      shallow(<FlipMove><SFC key="hi" /></FlipMove>);
+      shallow(
+        <FlipMove>
+          <SFC key="hi" />
+        </FlipMove>,
+      );
       shallow(<FlipMove>hi</FlipMove>);
       shallow(<FlipMove disableAnimations />);
       shallow(<FlipMove duration="hi" />);
@@ -297,8 +302,12 @@ As a result,  the default value for this parameter will be used, which is '350'.
     });
 
     describe('unsupported children', () => {
-      it('doesn\'t warn about SFC without key', () => {
-        shallow(<FlipMove><SFC /></FlipMove>);
+      it("doesn't warn about SFC without key", () => {
+        shallow(
+          <FlipMove>
+            <SFC />
+          </FlipMove>,
+        );
         expect(warnStub).to.not.have.been.called;
       });
 
@@ -307,7 +316,7 @@ As a result,  the default value for this parameter will be used, which is '350'.
           <FlipMove>
             <SFC key="foo" />
             <SFC key="bar" />
-          </FlipMove>
+          </FlipMove>,
         );
         expect(warnStub).to.have.been.calledOnce;
         expect(warnStub).to.have.been.calledWith(`
@@ -325,7 +334,7 @@ Please wrap your components in a native element (eg. <div>), or a non-functional
             hi
             <div key="foo" />
             hi
-          </FlipMove>
+          </FlipMove>,
         );
         expect(warnStub).to.have.been.calledOnce;
         expect(warnStub).to.have.been.calledWith(`
@@ -337,8 +346,12 @@ Please wrap your value in a native element (eg. <span>), or a component.
 `);
       });
 
-      it('doesn\'t warn when key is present', () => {
-        shallow(<FlipMove><div key="hi" /></FlipMove>);
+      it("doesn't warn when key is present", () => {
+        shallow(
+          <FlipMove>
+            <div key="hi" />
+          </FlipMove>,
+        );
         expect(warnStub).to.not.have.been.called;
       });
     });
@@ -353,7 +366,7 @@ Please wrap your value in a native element (eg. <span>), or a component.
         expect(errorStub).to.not.have.been.called;
       });
 
-      it('transitions without issue', (done) => {
+      it('transitions without issue', done => {
         setTimeout(() => {
           expect(errorStub).to.not.have.been.called;
           done();
@@ -383,7 +396,7 @@ This will become a silent error in future versions of react-flip-move.
               from: { opacity: '0' },
               to: { opacity: '0.5' },
             }}
-          />
+          />,
         );
         expect(errorStub).to.not.have.been.called;
         expect(wrapper.prop('appearAnimation')).to.deep.equal({
@@ -395,19 +408,25 @@ This will become a silent error in future versions of react-flip-move.
       it('uses default preset when value is `true`', () => {
         const wrapper = shallow(<FlipMove appearAnimation />);
         expect(errorStub).to.not.have.been.called;
-        expect(wrapper.prop('appearAnimation')).to.deep.equal(appearPresets[defaultPreset]);
+        expect(wrapper.prop('appearAnimation')).to.deep.equal(
+          appearPresets[defaultPreset],
+        );
       });
 
       it('uses empty preset when value is `false`', () => {
         const wrapper = shallow(<FlipMove appearAnimation={false} />);
         expect(errorStub).to.not.have.been.called;
-        expect(wrapper.prop('appearAnimation')).to.deep.equal(appearPresets[disablePreset]);
+        expect(wrapper.prop('appearAnimation')).to.deep.equal(
+          appearPresets[disablePreset],
+        );
       });
 
       it('finds a preset by name', () => {
         const wrapper = shallow(<FlipMove appearAnimation="fade" />);
         expect(errorStub).to.not.have.been.called;
-        expect(wrapper.prop('appearAnimation')).to.deep.equal(appearPresets.fade);
+        expect(wrapper.prop('appearAnimation')).to.deep.equal(
+          appearPresets.fade,
+        );
       });
 
       it('throws on an unknown preset', () => {
@@ -419,7 +438,9 @@ The enter/leave preset you provided is invalid. We don't currently have a 'unkno
 
 Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, none. The default value of 'elevator' will be used.
 `);
-        expect(wrapper.prop('appearAnimation')).to.deep.equal(appearPresets[defaultPreset]);
+        expect(wrapper.prop('appearAnimation')).to.deep.equal(
+          appearPresets[defaultPreset],
+        );
       });
     });
   });
@@ -455,7 +476,9 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
     });
 
     it('should be maintained', () => {
-      expect(containerBox.height).to.equal(getContainerBox(attachedWrapper).height);
+      expect(containerBox.height).to.equal(
+        getContainerBox(attachedWrapper).height,
+      );
     });
   });
 });

@@ -5,21 +5,15 @@ import FlipMoveWrapper from './helpers/FlipMoveWrapper';
 import FlipMoveListItem from './helpers/FlipMoveListItem';
 import FlipMoveListItemLegacy from './helpers/FlipMoveListItemLegacy';
 
-
 storiesOf('Basic Behaviour', module)
-  .add('native (<div>) children', () => (
-    <FlipMoveWrapper />
-  ))
+  .add('native (<div>) children', () => <FlipMoveWrapper />)
   .add('composite (<FlipMoveListItem>) children', () => (
-    <FlipMoveWrapper
-      itemType={FlipMoveListItem}
-    />
+    <FlipMoveWrapper itemType={FlipMoveListItem} />
   ))
-  .add('Original composite (<FlipMoveListItemLegacy>) children (createClass)', () => (
-    <FlipMoveWrapper
-      itemType={FlipMoveListItemLegacy}
-    />
-  ))
+  .add(
+    'Original composite (<FlipMoveListItemLegacy>) children (createClass)',
+    () => <FlipMoveWrapper itemType={FlipMoveListItemLegacy} />,
+  )
   .add('with long duration', () => (
     <FlipMoveWrapper
       itemType={FlipMoveListItem}
@@ -34,17 +28,16 @@ storiesOf('Basic Behaviour', module)
   ));
 
 const easings = ['linear', 'ease-in', 'ease-out', 'cubic-bezier(1,0,0,1)'];
-easings.forEach((easing) => {
-  storiesOf('Easings', module)
-    .add(easing, () => (
-      <FlipMoveWrapper
-        itemType={FlipMoveListItem}
-        flipMoveProps={{
-          easing,
-          duration: 850,
-        }}
-      />
-    ));
+easings.forEach(easing => {
+  storiesOf('Easings', module).add(easing, () => (
+    <FlipMoveWrapper
+      itemType={FlipMoveListItem}
+      flipMoveProps={{
+        easing,
+        duration: 850,
+      }}
+    />
+  ));
 });
 
 storiesOf('Staggers', module)

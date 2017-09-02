@@ -31,7 +31,8 @@ export const invalidTypeForTimingProp = (args: {
   prop: string,
   value: string | number,
   defaultValue: number,
-}) => console.error(`
+}) =>
+  console.error(`
 >> Error, via react-flip-move <<
 
 The prop you provided for '${args.prop}' is invalid. It needs to be a positive integer, or a string that can be resolved to a number. The value you provided is '${args.value}'.
@@ -51,7 +52,8 @@ export const invalidEnterLeavePreset = (args: {
   value: string,
   acceptableValues: string,
   defaultValue: $Keys<Presets>,
-}) => console.error(`
+}) =>
+  console.error(`
 >> Error, via react-flip-move <<
 
 The enter/leave preset you provided is invalid. We don't currently have a '${args.value} preset.'

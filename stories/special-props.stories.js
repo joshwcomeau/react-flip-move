@@ -4,7 +4,6 @@ import { storiesOf } from '@kadira/storybook';
 
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
 
-
 storiesOf('Special Props', module)
   .add('maintainContainerHeight (<div>)', () => (
     <FlipMoveWrapper
