@@ -1,0 +1,6 @@
+flow-typed
+coverage
+lib
+dist
+flow-coverage
+!.storybook
