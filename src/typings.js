@@ -10,8 +10,7 @@ import type {
   ChildrenHook,
   GetPosition,
   VerticalAlignment,
-  FlipMoveDefaultProps,
-  Hooks,
+  CommonProps,
   DelegatedProps,
   FlipMoveProps,
 } from 'react-flip-move'; // eslint-disable-line import/extensions
@@ -26,27 +25,19 @@ export type {
   ChildrenHook,
   GetPosition,
   VerticalAlignment,
-  FlipMoveDefaultProps,
-  Hooks,
+  CommonProps,
   DelegatedProps,
   FlipMoveProps,
 };
 
-export type ConvertedProps = Hooks & {
-  children: mixed,
-  easing: string,
+export type ConvertedProps = CommonProps & {
   duration: number,
   delay: number,
   staggerDurationBy: number,
   staggerDelayBy: number,
-  typeName: string,
   appearAnimation: ?Animation,
   enterAnimation: ?Animation,
   leaveAnimation: ?Animation,
-  disableAllAnimations: boolean,
-  getPosition: GetPosition,
-  maintainContainerHeight: boolean,
-  verticalAlignment: VerticalAlignment,
   delegated: DelegatedProps,
 };
 
