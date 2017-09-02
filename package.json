@@ -11,7 +11,7 @@
     "typings"
   ],
   "scripts": {
-    "lint": "eslint src stories test",
+    "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "build:lib": "babel src --out-dir lib",
     "build:umd": "webpack src/index.js dist/react-flip-move.js --config webpack.config.production.js",

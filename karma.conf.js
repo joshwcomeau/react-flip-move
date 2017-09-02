@@ -1,13 +1,10 @@
 // Karma configuration
-// var webpack = require('webpack');
+const karmaWebpack = require('karma-webpack');
 
-module.exports = function(config) {
-  'use strict';
-
-  var configuration = {
+module.exports = function createConfig(config) {
+  const configuration = {
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
-
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -15,15 +12,12 @@ module.exports = function(config) {
 
     client: {
       mocha: {
-        ui: 'bdd'
-      }
+        ui: 'bdd',
+      },
     },
 
     // list of files / patterns to load in the browser
-    files: [
-      'test/**/*.spec.js'
-    ],
-
+    files: ['test/**/*.spec.js'],
 
     webpack: {
       devtool: 'inline-source-map',
@@ -31,11 +25,11 @@ module.exports = function(config) {
       module: {
         loaders: [
           {
-            test:     /\.jsx?$/,
-            loader:   'babel',
-            exclude:  /node_modules/
-          }
-        ]
+            test: /\.jsx?$/,
+            loader: 'babel',
+            exclude: /node_modules/,
+          },
+        ],
       },
 
       externals: {
@@ -44,17 +38,14 @@ module.exports = function(config) {
         'react/lib/ExecutionEnvironment': true,
         'react/lib/ReactContext': true,
         'react-addons-test-utils': true,
-      }
+      },
     },
 
-
     // list of files to exclude
-    exclude: [
-    ],
-
+    exclude: [],
 
     plugins: [
-      require("karma-webpack"),
+      karmaWebpack,
       'karma-mocha',
       'karma-sinon-chai',
       'karma-sourcemap-loader',
@@ -62,37 +53,30 @@ module.exports = function(config) {
       'karma-coverage',
     ],
 
-
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'src/**/*.js': ['webpack', 'sourcemap'],
-      'test/**/*.js': ['webpack', 'sourcemap']
+      'test/**/*.js': ['webpack', 'sourcemap'],
     },
-
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress', 'coverage'],
 
-
     // web server port
     port: 9876,
 
-
     // enable / disable colors in the output (reporters and logs)
     colors: true,
-
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_INFO,
 
-
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
-
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
@@ -101,8 +85,8 @@ module.exports = function(config) {
     customLaunchers: {
       Chrome_travis_ci: {
         base: 'Chrome',
-        flags: ['--no-sandbox']
-      }
+        flags: ['--no-sandbox'],
+      },
     },
 
     // Continuous Integration mode
@@ -111,12 +95,12 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
-  }
+    concurrency: Infinity,
+  };
 
-  if ( process.env.TRAVIS ) {
+  if (process.env.TRAVIS) {
     configuration.browsers = ['Chrome_travis_ci'];
   }
 
   config.set(configuration);
-}
+};
