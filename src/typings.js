@@ -1,6 +1,7 @@
 // @flow
 import type { Element } from 'react';
 import type {
+  Child,
   Styles,
   Animation,
   Presets,
@@ -16,6 +17,7 @@ import type {
 } from 'react-flip-move'; // eslint-disable-line import/extensions
 
 export type {
+  Child,
   Styles,
   Animation,
   Presets,

@@ -90,7 +90,8 @@ function propConverter(
       // If the child doesn't have a key, it means we aren't animating it.
       // It's allowed to be an SFC, since we ignore it.
       Children.forEach(children, (child: Child) => {
-        if (child == null) {
+        // null, undefined, and booleans will be filtered out by Children.toArray
+        if (child == null || typeof child === 'boolean') {
           return;
         }
 

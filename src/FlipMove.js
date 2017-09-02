@@ -10,7 +10,7 @@
 
 import { Children, cloneElement, createElement, Component } from 'react';
 // eslint-disable-next-line no-duplicate-imports
-import type { Element, ElementRef, Key } from 'react';
+import type { Element, ElementRef, Key, ChildrenArray } from 'react';
 
 import './polyfills';
 import propConverter from './prop-converter';
@@ -26,6 +26,7 @@ import {
 } from './dom-manipulation';
 import { arraysEqual } from './helpers';
 import type {
+  Child,
   ConvertedProps,
   FlipMoveState,
   ElementShape,
@@ -43,6 +44,12 @@ function getKey(childData: ChildData): Key {
   return childData.key || '';
 }
 
+function getElementChildren(children: ChildrenArray<Child>): Array<Element<*>> {
+  // Fix incomplete typing of Children.toArray
+  // eslint-disable-next-line flowtype/no-weak-types
+  return (Children.toArray(children): any);
+}
+
 class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   // Copy props.children into state.
   // To understand why this is important (and not an anti-pattern), consider
@@ -53,7 +60,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   // can complete. Because we cannot mutate props, we make `state` the source
   // of truth.
   state = {
-    children: Children.toArray(
+    children: getElementChildren(
       this.props.children,
     ).map((element: Element<*>) => ({
       ...element,
@@ -122,7 +129,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     this.updateBoundingBoxCaches();
 
     // Convert opaque children object to array.
-    const nextChildren: Array<Element<*>> = Children.toArray(
+    const nextChildren: Array<Element<*>> = getElementChildren(
       nextProps.children,
     );
 
@@ -147,10 +154,10 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     // At the end of the transition, we clean up nodes that need to be removed.
     // We DON'T want this cleanup to trigger another update.
 
-    const oldChildrenKeys: Array<?Key> = Children.toArray(
+    const oldChildrenKeys: Array<?Key> = getElementChildren(
       this.props.children,
     ).map((d: Element<*>) => d.key);
-    const nextChildrenKeys: Array<?Key> = Children.toArray(
+    const nextChildrenKeys: Array<?Key> = getElementChildren(
       previousProps.children,
     ).map((d: Element<*>) => d.key);
 
@@ -240,7 +247,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
 
     // Start by marking new children as 'entering'
     const updatedChildren: Array<ChildData> = nextChildren.map(nextChild => {
-      const child = this.findChildByKey(nextChild.key || '');
+      const child = this.findChildByKey(nextChild.key);
 
       // If the current child did exist, but it was in the midst of leaving,
       // we want to treat it as though it's entering
@@ -450,6 +457,8 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
         .filter(({ leaving }) => !leaving)
         .map((item: ChildData) => ({
           ...item,
+          // fix for Flow
+          element: item.element,
           appearing: false,
           entering: false,
         }));
@@ -600,7 +609,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     );
   }
 
-  findChildByKey(key: Key): ?ChildData {
+  findChildByKey(key: ?Key): ?ChildData {
     return this.state.children.find(child => getKey(child) === key);
   }
 

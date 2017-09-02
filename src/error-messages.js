@@ -22,7 +22,7 @@ Please wrap your components in a native element (eg. <div>), or a non-functional
 export const primitiveNodeSupplied = warnOnce(`
 >> Error, via react-flip-move <<
 
-You provided a primitive (text, number, or boolean) node as a child to <FlipMove>. Flip Move needs containers with unique keys to move children around.
+You provided a primitive (text or number) node as a child to <FlipMove>. Flip Move needs containers with unique keys to move children around.
 
 Please wrap your value in a native element (eg. <span>), or a component.
 `);
