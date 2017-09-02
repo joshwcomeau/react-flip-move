@@ -1,3 +1,5 @@
+import type { ComponentType, Element, Node } from 'react';
+
 declare module 'react-flip-move' {
   declare export type Styles = {
     [key: string]: string,
@@ -33,16 +35,16 @@ declare module 'react-flip-move' {
 
   // can't use $Shape<React$Element<*>> here, because we use it in intersection
   declare export type ElementShape = {
-    type: $PropertyType<React$Element<*>, 'type'>,
-    props: $PropertyType<React$Element<*>, 'props'>,
-    key: $PropertyType<React$Element<*>, 'key'>,
-    ref: $PropertyType<React$Element<*>, 'ref'>,
+    type: $PropertyType<Element<*>, 'type'>,
+    props: $PropertyType<Element<*>, 'props'>,
+    key: $PropertyType<Element<*>, 'key'>,
+    ref: $PropertyType<Element<*>, 'ref'>,
   };
 
   declare type ChildHook = (element: ElementShape, node: ?HTMLElement) => mixed;
 
   declare export type ChildrenHook = (
-    elements: Array<ElementShape>,
+    elements: Array<Element<*>>,
     nodes: Array<?HTMLElement>
   ) => mixed;
 
@@ -50,23 +52,14 @@ declare module 'react-flip-move' {
 
   declare export type VerticalAlignment = 'top' | 'bottom';
 
-  // this one cannot use intersection, see https://github.com/facebook/flow/issues/2904
-  declare export type FlipMoveDefaultProps = {
+  declare export type CommonProps = {
+    children: Node,
     easing: string,
-    duration: string | number,
-    delay: string | number,
-    staggerDurationBy: string | number,
-    staggerDelayBy: string | number,
     typeName: string,
-    enterAnimation: AnimationProp,
-    leaveAnimation: AnimationProp,
     disableAllAnimations: boolean,
     getPosition: GetPosition,
     maintainContainerHeight: boolean,
     verticalAlignment: VerticalAlignment,
-  };
-
-  declare export type Hooks = {
     onStart?: ChildHook,
     onFinish?: ChildHook,
     onStartAll?: ChildrenHook,
@@ -77,11 +70,16 @@ declare module 'react-flip-move' {
     style?: ReactStyles,
   };
 
-  declare export type FlipMoveProps = FlipMoveDefaultProps & Hooks & DelegatedProps & {
-    children?: mixed,
+  declare export type FlipMoveProps = CommonProps & DelegatedProps & {
+    duration: string | number,
+    delay: string | number,
+    staggerDurationBy: string | number,
+    staggerDelayBy: string | number,
+    enterAnimation: AnimationProp,
+    leaveAnimation: AnimationProp,
     appearAnimation?: AnimationProp,
     disableAnimations?: boolean, // deprecated, use disableAllAnimations instead
   };
 
-  declare export default Class<React$Component<FlipMoveDefaultProps, FlipMoveProps, void>>;
+  declare export default ComponentType<FlipMoveProps>;
 }

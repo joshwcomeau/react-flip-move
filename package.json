@@ -79,7 +79,7 @@
     "eslint-plugin-prettier": "^2.2.0",
     "eslint-plugin-react": "6.10.3",
     "eslint-plugin-sort-class-members": "1.1.1",
-    "flow-bin": "0.45.0",
+    "flow-bin": "0.54.0",
     "flow-coverage-report": "0.3.0",
     "husky": "0.14.1",
     "karma": "0.13.19",
