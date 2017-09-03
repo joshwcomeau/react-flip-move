@@ -1,17 +1,15 @@
-import type { ComponentType, Element, Node } from 'react';
-
-declare module 'react-flip-move' {
+declare module "react-flip-move" {
   declare export type Styles = {
-    [key: string]: string,
+    [key: string]: string
   };
 
   declare type ReactStyles = {
-    [key: string]: string | number,
+    [key: string]: string | number
   };
 
   declare export type Animation = {
     from: Styles,
-    to: Styles,
+    to: Styles
   };
 
   declare export type Presets = {
@@ -19,7 +17,7 @@ declare module 'react-flip-move' {
     fade: Animation,
     accordionVertical: Animation,
     accordionHorizontal: Animation,
-    none: null,
+    none: null
   };
 
   declare export type AnimationProp = $Keys<Presets> | boolean | Animation;
@@ -30,56 +28,79 @@ declare module 'react-flip-move' {
     bottom: number,
     left: number,
     height: number,
-    width: number,
+    width: number
   };
 
   // can't use $Shape<React$Element<*>> here, because we use it in intersection
   declare export type ElementShape = {
-    type: $PropertyType<Element<*>, 'type'>,
-    props: $PropertyType<Element<*>, 'props'>,
-    key: $PropertyType<Element<*>, 'key'>,
-    ref: $PropertyType<Element<*>, 'ref'>,
+    +type: $PropertyType<React$Element<*>, "type">,
+    +props: $PropertyType<React$Element<*>, "props">,
+    +key: $PropertyType<React$Element<*>, "key">,
+    +ref: $PropertyType<React$Element<*>, "ref">
   };
 
   declare type ChildHook = (element: ElementShape, node: ?HTMLElement) => mixed;
 
   declare export type ChildrenHook = (
-    elements: Array<Element<*>>,
+    elements: Array<ElementShape>,
     nodes: Array<?HTMLElement>
   ) => mixed;
 
   declare export type GetPosition = (node: HTMLElement) => ClientRect;
 
-  declare export type VerticalAlignment = 'top' | 'bottom';
+  declare export type VerticalAlignment = "top" | "bottom";
 
-  declare export type CommonProps = {
-    children: Node,
+  declare export type Child = void | null | boolean | React$Element<*>;
+
+  // can't import from React, see https://github.com/facebook/flow/issues/4787
+  declare type ChildrenArray<T> = $ReadOnlyArray<ChildrenArray<T>> | T;
+
+  declare type BaseProps = {
     easing: string,
     typeName: string,
     disableAllAnimations: boolean,
     getPosition: GetPosition,
     maintainContainerHeight: boolean,
-    verticalAlignment: VerticalAlignment,
-    onStart?: ChildHook,
-    onFinish?: ChildHook,
-    onStartAll?: ChildrenHook,
-    onFinishAll?: ChildrenHook,
+    verticalAlignment: VerticalAlignment
   };
 
-  declare export type DelegatedProps = {
-    style?: ReactStyles,
-  };
-
-  declare export type FlipMoveProps = CommonProps & DelegatedProps & {
+  declare type PolymorphicProps = {
     duration: string | number,
     delay: string | number,
     staggerDurationBy: string | number,
     staggerDelayBy: string | number,
     enterAnimation: AnimationProp,
-    leaveAnimation: AnimationProp,
-    appearAnimation?: AnimationProp,
-    disableAnimations?: boolean, // deprecated, use disableAllAnimations instead
+    leaveAnimation: AnimationProp
   };
 
-  declare export default ComponentType<FlipMoveProps>;
+  declare type Hooks = {
+    onStart?: ChildHook,
+    onFinish?: ChildHook,
+    onStartAll?: ChildrenHook,
+    onFinishAll?: ChildrenHook
+  };
+
+  declare export type DelegatedProps = {
+    style?: ReactStyles
+  };
+
+  declare export type FlipMoveDefaultProps = BaseProps & PolymorphicProps;
+
+  declare export type CommonProps = BaseProps &
+    Hooks & {
+      children?: ChildrenArray<Child>
+    };
+
+  declare export type FlipMoveProps = FlipMoveDefaultProps &
+    CommonProps &
+    DelegatedProps & {
+      appearAnimation?: AnimationProp,
+      disableAnimations?: boolean // deprecated, use disableAllAnimations instead
+    };
+
+  declare class FlipMove extends React$Component<FlipMoveProps> {
+    static defaultProps: FlipMoveDefaultProps
+  }
+
+  declare export default typeof FlipMove
 }
