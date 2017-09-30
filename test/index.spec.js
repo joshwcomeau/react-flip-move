@@ -208,9 +208,8 @@ describe('FlipMove', () => {
 
   describe('callbacks', () => {
     beforeEach(() => {
-      mountAttached();
-      attachedWrapper.setProps({
-        articles: [...articles].reverse(),
+      attachedWrapper = mount(<ListParent articles={articles.reverse()} />, {
+        attachTo: container,
       });
     });
 
@@ -357,8 +356,12 @@ Please wrap your value in a native element (eg. <span>), or a component.
 
     describe('falsy children', () => {
       beforeEach(() => {
-        mountAttached();
-        attachedWrapper.setProps({ articles: [null, ...articles.slice(1)] });
+        attachedWrapper = mount(
+          <ListParent articles={[null, ...articles.slice(1)]} />,
+          {
+            attachTo: container,
+          },
+        );
       });
 
       it('adds a falsy child to the articles', () => {
@@ -384,7 +387,10 @@ The 'disableAnimations' prop you provided is deprecated. Please switch to use 'd
 
 This will become a silent error in future versions of react-flip-move.
 `);
-      expect(wrapper).to.have.prop('disableAllAnimations', true);
+      expect(wrapper.props('disableAllAnimations')).to.have.prop(
+        'disableAllAnimations',
+        true,
+      );
     });
 
     describe('animation props', () => {
@@ -448,11 +454,13 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
     let originalPositions;
 
     beforeEach(() => {
-      mountAttached({ disableAllAnimations: true });
-
+      attachedWrapper = mount(
+        <ListParent disableAllAnimations articles={[...articles].reverse()} />,
+        {
+          attachTo: container,
+        },
+      );
       originalPositions = getTagPositions(attachedWrapper);
-
-      attachedWrapper.setProps({ articles: [...articles].reverse() });
     });
 
     it('should transition immediately', () => {
@@ -468,10 +476,13 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
     let containerBox = null;
 
     beforeEach(() => {
-      mountAttached({ maintainContainerHeight: true });
+      attachedWrapper = mount(
+        <ListParent maintainContainerHeight articles={articles.slice(-1)} />,
+        {
+          attachTo: container,
+        },
+      );
       containerBox = getContainerBox(attachedWrapper);
-
-      attachedWrapper.setProps({ articles: articles.slice(-1) });
     });
 
     it('should be maintained', () => {
