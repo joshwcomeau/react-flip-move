@@ -2,7 +2,8 @@
 /* eslint-env mocha */
 /* eslint-disable react/prop-types, react/no-multi-comp, no-unused-expressions */
 import React, { Component } from 'react';
-import { shallow, mount } from 'enzyme';
+import Enzyme, { shallow, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import chaiEnzyme from 'chai-enzyme';
 
 import { getContainerBox, getTagPositions } from './helpers';
@@ -14,6 +15,7 @@ import {
 } from '../src/enter-leave-presets';
 
 chai.use(chaiEnzyme());
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('FlipMove', () => {
   let finishAllStub;
@@ -119,42 +121,39 @@ describe('FlipMove', () => {
 
   it('renders the children components', () => {
     const wrapper = mount(<ListParent />);
-    expect(wrapper)
-      .to.have.exactly(3)
-      .descendants(ListItem);
-    expect(wrapper)
-      .to.have.exactly(3)
-      .descendants('li');
+
+    expect(wrapper.find(ListItem).length).to.equal(3);
+    expect(wrapper.find('li').length).to.equal(3);
 
     const outputComponents = wrapper.find(ListItem);
 
     // Check that they're rendered in order
-    expect(outputComponents.at(0)).to.have.id('a');
-    expect(outputComponents.at(1)).to.have.id('b');
-    expect(outputComponents.at(2)).to.have.id('c');
+    expect(outputComponents.at(0).prop('id')).to.equal('a');
+    expect(outputComponents.at(1).prop('id')).to.equal('b');
+    expect(outputComponents.at(2).prop('id')).to.equal('c');
   });
 
   describe('updating state', () => {
     let originalPositions;
 
     beforeEach(() => {
-      mountAttached();
+      attachedWrapper = mount(<ListParent articles={articles.reverse()} />, {
+        attachTo: container,
+      });
       originalPositions = getTagPositions(attachedWrapper);
-
-      attachedWrapper.setProps({ articles: articles.reverse() });
     });
 
     it('rearranges the components and DOM nodes', () => {
       const outputComponents = attachedWrapper.find(ListItem);
       const outputTags = attachedWrapper.find('li');
 
-      expect(outputComponents.at(0)).to.have.id('c');
-      expect(outputComponents.at(1)).to.have.id('b');
-      expect(outputComponents.at(2)).to.have.id('a');
+      expect(outputComponents.at(0).prop('id')).to.equal('c');
+      expect(outputComponents.at(1).prop('id')).to.equal('b');
+      expect(outputComponents.at(2).prop('id')).to.equal('a');
 
-      expect(outputTags.at(0)).to.have.id('c');
-      expect(outputTags.at(1)).to.have.id('b');
-      expect(outputTags.at(2)).to.have.id('a');
+      expect(outputTags.at(0).prop('id')).to.equal('c');
+      expect(outputTags.at(1).prop('id')).to.equal('b');
+      expect(outputTags.at(2).prop('id')).to.equal('a');
     });
 
     it("doesn't actually move the elements on-screen synchronously", () => {
