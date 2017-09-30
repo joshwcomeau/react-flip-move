@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { configure } from '@kadira/storybook';
+import React from 'react';
+import { configure, addDecorator } from '@storybook/react';
 
 const req = require.context('../stories', true, /\.stories\.js$/);
 
