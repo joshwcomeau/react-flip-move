@@ -48,6 +48,18 @@ describe('FlipMove', () => {
     }
   };
 
+  class ListItemsFragment extends Component {
+    render() {
+      return articles.map(article => (
+        <ListItem
+          key={article ? article.id : null}
+          id={article ? article.id : null}
+          name={article ? article.name : null}
+        />
+      ));
+    }
+  }
+
   // We need our list parent, which contains our FlipMove as well as
   // all the list items.
   const ListParent = class ListParent extends Component {
@@ -58,6 +70,7 @@ describe('FlipMove', () => {
       disableAllAnimations: this.props.disableAllAnimations || false,
       maintainContainerHeight: this.props.maintainContainerHeight || false,
       articles: this.props.articles || articles,
+      useFragment: this.props.useFragment || false,
     };
 
     count = 0;
@@ -71,13 +84,17 @@ describe('FlipMove', () => {
     };
 
     renderArticles() {
-      return this.state.articles.map(article => (
-        <ListItem
-          key={article ? article.id : null}
-          id={article ? article.id : null}
-          name={article ? article.name : null}
-        />
-      ));
+      return this.state.useFragment ? (
+        <ListItemsFragment articles={this.state.articles} />
+      ) : (
+        this.state.articles.map(article => (
+          <ListItem
+            key={article ? article.id : null}
+            id={article ? article.id : null}
+            name={article ? article.name : null}
+          />
+        ))
+      );
     }
 
     render() {
@@ -117,6 +134,20 @@ describe('FlipMove', () => {
 
   it('renders the children components', () => {
     const wrapper = mount(<ListParent />);
+
+    expect(wrapper.find(ListItem).length).to.equal(3);
+    expect(wrapper.find('li').length).to.equal(3);
+
+    const outputComponents = wrapper.find(ListItem);
+
+    // Check that they're rendered in order
+    expect(outputComponents.at(0).prop('id')).to.equal('a');
+    expect(outputComponents.at(1).prop('id')).to.equal('b');
+    expect(outputComponents.at(2).prop('id')).to.equal('c');
+  });
+
+  it('renders the children components as fragments', () => {
+    const wrapper = mount(<ListParent useFragment />);
 
     expect(wrapper.find(ListItem).length).to.equal(3);
     expect(wrapper.find('li').length).to.equal(3);
