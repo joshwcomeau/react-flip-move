@@ -43,6 +43,7 @@ describe('FlipMove', () => {
   ];
 
   // We need a list item, the thing we'll be moving about.
+  // eslint-disable-next-line react/prefer-stateless-function
   const ListItem = class ListItem extends Component {
     render() {
       return <li id={this.props.id}>{this.props.name}</li>;
@@ -469,7 +470,7 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
     let containerBox = null;
 
     beforeEach(() => {
-      mountAttached({maintainContainerHeight: true});
+      mountAttached({ maintainContainerHeight: true });
       attachedWrapper.setState({
         articles: [null, ...articles.slice(-1)],
       });
