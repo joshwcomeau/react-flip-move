@@ -43,40 +43,36 @@ describe('FlipMove', () => {
   ];
 
   // We need a list item, the thing we'll be moving about.
-  // eslint-disable-next-line react/prefer-stateless-function
   const ListItem = class ListItem extends Component {
     render() {
       return <li id={this.props.id}>{this.props.name}</li>;
     }
   };
+
   // We need our list parent, which contains our FlipMove as well as
   // all the list items.
   const ListParent = class ListParent extends Component {
-    static defaultProps = {
-      duration: 500,
-      staggerDelayBy: 0,
-      staggerDurationBy: 0,
-      disableAllAnimations: false,
-      maintainContainerHeight: false,
-      articles,
+    state = {
+      duration: this.props.duration || 500,
+      staggerDelayBy: this.props.staggerDelayBy || 0,
+      staggerDurationBy: this.props.staggerDurationBy || 0,
+      disableAllAnimations: this.props.disableAllAnimations || false,
+      maintainContainerHeight: this.props.maintainContainerHeight || false,
+      articles: this.props.articles || articles,
     };
 
-    constructor(props) {
-      super(props);
-      this.count = 0;
+    count = 0;
 
-      this.onStartHandler = this.onStartHandler.bind(this);
-      this.onFinishHandler = this.onFinishHandler.bind(this);
-    }
-
-    onFinishHandler() {
+    onFinishHandler = () => {
       this.count += 1;
-    }
-    onStartHandler() {
+    };
+
+    onStartHandler = () => {
       this.count -= 1;
-    }
+    };
+
     renderArticles() {
-      return this.props.articles.map(article => (
+      return this.state.articles.map(article => (
         <ListItem
           key={article ? article.id : null}
           id={article ? article.id : null}
@@ -89,11 +85,11 @@ describe('FlipMove', () => {
       return (
         <ul>
           <FlipMove
-            duration={this.props.duration}
-            staggerDelayBy={this.props.staggerDelayBy}
-            staggerDurationBy={this.props.staggerDurationBy}
-            disableAllAnimations={this.props.disableAllAnimations}
-            maintainContainerHeight={this.props.maintainContainerHeight}
+            duration={this.state.duration}
+            staggerDelayBy={this.state.staggerDelayBy}
+            staggerDurationBy={this.state.staggerDurationBy}
+            disableAllAnimations={this.state.disableAllAnimations}
+            maintainContainerHeight={this.state.maintainContainerHeight}
             onStart={this.onStartHandler}
             onFinish={this.onFinishHandler}
             onFinishAll={finishAllStub}
@@ -110,6 +106,7 @@ describe('FlipMove', () => {
   document.body.appendChild(container);
   function mountAttached(props) {
     attachedWrapper = mount(<ListParent {...props} />, { attachTo: container });
+    attachedWrapper.setState({ ...props });
   }
 
   afterEach(() => {
@@ -137,10 +134,12 @@ describe('FlipMove', () => {
     let originalPositions;
 
     beforeEach(() => {
-      attachedWrapper = mount(<ListParent articles={articles.reverse()} />, {
-        attachTo: container,
-      });
+      mountAttached();
       originalPositions = getTagPositions(attachedWrapper);
+      attachedWrapper.setState({
+        articles: articles.reverse(),
+      });
+      attachedWrapper.update();
     });
 
     it('rearranges the components and DOM nodes', () => {
@@ -208,8 +207,9 @@ describe('FlipMove', () => {
 
   describe('callbacks', () => {
     beforeEach(() => {
-      attachedWrapper = mount(<ListParent articles={articles.reverse()} />, {
-        attachTo: container,
+      mountAttached();
+      attachedWrapper.setState({
+        articles: articles.reverse(),
       });
     });
 
@@ -356,12 +356,10 @@ Please wrap your value in a native element (eg. <span>), or a component.
 
     describe('falsy children', () => {
       beforeEach(() => {
-        attachedWrapper = mount(
-          <ListParent articles={[null, ...articles.slice(1)]} />,
-          {
-            attachTo: container,
-          },
-        );
+        mountAttached();
+        attachedWrapper.setState({
+          articles: [null, ...articles.slice(1)],
+        });
       });
 
       it('adds a falsy child to the articles', () => {
@@ -387,10 +385,7 @@ The 'disableAnimations' prop you provided is deprecated. Please switch to use 'd
 
 This will become a silent error in future versions of react-flip-move.
 `);
-      expect(wrapper.props('disableAllAnimations')).to.have.prop(
-        'disableAllAnimations',
-        true,
-      );
+      expect(wrapper.prop('disableAllAnimations')).to.equal(true);
     });
 
     describe('animation props', () => {
@@ -454,13 +449,11 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
     let originalPositions;
 
     beforeEach(() => {
-      attachedWrapper = mount(
-        <ListParent disableAllAnimations articles={[...articles].reverse()} />,
-        {
-          attachTo: container,
-        },
-      );
+      mountAttached({ disableAllAnimations: true });
       originalPositions = getTagPositions(attachedWrapper);
+      attachedWrapper.setState({
+        articles: articles.reverse(),
+      });
     });
 
     it('should transition immediately', () => {
@@ -476,12 +469,11 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
     let containerBox = null;
 
     beforeEach(() => {
-      attachedWrapper = mount(
-        <ListParent maintainContainerHeight articles={articles.slice(-1)} />,
-        {
-          attachTo: container,
-        },
-      );
+      mountAttached({maintainContainerHeight: true});
+      attachedWrapper.setState({
+        articles: [null, ...articles.slice(-1)],
+      });
+
       containerBox = getContainerBox(attachedWrapper);
     });
 
