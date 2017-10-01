@@ -23,7 +23,7 @@ module.exports = {
     loaders: [
       {
         test: /\.jsx?$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         exclude: /node_modules/,
         include: /src/,
       },
@@ -31,6 +31,6 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
   },
 };
