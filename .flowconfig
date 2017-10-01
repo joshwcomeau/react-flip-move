@@ -4,6 +4,7 @@
 .*/node_modules/flow-coverage-report/.*
 .*/node_modules/preact/.*
 .*/node_modules/@storybook/.*
+.*/node_modules/radium/.*
 
 [include]
 
