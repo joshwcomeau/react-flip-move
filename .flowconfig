@@ -3,6 +3,7 @@
 .*/node_modules/editions/.*
 .*/node_modules/flow-coverage-report/.*
 .*/node_modules/preact/.*
+.*/node_modules/@storybook/.*
 
 [include]
 
