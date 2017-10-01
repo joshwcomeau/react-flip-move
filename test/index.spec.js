@@ -40,11 +40,21 @@ describe('FlipMove', () => {
     { id: 'c', name: 'This Just Happened', timestamp: 654321 },
   ];
 
+  const ListItemString = ({ name }) => name;
+
   // We need a list item, the thing we'll be moving about.
   // eslint-disable-next-line react/prefer-stateless-function
   const ListItem = class ListItem extends Component {
     render() {
-      return <li id={this.props.id}>{this.props.name}</li>;
+      return (
+        <li id={this.props.id}>
+          {this.props.useString ? (
+            <ListItemString name={this.props.name} />
+          ) : (
+            this.props.name
+          )}
+        </li>
+      );
     }
   };
 
@@ -55,6 +65,7 @@ describe('FlipMove', () => {
           key={article ? article.id : null}
           id={article ? article.id : null}
           name={article ? article.name : null}
+          useString
         />
       ));
     }
