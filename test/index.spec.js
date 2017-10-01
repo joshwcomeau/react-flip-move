@@ -4,7 +4,6 @@
 import React, { Component } from 'react';
 import Enzyme, { shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import chaiEnzyme from 'chai-enzyme';
 
 import { getContainerBox, getTagPositions } from './helpers';
 import FlipMove from '../src/FlipMove';
@@ -14,7 +13,6 @@ import {
   appearPresets,
 } from '../src/enter-leave-presets';
 
-chai.use(chaiEnzyme());
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('FlipMove', () => {

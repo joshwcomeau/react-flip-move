@@ -66,7 +66,6 @@
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
     "chai": "4.1.2",
-    "chai-enzyme": "rylanc/chai-enzyme#enzyme-3",
     "create-react-class": "15.6.2",
     "enzyme": "3.0.0",
     "enzyme-adapter-react-16": "^1.0.0",
