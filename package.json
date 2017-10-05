@@ -50,7 +50,7 @@
     "react-dom": ">=0.13.x <=16.x.x"
   },
   "devDependencies": {
-    "@storybook/react": "^3.2.8",
+    "@storybook/react": "3.2.12",
     "@types/react": "16.0.7",
     "babel": "6.23.0",
     "babel-cli": "6.26.0",
