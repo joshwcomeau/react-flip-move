@@ -133,6 +133,11 @@ class FlipMoveWrapper extends Component {
     }
 
     return items.map(item => {
+      // Support falsy children by passing them straight to FlipMove
+      if (!item) {
+        return item;
+      }
+
       let text = item.text;
 
       if (item.count) {
