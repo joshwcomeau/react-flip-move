@@ -260,6 +260,7 @@ class Controls extends Component {
   }
 
   render() {
+    /* eslint-disable no-unused-vars */
     const {
       childInnerStyles,
       childOuterStyles,
@@ -268,6 +269,7 @@ class Controls extends Component {
       firstChildOuterStyles,
       ...filteredProps
     } = this.props;
+    /* eslint-enable no-unused-vars */
     return (
       <div
         style={{
