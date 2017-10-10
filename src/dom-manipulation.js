@@ -246,7 +246,7 @@ export const getNativeNode = (element: ElementRef<*>): ?HTMLElement => {
   // composite components.
   const foundNode: ?(Element | Text) = findDOMNode(element);
 
-  if (!(foundNode instanceof HTMLElement)) {
+  if (foundNode.nodeType === Node.TEXT_NODE) {
     // Text nodes are not supported
     return null;
   }
