@@ -7,13 +7,26 @@
  * They almost always have side effects, and will hopefully become the
  * only spot in the codebase with impure functions.
  */
-import { findDOMNode } from "react-dom";
-import type { ElementRef } from "react";
+import { findDOMNode } from 'react-dom';
+import type { ElementRef } from 'react';
 
-import { hyphenate } from "./helpers";
-import type { Styles, ClientRect, GetPosition, NodeData, VerticalAlignment, ConvertedProps } from "./typings";
+import { hyphenate } from './helpers';
+import type {
+  Styles,
+  ClientRect,
+  GetPosition,
+  NodeData,
+  VerticalAlignment,
+  ConvertedProps,
+} from './typings';
 
-export function applyStylesToDOMNode({ domNode, styles }: { domNode: HTMLElement, styles: Styles }) {
+export function applyStylesToDOMNode({
+  domNode,
+  styles,
+}: {
+  domNode: HTMLElement,
+  styles: Styles,
+}) {
   // Can't just do an object merge because domNode.styles is no regular object.
   // Need to do it this way for the engine to fire its `set` listeners.
   Object.keys(styles).forEach(key => {
@@ -24,33 +37,35 @@ export function applyStylesToDOMNode({ domNode, styles }: { domNode: HTMLElement
 // Modified from Modernizr
 export function whichTransitionEvent(): string {
   const transitions = {
-    transition: "transitionend",
-    "-o-transition": "oTransitionEnd",
-    "-moz-transition": "transitionend",
-    "-webkit-transition": "webkitTransitionEnd"
+    transition: 'transitionend',
+    '-o-transition': 'oTransitionEnd',
+    '-moz-transition': 'transitionend',
+    '-webkit-transition': 'webkitTransitionEnd',
   };
 
   // If we're running in a browserless environment (eg. SSR), it doesn't apply.
   // Return a placeholder string, for consistent type return.
-  if (typeof document === "undefined") return "";
+  if (typeof document === 'undefined') return '';
 
-  const el = document.createElement("fakeelement");
+  const el = document.createElement('fakeelement');
 
-  const match = Object.keys(transitions).find(t => el.style.getPropertyValue(t) !== undefined);
+  const match = Object.keys(transitions).find(
+    t => el.style.getPropertyValue(t) !== undefined,
+  );
 
   // If no `transition` is found, we must be running in a browser so ancient,
   // React itself won't run. Return an empty string, for consistent type return
-  return match ? transitions[match] : "";
+  return match ? transitions[match] : '';
 }
 
 export const getRelativeBoundingBox = ({
   childDomNode,
   parentDomNode,
-  getPosition
+  getPosition,
 }: {
   childDomNode: HTMLElement,
   parentDomNode: HTMLElement,
-  getPosition: GetPosition
+  getPosition: GetPosition,
 }): ClientRect => {
   const parentBox = getPosition(parentDomNode);
   const { top, left, right, bottom, width, height } = getPosition(childDomNode);
@@ -61,7 +76,7 @@ export const getRelativeBoundingBox = ({
     right: parentBox.right - right,
     bottom: parentBox.bottom - bottom,
     width,
-    height
+    height,
   };
 };
 
@@ -74,12 +89,12 @@ export const getPositionDelta = ({
   childDomNode,
   childBoundingBox,
   parentBoundingBox,
-  getPosition
+  getPosition,
 }: {
   childDomNode: HTMLElement,
   childBoundingBox: ?ClientRect,
   parentBoundingBox: ?ClientRect,
-  getPosition: GetPosition
+  getPosition: GetPosition,
 }): [number, number] => {
   // TEMP: A mystery bug is sometimes causing unnecessary boundingBoxes to
   // remain. Until this bug can be solved, this band-aid fix does the job:
@@ -89,7 +104,7 @@ export const getPositionDelta = ({
     right: 0,
     bottom: 0,
     height: 0,
-    width: 0
+    width: 0,
   };
 
   // Our old box is its last calculated position, derived on mount or at the
@@ -104,10 +119,13 @@ export const getPositionDelta = ({
   const newAbsoluteBox = getPosition(childDomNode);
   const newRelativeBox = {
     top: newAbsoluteBox.top - parentBox.top,
-    left: newAbsoluteBox.left - parentBox.left
+    left: newAbsoluteBox.left - parentBox.left,
   };
 
-  return [oldRelativeBox.left - newRelativeBox.left, oldRelativeBox.top - newRelativeBox.top];
+  return [
+    oldRelativeBox.left - newRelativeBox.left,
+    oldRelativeBox.top - newRelativeBox.top,
+  ];
 };
 
 /** removeNodeFromDOMFlow
@@ -120,7 +138,10 @@ export const getPositionDelta = ({
  *
  * This is a vital part of the FLIP technique.
  */
-export const removeNodeFromDOMFlow = (childData: NodeData, verticalAlignment: VerticalAlignment) => {
+export const removeNodeFromDOMFlow = (
+  childData: NodeData,
+  verticalAlignment: VerticalAlignment,
+) => {
   const { domNode, boundingBox } = childData;
 
   if (!domNode || !boundingBox) {
@@ -132,15 +153,15 @@ export const removeNodeFromDOMFlow = (childData: NodeData, verticalAlignment: Ve
 
   // We need to clean up margins, by converting and removing suffix:
   // eg. '21px' -> 21
-  const marginAttrs = ["margin-top", "margin-left", "margin-right"];
+  const marginAttrs = ['margin-top', 'margin-left', 'margin-right'];
   const margins: {
-    [string]: number
+    [string]: number,
   } = marginAttrs.reduce((acc, margin) => {
     const propertyVal = computed.getPropertyValue(margin);
 
     return {
       ...acc,
-      [margin]: Number(propertyVal.replace("px", ""))
+      [margin]: Number(propertyVal.replace('px', '')),
     };
   }, {});
 
@@ -148,13 +169,16 @@ export const removeNodeFromDOMFlow = (childData: NodeData, verticalAlignment: Ve
   // top offset. This is because, when the container is bottom-aligned, its
   // height shrinks from the top, not the bottom. We're removing this node
   // from the flow, so the top is going to drop by its height.
-  const topOffset = verticalAlignment === "bottom" ? boundingBox.top - boundingBox.height : boundingBox.top;
+  const topOffset =
+    verticalAlignment === 'bottom'
+      ? boundingBox.top - boundingBox.height
+      : boundingBox.top;
 
   const styles: Styles = {
-    position: "absolute",
-    top: `${topOffset - margins["margin-top"]}px`,
-    left: `${boundingBox.left - margins["margin-left"]}px`,
-    right: `${boundingBox.right - margins["margin-right"]}px`
+    position: 'absolute',
+    top: `${topOffset - margins['margin-top']}px`,
+    left: `${boundingBox.left - margins['margin-left']}px`,
+    right: `${boundingBox.right - margins['margin-right']}px`,
   };
 
   applyStylesToDOMNode({ domNode, styles });
@@ -166,7 +190,15 @@ export const removeNodeFromDOMFlow = (childData: NodeData, verticalAlignment: Ve
  * container doesn't collapse when its children are removed from the
  * document flow.
  */
-export const updateHeightPlaceholder = ({ domNode, parentData, getPosition }: { domNode: HTMLElement, parentData: NodeData, getPosition: GetPosition }) => {
+export const updateHeightPlaceholder = ({
+  domNode,
+  parentData,
+  getPosition,
+}: {
+  domNode: HTMLElement,
+  parentData: NodeData,
+  getPosition: GetPosition,
+}) => {
   const parentDomNode = parentData.domNode;
   const parentBoundingBox = parentData.boundingBox;
 
@@ -179,7 +211,7 @@ export const updateHeightPlaceholder = ({ domNode, parentData, getPosition }: { 
   // we first set its height to 0.
   // This allows the container to collapse down to the size of just its
   // content (plus container padding or borders if any).
-  applyStylesToDOMNode({ domNode, styles: { height: "0" } });
+  applyStylesToDOMNode({ domNode, styles: { height: '0' } });
 
   // Find the distance by which the container would be collapsed by elements
   // leaving. We compare the freshly-available parent height with the original,
@@ -192,7 +224,7 @@ export const updateHeightPlaceholder = ({ domNode, parentData, getPosition }: { 
   // height to take up the difference. Otherwise set its height to zero,
   // so that it has no effect.
   const styles: Styles = {
-    height: reductionInHeight > 0 ? `${reductionInHeight}px` : "0"
+    height: reductionInHeight > 0 ? `${reductionInHeight}px` : '0',
   };
 
   applyStylesToDOMNode({ domNode, styles });
@@ -200,7 +232,7 @@ export const updateHeightPlaceholder = ({ domNode, parentData, getPosition }: { 
 
 export const getNativeNode = (element: ElementRef<*>): ?HTMLElement => {
   // When running in a windowless environment, abort!
-  if (typeof HTMLElement === "undefined") {
+  if (typeof HTMLElement === 'undefined') {
     return null;
   }
 
@@ -222,14 +254,19 @@ export const getNativeNode = (element: ElementRef<*>): ?HTMLElement => {
   return foundNode;
 };
 
-export const createTransitionString = (index: number, props: ConvertedProps): string => {
+export const createTransitionString = (
+  index: number,
+  props: ConvertedProps,
+): string => {
   let { delay, duration } = props;
   const { staggerDurationBy, staggerDelayBy, easing } = props;
 
   delay += index * staggerDelayBy;
   duration += index * staggerDurationBy;
 
-  const cssProperties = ["transform", "opacity"];
+  const cssProperties = ['transform', 'opacity'];
 
-  return cssProperties.map(prop => `${prop} ${duration}ms ${easing} ${delay}ms`).join(", ");
+  return cssProperties
+    .map(prop => `${prop} ${duration}ms ${easing} ${delay}ms`)
+    .join(', ');
 };
