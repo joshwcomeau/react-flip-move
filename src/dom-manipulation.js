@@ -250,8 +250,8 @@ export const getNativeNode = (element: ElementRef<*>): ?HTMLElement => {
     // Text nodes are not supported
     return null;
   }
-
-  return foundNode;
+  // eslint-disable-next-line flowtype/no-weak-types
+  return ((foundNode: any): ?HTMLElement);
 };
 
 export const createTransitionString = (
