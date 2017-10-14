@@ -61,7 +61,11 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   // of truth.
   state = {
     children: getElementChildren(
-      this.props? this.props.children: [],
+      // `this.props` ought to always be defined at this point, but a report
+      // was made about it not being defined in IE10.
+      // TODO: Test in IE10, to see if there's an underlying cause that can
+      // be addressed.
+      this.props ? this.props.children : [],
     ).map((element: Element<*>) => ({
       ...element,
       element,
