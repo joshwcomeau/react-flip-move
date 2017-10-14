@@ -246,12 +246,12 @@ export const getNativeNode = (element: ElementRef<*>): ?HTMLElement => {
   // composite components.
   const foundNode: ?(Element | Text) = findDOMNode(element);
 
-  if (!(foundNode instanceof HTMLElement)) {
+  if (foundNode && foundNode.nodeType === Node.TEXT_NODE) {
     // Text nodes are not supported
     return null;
   }
-
-  return foundNode;
+  // eslint-disable-next-line flowtype/no-weak-types
+  return ((foundNode: any): ?HTMLElement);
 };
 
 export const createTransitionString = (
