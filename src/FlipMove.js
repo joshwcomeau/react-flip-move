@@ -61,7 +61,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   // of truth.
   state = {
     children: getElementChildren(
-      this.props.children,
+      this.props? this.props.children: [],
     ).map((element: Element<*>) => ({
       ...element,
       element,
