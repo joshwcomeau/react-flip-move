@@ -1,6 +1,6 @@
 /* eslint-disable react/forbid-prop-types */
 import React, { Component } from 'react';
-import { storiesOf } from '@kadira/storybook';
+import { storiesOf } from '@storybook/react';
 import shuffle from 'lodash/shuffle';
 import range from 'lodash/range';
 import PropTypes from 'prop-types';
@@ -260,6 +260,16 @@ class Controls extends Component {
   }
 
   render() {
+    /* eslint-disable no-unused-vars */
+    const {
+      childInnerStyles,
+      childOuterStyles,
+      styleFirstChild,
+      firstChildInnerStyles,
+      firstChildOuterStyles,
+      ...filteredProps
+    } = this.props;
+    /* eslint-enable no-unused-vars */
     return (
       <div
         style={{
@@ -272,7 +282,7 @@ class Controls extends Component {
           <button onClick={this.buttonClickHandler}>Remove</button>
           <button onClick={this.restore}>Restore</button>
         </div>
-        <FlipMove {...this.props}>{this.renderItems()}</FlipMove>
+        <FlipMove {...filteredProps}>{this.renderItems()}</FlipMove>
       </div>
     );
   }
@@ -281,7 +291,7 @@ Controls.propTypes = {
   mode: PropTypes.string,
   childOuterStyles: PropTypes.object,
   childInnerStyles: PropTypes.object,
-  styleFirstChild: PropTypes.object,
+  styleFirstChild: PropTypes.bool,
   firstChildOuterStyles: PropTypes.object,
   firstChildInnerStyles: PropTypes.object,
 };

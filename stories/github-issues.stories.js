@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 import React, { Component } from 'react';
-import { storiesOf } from '@kadira/storybook';
+import { storiesOf } from '@storybook/react';
 import range from 'lodash/range';
 
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';

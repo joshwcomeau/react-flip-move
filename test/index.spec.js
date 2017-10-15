@@ -2,8 +2,8 @@
 /* eslint-env mocha */
 /* eslint-disable react/prop-types, react/no-multi-comp, no-unused-expressions */
 import React, { Component } from 'react';
-import { shallow, mount } from 'enzyme';
-import chaiEnzyme from 'chai-enzyme';
+import Enzyme, { shallow, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
 import { getContainerBox, getTagPositions } from './helpers';
 import FlipMove from '../src/FlipMove';
@@ -13,7 +13,7 @@ import {
   appearPresets,
 } from '../src/enter-leave-presets';
 
-chai.use(chaiEnzyme());
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('FlipMove', () => {
   let finishAllStub;
@@ -40,58 +40,83 @@ describe('FlipMove', () => {
     { id: 'c', name: 'This Just Happened', timestamp: 654321 },
   ];
 
+  const ListItemString = ({ name }) => name;
+
   // We need a list item, the thing we'll be moving about.
   // eslint-disable-next-line react/prefer-stateless-function
   const ListItem = class ListItem extends Component {
     render() {
-      return <li id={this.props.id}>{this.props.name}</li>;
+      return (
+        <li id={this.props.id}>
+          {this.props.useString ? (
+            <ListItemString name={this.props.name} />
+          ) : (
+            this.props.name
+          )}
+        </li>
+      );
     }
   };
-  // We need our list parent, which contains our FlipMove as well as
-  // all the list items.
-  const ListParent = class ListParent extends Component {
-    static defaultProps = {
-      duration: 500,
-      staggerDelayBy: 0,
-      staggerDurationBy: 0,
-      disableAllAnimations: false,
-      maintainContainerHeight: false,
-      articles,
-    };
 
-    constructor(props) {
-      super(props);
-      this.count = 0;
-
-      this.onStartHandler = this.onStartHandler.bind(this);
-      this.onFinishHandler = this.onFinishHandler.bind(this);
-    }
-
-    onFinishHandler() {
-      this.count += 1;
-    }
-    onStartHandler() {
-      this.count -= 1;
-    }
-    renderArticles() {
-      return this.props.articles.map(article => (
+  class ListItemsFragment extends Component {
+    render() {
+      return articles.map(article => (
         <ListItem
           key={article ? article.id : null}
           id={article ? article.id : null}
           name={article ? article.name : null}
+          useString
         />
       ));
+    }
+  }
+
+  // We need our list parent, which contains our FlipMove as well as
+  // all the list items.
+  const ListParent = class ListParent extends Component {
+    state = {
+      duration: this.props.duration || 500,
+      staggerDelayBy: this.props.staggerDelayBy || 0,
+      staggerDurationBy: this.props.staggerDurationBy || 0,
+      disableAllAnimations: this.props.disableAllAnimations || false,
+      maintainContainerHeight: this.props.maintainContainerHeight || false,
+      articles: this.props.articles || articles,
+      useFragment: this.props.useFragment || false,
+    };
+
+    count = 0;
+
+    onFinishHandler = () => {
+      this.count += 1;
+    };
+
+    onStartHandler = () => {
+      this.count -= 1;
+    };
+
+    renderArticles() {
+      return this.state.useFragment ? (
+        <ListItemsFragment articles={this.state.articles} />
+      ) : (
+        this.state.articles.map(article => (
+          <ListItem
+            key={article ? article.id : null}
+            id={article ? article.id : null}
+            name={article ? article.name : null}
+          />
+        ))
+      );
     }
 
     render() {
       return (
         <ul>
           <FlipMove
-            duration={this.props.duration}
-            staggerDelayBy={this.props.staggerDelayBy}
-            staggerDurationBy={this.props.staggerDurationBy}
-            disableAllAnimations={this.props.disableAllAnimations}
-            maintainContainerHeight={this.props.maintainContainerHeight}
+            duration={this.state.duration}
+            staggerDelayBy={this.state.staggerDelayBy}
+            staggerDurationBy={this.state.staggerDurationBy}
+            disableAllAnimations={this.state.disableAllAnimations}
+            maintainContainerHeight={this.state.maintainContainerHeight}
             onStart={this.onStartHandler}
             onFinish={this.onFinishHandler}
             onFinishAll={finishAllStub}
@@ -108,6 +133,7 @@ describe('FlipMove', () => {
   document.body.appendChild(container);
   function mountAttached(props) {
     attachedWrapper = mount(<ListParent {...props} />, { attachTo: container });
+    attachedWrapper.setState({ ...props });
   }
 
   afterEach(() => {
@@ -119,19 +145,30 @@ describe('FlipMove', () => {
 
   it('renders the children components', () => {
     const wrapper = mount(<ListParent />);
-    expect(wrapper)
-      .to.have.exactly(3)
-      .descendants(ListItem);
-    expect(wrapper)
-      .to.have.exactly(3)
-      .descendants('li');
+
+    expect(wrapper.find(ListItem).length).to.equal(3);
+    expect(wrapper.find('li').length).to.equal(3);
 
     const outputComponents = wrapper.find(ListItem);
 
     // Check that they're rendered in order
-    expect(outputComponents.at(0)).to.have.id('a');
-    expect(outputComponents.at(1)).to.have.id('b');
-    expect(outputComponents.at(2)).to.have.id('c');
+    expect(outputComponents.at(0).prop('id')).to.equal('a');
+    expect(outputComponents.at(1).prop('id')).to.equal('b');
+    expect(outputComponents.at(2).prop('id')).to.equal('c');
+  });
+
+  it('renders the children components as fragments', () => {
+    const wrapper = mount(<ListParent useFragment />);
+
+    expect(wrapper.find(ListItem).length).to.equal(3);
+    expect(wrapper.find('li').length).to.equal(3);
+
+    const outputComponents = wrapper.find(ListItem);
+
+    // Check that they're rendered in order
+    expect(outputComponents.at(0).prop('id')).to.equal('a');
+    expect(outputComponents.at(1).prop('id')).to.equal('b');
+    expect(outputComponents.at(2).prop('id')).to.equal('c');
   });
 
   describe('updating state', () => {
@@ -140,21 +177,23 @@ describe('FlipMove', () => {
     beforeEach(() => {
       mountAttached();
       originalPositions = getTagPositions(attachedWrapper);
-
-      attachedWrapper.setProps({ articles: articles.reverse() });
+      attachedWrapper.setState({
+        articles: articles.reverse(),
+      });
+      attachedWrapper.update();
     });
 
     it('rearranges the components and DOM nodes', () => {
       const outputComponents = attachedWrapper.find(ListItem);
       const outputTags = attachedWrapper.find('li');
 
-      expect(outputComponents.at(0)).to.have.id('c');
-      expect(outputComponents.at(1)).to.have.id('b');
-      expect(outputComponents.at(2)).to.have.id('a');
+      expect(outputComponents.at(0).prop('id')).to.equal('c');
+      expect(outputComponents.at(1).prop('id')).to.equal('b');
+      expect(outputComponents.at(2).prop('id')).to.equal('a');
 
-      expect(outputTags.at(0)).to.have.id('c');
-      expect(outputTags.at(1)).to.have.id('b');
-      expect(outputTags.at(2)).to.have.id('a');
+      expect(outputTags.at(0).prop('id')).to.equal('c');
+      expect(outputTags.at(1).prop('id')).to.equal('b');
+      expect(outputTags.at(2).prop('id')).to.equal('a');
     });
 
     it("doesn't actually move the elements on-screen synchronously", () => {
@@ -210,8 +249,8 @@ describe('FlipMove', () => {
   describe('callbacks', () => {
     beforeEach(() => {
       mountAttached();
-      attachedWrapper.setProps({
-        articles: [...articles].reverse(),
+      attachedWrapper.setState({
+        articles: articles.reverse(),
       });
     });
 
@@ -359,7 +398,9 @@ Please wrap your value in a native element (eg. <span>), or a component.
     describe('falsy children', () => {
       beforeEach(() => {
         mountAttached();
-        attachedWrapper.setProps({ articles: [null, ...articles.slice(1)] });
+        attachedWrapper.setState({
+          articles: [null, ...articles.slice(1)],
+        });
       });
 
       it('adds a falsy child to the articles', () => {
@@ -385,7 +426,7 @@ The 'disableAnimations' prop you provided is deprecated. Please switch to use 'd
 
 This will become a silent error in future versions of react-flip-move.
 `);
-      expect(wrapper).to.have.prop('disableAllAnimations', true);
+      expect(wrapper.prop('disableAllAnimations')).to.equal(true);
     });
 
     describe('animation props', () => {
@@ -450,10 +491,10 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
 
     beforeEach(() => {
       mountAttached({ disableAllAnimations: true });
-
       originalPositions = getTagPositions(attachedWrapper);
-
-      attachedWrapper.setProps({ articles: [...articles].reverse() });
+      attachedWrapper.setState({
+        articles: articles.reverse(),
+      });
     });
 
     it('should transition immediately', () => {
@@ -470,9 +511,11 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
 
     beforeEach(() => {
       mountAttached({ maintainContainerHeight: true });
-      containerBox = getContainerBox(attachedWrapper);
+      attachedWrapper.setState({
+        articles: [null, ...articles.slice(-1)],
+      });
 
-      attachedWrapper.setProps({ articles: articles.slice(-1) });
+      containerBox = getContainerBox(attachedWrapper);
     });
 
     it('should be maintained', () => {

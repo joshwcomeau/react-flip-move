@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { storiesOf } from '@kadira/storybook';
+import { storiesOf } from '@storybook/react';
 
 import FlipMove from '../src';
 import FlipMoveWrapper from './helpers/FlipMoveWrapper';
