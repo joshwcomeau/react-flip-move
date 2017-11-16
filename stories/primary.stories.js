@@ -25,6 +25,9 @@ storiesOf('Basic Behaviour', module)
       itemType={FlipMoveListItem}
       flipMoveProps={{ delay: 500 }}
     />
+  ))
+  .add('without wrapper (react 16+)', () => (
+    <FlipMoveWrapper itemType={FlipMoveListItem} typeName={false} />
   ));
 
 const easings = ['linear', 'ease-in', 'ease-out', 'cubic-bezier(1,0,0,1)'];

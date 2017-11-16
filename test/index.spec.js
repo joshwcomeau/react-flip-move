@@ -85,6 +85,7 @@ describe('FlipMove', () => {
     };
 
     count = 0;
+    customAnchor = null;
 
     onFinishHandler = () => {
       this.count += 1;
@@ -110,7 +111,7 @@ describe('FlipMove', () => {
 
     render() {
       return (
-        <ul>
+        <ul ref={node => (this.customAnchor = node)}>
           <FlipMove
             duration={this.state.duration}
             staggerDelayBy={this.state.staggerDelayBy}
@@ -120,6 +121,8 @@ describe('FlipMove', () => {
             onStart={this.onStartHandler}
             onFinish={this.onFinishHandler}
             onFinishAll={finishAllStub}
+            typeName={this.props.withoutWrapper ? false : 'div'}
+            anchor={this.props.withoutAnchor ? undefined : this.customAnchor}
           >
             {this.renderArticles()}
           </FlipMove>
@@ -164,6 +167,20 @@ describe('FlipMove', () => {
     expect(wrapper.find('li').length).to.equal(3);
 
     const outputComponents = wrapper.find(ListItem);
+
+    // Check that they're rendered in order
+    expect(outputComponents.at(0).prop('id')).to.equal('a');
+    expect(outputComponents.at(1).prop('id')).to.equal('b');
+    expect(outputComponents.at(2).prop('id')).to.equal('c');
+  });
+
+  it('renders the children without wrapper if typeName prop is falsy', () => {
+    const wrapper = mount(<ListParent withoutWrapper />);
+
+    expect(wrapper.find(ListItem).length).to.equal(3);
+    expect(wrapper.find('li').length).to.equal(3);
+
+    const outputComponents = wrapper.find('FlipMove').children();
 
     // Check that they're rendered in order
     expect(outputComponents.at(0).prop('id')).to.equal('a');
