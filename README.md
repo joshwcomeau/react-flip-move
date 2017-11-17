@@ -142,6 +142,18 @@ FlipMove passes the `className` and `style` props along to the `ul` that needs t
 
 This works for all HTML props - there's no validation.
 
+You can pass `false` to `typeName` and a valid HTMLElement reference as `anchor` to render the children without a wrapping DOM node. Note that you will have to use react 16.0.0 or higher, and that all other props (such as `className` or `style`) will have no effect.
+```html
+<div ref={node => this.myCustomParent = node}>
+  <FlipMove typeName={false} anchor={this.myCustomParent}>
+    <li className="col">Column 1</li>
+    <li className="col">Column 2</li>
+  </FlipMove>
+</div>
+```
+
+If no anchor is provided, react-flip-move will try to use the components parent node. This, however, is a costly operation that violates component separation principles and thus is [highly discouraged](https://reactjs.org/docs/react-dom.html#finddomnode).
+
 ---
 
 

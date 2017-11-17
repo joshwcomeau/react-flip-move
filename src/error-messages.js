@@ -35,9 +35,15 @@ export const invalidTypeForTimingProp = (args: {
   console.error(`
 >> Error, via react-flip-move <<
 
-The prop you provided for '${args.prop}' is invalid. It needs to be a positive integer, or a string that can be resolved to a number. The value you provided is '${args.value}'.
+The prop you provided for '${
+    args.prop
+  }' is invalid. It needs to be a positive integer, or a string that can be resolved to a number. The value you provided is '${
+    args.value
+  }'.
 
-As a result,  the default value for this parameter will be used, which is '${args.defaultValue}'.
+As a result,  the default value for this parameter will be used, which is '${
+    args.defaultValue
+  }'.
 `);
 
 export const deprecatedDisableAnimations = warnOnce(`
@@ -56,7 +62,11 @@ export const invalidEnterLeavePreset = (args: {
   console.error(`
 >> Error, via react-flip-move <<
 
-The enter/leave preset you provided is invalid. We don't currently have a '${args.value} preset.'
+The enter/leave preset you provided is invalid. We don't currently have a '${
+    args.value
+  } preset.'
 
-Acceptable values are ${args.acceptableValues}. The default value of '${args.defaultValue}' will be used.
+Acceptable values are ${args.acceptableValues}. The default value of '${
+    args.defaultValue
+  }' will be used.
 `);
