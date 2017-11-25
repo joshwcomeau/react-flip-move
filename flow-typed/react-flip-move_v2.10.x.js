@@ -82,7 +82,7 @@ declare module "react-flip-move" {
 
   declare export type DelegatedProps = {
     style?: ReactStyles,
-		anchor?: HTMLElement
+    anchor?: HTMLElement
   };
 
   declare export type FlipMoveDefaultProps = BaseProps & PolymorphicProps;

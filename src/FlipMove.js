@@ -114,10 +114,14 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   remainingAnimations = 0;
   childrenToAnimate: Array<Key> = [];
 
-  // Make sure we dont spam warnings in the console
-  wasWarned = false;
-
   componentDidMount() {
+    // If wrapperless mode was activated, we need to make sure we still have a
+    // valid parentNode to properly animate.
+    // If no anchor was provided we fall back to using findDomNode.
+    if (this.props.typeName === null) {
+      this.findDOMContainer();
+    }
+
     // Run our `appearAnimation` if it was requested, right after the
     // component mounts.
     const shouldTriggerFLIP =
@@ -158,20 +162,8 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     // If wrapperless mode was activated, we need to make sure we still have a
     // valid parentNode to properly animate.
     // If no anchor was provided we fall back to using findDomNode.
-    if (!this.props.typeName) {
-      if (!this.props.delegated.anchor) {
-        // Render warning if wrapperless mode is activated but no anchor has
-        // been provided
-        this.logAnchorWarning();
-
-        this.parentData.domNode =
-          /* eslint-disable react/no-find-dom-node */
-          // $FlowFixMe we because we now parentNode has to be HTMLElement
-          ReactDOM.findDOMNode(this) && ReactDOM.findDOMNode(this).parentNode;
-        /* eslint-enable react/no-find-dom-node */
-      } else {
-        this.parentData.domNode = this.props.delegated.anchor;
-      }
+    if (this.props.typeName === null) {
+      this.findDOMContainer();
     }
     // If the children have been re-arranged, moved, or added/removed,
     // trigger the main FLIP animation.
@@ -197,17 +189,19 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     }
   }
 
-  logAnchorWarning = () => {
-    if (!this.wasWarned) {
-      console.warn(`
-				>> Error, via react-flip-move <<
-				
-				Wrapperless mode was activated but no anchor has been provided to react-flip-move. 
-				
-				Please use either the 'typeName' prop to pass a wrapper type (such as 'ul') or make sure a valid HTMLElement is passed in 'anchor'
-			`);
-      this.wasWarned = true;
+  // If no `typeName` is provided, figure out which container we should use
+  // for reference.
+  findDOMContainer = () => {
+    // eslint-disable-next-line react/no-find-dom-node
+    const domNode = ReactDOM.findDOMNode(this);
+    const parentNode = domNode && domNode.parentNode;
+
+    // This ought to be impossible, but handling it for Flow's sake.
+    if (!parentNode || !(parentNode instanceof HTMLElement)) {
+      return;
     }
+
+    this.parentData.domNode = parentNode;
   };
 
   runAnimation = () => {

@@ -97,8 +97,7 @@ storiesOf('Legacy Stories', module)
     <Controls
       onStartAll={(elements, nodes) =>
         // eslint-disable-next-line no-console
-        console.log('Started with', elements, nodes)
-      }
+        console.log('Started with', elements, nodes)}
     />
   ))
   .add('when prop keys do not change, but items rearrange', () => (

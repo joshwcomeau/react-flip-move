@@ -7,6 +7,7 @@ import Controls from './Controls';
 
 const baseStyles = {
   bodyContainerStyles: {
+    position: 'relative',
     background: '#F3F3F3',
     padding: '100px',
     minHeight: '100%',
@@ -167,7 +168,6 @@ class FlipMoveWrapper extends Component {
           ...baseStyles.bodyContainerStyles,
           ...this.props.bodyContainerStyles,
         }}
-        ref={node => (this.anchor = node)}
       >
         <Controls
           onRemove={this.removeItem}
@@ -182,18 +182,18 @@ class FlipMoveWrapper extends Component {
             this.props.sequence ? this.props.sequence.length : 0
           }
         />
-        <FlipMove
-          style={{
-            ...baseStyles.flipMoveContainerStyles,
-            ...this.props.flipMoveContainerStyles,
-          }}
-          duration={500}
-          {...this.props.flipMoveProps}
-          typeName={this.props.typeName}
-          anchor={this.anchor}
-        >
-          {this.renderItems()}
-        </FlipMove>
+        <div>
+          <FlipMove
+            style={{
+              ...baseStyles.flipMoveContainerStyles,
+              ...this.props.flipMoveContainerStyles,
+            }}
+            duration={500}
+            {...this.props.flipMoveProps}
+          >
+            {this.renderItems()}
+          </FlipMove>
+        </div>
       </div>
     );
   }
@@ -212,7 +212,6 @@ FlipMoveWrapper.propTypes = {
     PropTypes.string, // for DOM types like 'div'
     PropTypes.func, // for composite components
   ]),
-  typeName: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   bodyContainerStyles: PropTypes.object,
   flipMoveContainerStyles: PropTypes.object,
   listItemStyles: PropTypes.object,
@@ -251,7 +250,6 @@ FlipMoveWrapper.defaultProps = {
     },
   ],
   itemType: 'div',
-  typeName: 'div',
 };
 
 export default FlipMoveWrapper;
