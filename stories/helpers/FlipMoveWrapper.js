@@ -7,7 +7,6 @@ import Controls from './Controls';
 
 const baseStyles = {
   bodyContainerStyles: {
-    position: 'relative',
     background: '#F3F3F3',
     padding: '100px',
     minHeight: '100%',

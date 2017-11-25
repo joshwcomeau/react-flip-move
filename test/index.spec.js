@@ -85,7 +85,6 @@ describe('FlipMove', () => {
     };
 
     count = 0;
-    customAnchor = null;
 
     onFinishHandler = () => {
       this.count += 1;
@@ -111,7 +110,7 @@ describe('FlipMove', () => {
 
     render() {
       return (
-        <ul ref={node => (this.customAnchor = node)}>
+        <ul>
           <FlipMove
             duration={this.state.duration}
             staggerDelayBy={this.state.staggerDelayBy}
@@ -122,7 +121,6 @@ describe('FlipMove', () => {
             onFinish={this.onFinishHandler}
             onFinishAll={finishAllStub}
             typeName={this.props.withoutWrapper ? false : 'div'}
-            anchor={this.props.withoutAnchor ? undefined : this.customAnchor}
           >
             {this.renderArticles()}
           </FlipMove>

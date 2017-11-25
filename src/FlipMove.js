@@ -115,9 +115,9 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   childrenToAnimate: Array<Key> = [];
 
   componentDidMount() {
-    // If wrapperless mode was activated, we need to make sure we still have a
-    // valid parentNode to properly animate.
-    // If no anchor was provided we fall back to using findDomNode.
+    // Because React 16 no longer requires wrapping elements, Flip Move can opt
+    // to not wrap the children in an element. In that case, find the parent
+    // element using `findDOMNode`.
     if (this.props.typeName === null) {
       this.findDOMContainer();
     }
@@ -159,9 +159,6 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   }
 
   componentDidUpdate(previousProps: ConvertedProps) {
-    // If wrapperless mode was activated, we need to make sure we still have a
-    // valid parentNode to properly animate.
-    // If no anchor was provided we fall back to using findDomNode.
     if (this.props.typeName === null) {
       this.findDOMContainer();
     }
@@ -189,8 +186,6 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     }
   }
 
-  // If no `typeName` is provided, figure out which container we should use
-  // for reference.
   findDOMContainer = () => {
     // eslint-disable-next-line react/no-find-dom-node
     const domNode = ReactDOM.findDOMNode(this);
