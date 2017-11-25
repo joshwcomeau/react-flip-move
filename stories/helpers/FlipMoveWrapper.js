@@ -181,18 +181,16 @@ class FlipMoveWrapper extends Component {
             this.props.sequence ? this.props.sequence.length : 0
           }
         />
-        <div>
-          <FlipMove
-            style={{
-              ...baseStyles.flipMoveContainerStyles,
-              ...this.props.flipMoveContainerStyles,
-            }}
-            duration={500}
-            {...this.props.flipMoveProps}
-          >
-            {this.renderItems()}
-          </FlipMove>
-        </div>
+        <FlipMove
+          style={{
+            ...baseStyles.flipMoveContainerStyles,
+            ...this.props.flipMoveContainerStyles,
+          }}
+          duration={500}
+          {...this.props.flipMoveProps}
+        >
+          {this.renderItems()}
+        </FlipMove>
       </div>
     );
   }

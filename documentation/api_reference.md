@@ -286,7 +286,7 @@ Flip Move wraps your children in a container element. By default, this element i
 
 Any valid HTML element type is accepted, but peculiar things may happen if you use an unconventional element.
 
-With React 16, Flip Move can opt not to use a container element: set `typeName` to `null` to use this new "wrapperless" behaviour. This can be useful when using flexbox or grids, when DOM structure is important.
+With React 16, Flip Move can opt not to use a container element: set `typeName` to `null` to use this new "wrapperless" behaviour. [Read more](https://github.com/joshwcomeau/react-flip-move/blob/master/README.md#wrapping-elements).
 
 ---
 
