@@ -32,6 +32,7 @@ export const invalidTypeForTimingProp = (args: {
   value: string | number,
   defaultValue: number,
 }) =>
+  // prettier-ignore
   console.error(`
 >> Error, via react-flip-move <<
 
@@ -53,6 +54,7 @@ export const invalidEnterLeavePreset = (args: {
   acceptableValues: string,
   defaultValue: $Keys<Presets>,
 }) =>
+  // prettier-ignore
   console.error(`
 >> Error, via react-flip-move <<
 
