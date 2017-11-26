@@ -13,6 +13,7 @@ import ReactDOM from 'react-dom';
 // eslint-disable-next-line no-duplicate-imports
 import type { Element, ElementRef, Key, ChildrenArray } from 'react';
 
+import { parentNodePositionStatic } from './error-messages';
 import './polyfills';
 import propConverter from './prop-converter';
 import {
@@ -194,6 +195,14 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     // This ought to be impossible, but handling it for Flow's sake.
     if (!parentNode || !(parentNode instanceof HTMLElement)) {
       return;
+    }
+
+    // If the parent node has static positioning, leave animations might look
+    // really funky. Let's automatically apply `position: relative` in this
+    // case, to prevent any quirkiness.
+    if (window.getComputedStyle(parentNode).position === 'static') {
+      parentNode.style.position = 'relative';
+      parentNodePositionStatic();
     }
 
     this.parentData.domNode = parentNode;

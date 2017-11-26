@@ -62,3 +62,13 @@ The enter/leave preset you provided is invalid. We don't currently have a '${arg
 
 Acceptable values are ${args.acceptableValues}. The default value of '${args.defaultValue}' will be used.
 `);
+
+export const parentNodePositionStatic = warnOnce(`
+>> Warning, via react-flip-move <<
+
+When using "wrapperless" mode (by supplying 'typeName' of 'null'), strange things happen when the direct parent has the default "static" position.
+
+FlipMove has added 'position: relative' to this node, to ensure Flip Move animates correctly.
+
+To avoid seeing this warning, simply apply a non-static position to that parent node.
+`);

@@ -103,3 +103,49 @@ import FlipMoveListItem from './helpers/FlipMoveListItem';
       );
     });
 });
+
+storiesOf('Misc - wrapperless', module).add('within a static <div>', () => {
+  // eslint-disable-next-line react/no-multi-comp
+  class CustomComponent extends Component {
+    state = {
+      items: ['hello', 'world', 'how', 'are', 'you'],
+    };
+
+    componentDidMount() {
+      this.intervalId = window.setInterval(() => {
+        const { items } = this.state;
+
+        if (items.length === 0) {
+          return;
+        }
+
+        this.setState({
+          items: items.slice(0, items.length - 1),
+        });
+      }, 1000);
+    }
+
+    componentWillUnmount() {
+      window.clearInterval(this.intervalId);
+    }
+
+    render() {
+      return (
+        <div
+          style={{
+            color: 'red',
+            marginLeft: 100,
+            marginTop: 200,
+            border: '1px solid blue',
+          }}
+        >
+          <FlipMove typeName={null}>
+            {this.state.items.map(item => <div key={item}>{item}</div>)}
+          </FlipMove>
+        </div>
+      );
+    }
+  }
+
+  return <CustomComponent />;
+});
