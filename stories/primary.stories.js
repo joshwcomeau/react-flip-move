@@ -25,9 +25,6 @@ storiesOf('Basic Behaviour', module)
       itemType={FlipMoveListItem}
       flipMoveProps={{ delay: 500 }}
     />
-  ))
-  .add('without wrapper (react 16+)', () => (
-    <FlipMoveWrapper itemType={FlipMoveListItem} typeName={false} />
   ));
 
 const easings = ['linear', 'ease-in', 'ease-out', 'cubic-bezier(1,0,0,1)'];
@@ -110,18 +107,11 @@ storiesOf('Disabled animations', module)
 
 storiesOf('Type names', module)
   .add('ul/li', () => (
-    <FlipMoveWrapper
-      itemType="li"
-      flipMoveProps={{
-        typeName: 'ul',
-      }}
-    />
+    <FlipMoveWrapper itemType="li" flipMoveProps={{ typeName: 'ul' }} />
   ))
   .add('ol/li', () => (
-    <FlipMoveWrapper
-      itemType="li"
-      flipMoveProps={{
-        typeName: 'ol',
-      }}
-    />
+    <FlipMoveWrapper itemType="li" flipMoveProps={{ typeName: 'ol' }} />
+  ))
+  .add('null', () => (
+    <FlipMoveWrapper itemType="div" flipMoveProps={{ typeName: null }} />
   ));

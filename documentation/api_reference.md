@@ -277,14 +277,16 @@ In general, it is advisable to ignore the `domNodes` argument and work with the 
 
 ### `typeName`
 
-| **Accepted Types:** | **Default Value** |
-|---------------------|-------------------|
-|  `String`           | 'div'             |
+| **Accepted Types:**  | **Default Value** |
+|----------------------|-------------------|
+|  `String` | `null`   | 'div'             |
 
 
 Flip Move wraps your children in a container element. By default, this element is a `div`, but you may wish to provide a custom HTML element (for example, if your children are list items, you may wish to set this to `ul`).
 
 Any valid HTML element type is accepted, but peculiar things may happen if you use an unconventional element.
+
+With React 16, Flip Move can opt not to use a container element: set `typeName` to `null` to use this new "wrapperless" behaviour. [Read more](https://github.com/joshwcomeau/react-flip-move/blob/master/README.md#wrapping-elements).
 
 ---
 

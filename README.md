@@ -24,21 +24,6 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/scrabble" target="_blank">__Scrabble__</a>
   * <a href="http://joshwcomeau.github.io/react-flip-move/examples/#/laboratory" target="_blank">__Laboratory__</a>
 
-## Table of Contents
-
-* [Installation](#installation)
-* [Features](#features)
-* [Quickstart](#quickstart)
-* [Compatibility](#compatibility)
-* [Enter/Leave Animations](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/enter_leave_animations.md)
-* [API Reference](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/api_reference.md)
-* [Gotchas](#gotchas)
-* [Known Issues](#known-issues)
-* [Contributions](#contributions)
-* [Development](#development)
-* [Flow support](#flow-support)
-* [License](#license)
-
 
 
 ## Installation
@@ -114,45 +99,95 @@ Curious how this works, under the hood? [__Read the Medium post__](https://mediu
 
 ---
 
-### HTML Attributes
+### Wrapping Element
 
-FlipMove creates its own DOM node to wrap the children it needs to animate. Sometimes, you'll want to be able to pass specific HTML attributes to this node.
+By default, FlipMove wraps the children you pass it in a `<div>`:
 
-All props other than the ones listed above will be delegated to this new node, so you can apply them directly to FlipMove. For example:
+```jsx
+// JSX
+<FlipMove>
+  <div key="a">Hello</div>
+  <div key="b">World</div>
+</FlipMove>
 
-```html
+// HTML
 <div>
-  <FlipMove typeName="ul" className="row" style={{ backgroundColor: 'red' }}>
-    <li className="col">Column 1</li>
-    <li className="col">Column 2</li>
+  <div>Hello</div>
+  <div>World</div>
+</div>
+```
+
+Any unrecognized props to `<FlipMove>` will be delegated to this wrapper element:
+
+```jsx
+// JSX
+<FlipMove className="flip-wrapper" style={{ color: 'red' }}>
+  <div key="a">Hello</div>
+  <div key="b">World</div>
+</FlipMove>
+
+// HTML
+<div class="flip-wrapper" style="color: red;">
+  <div key="a">Hello</div>
+  <div key="b">World</div>
+</div>
+```
+
+You can supply a different element type with the `typeName` prop:
+
+```jsx
+// JSX
+<FlipMove typeName="ul">
+  <li key="a">Hello</li>
+  <li key="b">World</li>
+</FlipMove>
+
+// HTML
+<ul style="color: red;">
+  <li key="a">Hello</li>
+  <li key="b">World</li>
+</ul>
+```
+
+Finally, if you're using React 16 or higher, and Flip Move 2.10 or higher, you can use the new "wrapperless" mode. This takes advantage of a React Fiber feature, which allows us to omit this wrapping element:
+
+```jsx
+// JSX
+<div className="your-own-element">
+  <FlipMove typeName={null}>
+    <div key="a">Hello</div>
+    <div key="b">World</div>
+  </FlipMove>
+</div>
+
+// HTML
+<div class="your-own-element">
+  <div key="a">Hello</div>
+  <div key="b">World</div>
+</div>
+```
+
+Wrapperless mode is nice, because it makes FlipMove more "invisible", and makes it easier to integrate with parent-child CSS properties like flexbox. However, there are some things to note:
+
+- This is a new feature in FlipMove, and isn't as battle-tested as the traditional method. Please test thoroughly before using in production, and report any bugs!
+- FlipMove does some positioning magic for enter/exit animations - specifically, it temporarily applies `position: absolute` to its children. For this to work correctly, you'll need to make sure that `<FlipMove>` is within a container that has a non-static position (eg. `position: relative`), and no padding:
+
+```jsx
+// BAD - this will cause children to jump to a new position before exiting:
+<div style={{ padding: 20 }}>
+  <FlipMove typeName={null}>
+    <div key="a">Hello world</div>
+  </FlipMove>
+</div>
+
+// GOOD - a non-static position and a tight-fitting wrapper means children will
+// stay in place while exiting:
+<div style={{ position: 'relative' }}>
+  <FlipMove typeName={null}>
+    <div key="a">Hello world</div>
   </FlipMove>
 </div>
 ```
-
-FlipMove passes the `className` and `style` props along to the `ul` that needs to be created. Here's how it renders:
-
-```html
-<div>
-  <ul class="row" style="background-color: red">
-    <li class="col">Column 1</li>
-    <li class="col">Column 2</li>
-  </ul>
-</div>
-```
-
-This works for all HTML props - there's no validation.
-
-You can pass `false` to `typeName` and a valid HTMLElement reference as `anchor` to render the children without a wrapping DOM node. Note that you will have to use react 16.0.0 or higher, and that all other props (such as `className` or `style`) will have no effect.
-```html
-<div ref={node => this.myCustomParent = node}>
-  <FlipMove typeName={false} anchor={this.myCustomParent}>
-    <li className="col">Column 1</li>
-    <li className="col">Column 2</li>
-  </FlipMove>
-</div>
-```
-
-If no anchor is provided, react-flip-move will try to use the components parent node. This, however, is a costly operation that violates component separation principles and thus is [highly discouraged](https://reactjs.org/docs/react-dom.html#finddomnode).
 
 ---
 
