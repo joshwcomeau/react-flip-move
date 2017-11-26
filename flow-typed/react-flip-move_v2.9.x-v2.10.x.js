@@ -99,7 +99,7 @@ declare module 'react-flip-move' {
     };
 
   declare class FlipMove extends React$Component<FlipMoveProps> {
-    static defaultProps: FlipMoveDefaultProps,
+    static defaultProps: FlipMoveDefaultProps;
   }
 
   declare export default typeof FlipMove
