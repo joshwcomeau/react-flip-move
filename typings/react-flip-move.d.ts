@@ -206,7 +206,7 @@ declare namespace FlipMove {
          *
          * @default "div"
          */
-        typeName?: string;
+        typeName?: string | null;
 
         /**
          * Sometimes, you may wish to temporarily disable the animations and have the normal behaviour resumed. Setting this
