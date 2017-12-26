@@ -279,7 +279,7 @@ In general, it is advisable to ignore the `domNodes` argument and work with the 
 
 | **Accepted Types:**  | **Default Value** |
 |----------------------|-------------------|
-|  `String` | `null`   | 'div'             |
+|  `String`, `null`    | 'div'             |
 
 
 Flip Move wraps your children in a container element. By default, this element is a `div`, but you may wish to provide a custom HTML element (for example, if your children are list items, you may wish to set this to `ul`).
