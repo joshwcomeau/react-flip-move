@@ -217,10 +217,10 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     const childrenInitialStyles = dynamicChildren.map(child =>
       this.computeInitialStyles(child),
     );
-    dynamicChildren.forEach((child, n) => {
+    dynamicChildren.forEach((child, index) => {
       this.remainingAnimations += 1;
       this.childrenToAnimate.push(getKey(child));
-      this.animateChild(child, n, childrenInitialStyles);
+      this.animateChild(child, index, childrenInitialStyles[index]);
     });
 
     if (typeof this.props.onStartAll === 'function') {
@@ -386,11 +386,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     });
   }
 
-  animateChild(
-    child: ChildData,
-    index: number,
-    childrenInitialStyles: Styles[],
-  ) {
+  animateChild(child: ChildData, index: number, childInitialStyles: Styles) {
     const { domNode } = this.getChildData(getKey(child));
     if (!domNode) {
       return;
@@ -404,7 +400,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     // In FLIP terminology, this is the 'Invert' stage.
     applyStylesToDOMNode({
       domNode,
-      styles: childrenInitialStyles[index],
+      styles: childInitialStyles,
     });
 
     // Start by invoking the onStart callback for this child.
@@ -570,7 +566,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
       if (!childKey) {
-        childrenBoundingBoxes.push();
+        childrenBoundingBoxes.push(null);
         return;
       }
 
@@ -578,7 +574,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
       // populated for certain children. In this case, avoid doing this update.
       // see: https://github.com/joshwcomeau/react-flip-move/pull/91
       if (!this.hasChildData(childKey)) {
-        childrenBoundingBoxes.push();
+        childrenBoundingBoxes.push(null);
         return;
       }
 
@@ -587,7 +583,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
       // If the child element returns null, we need to avoid trying to
       // account for it
       if (!childData.domNode || !child) {
-        childrenBoundingBoxes.push();
+        childrenBoundingBoxes.push(null);
         return;
       }
 
@@ -603,12 +599,14 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     this.state.children.forEach((child, index) => {
       const childKey = getKey(child);
 
-      if (!childKey || !childrenBoundingBoxes[index]) {
+      const childBoundingBox = childrenBoundingBoxes[index];
+
+      if (!childKey) {
         return;
       }
 
       this.setChildData(childKey, {
-        boundingBox: childrenBoundingBoxes[index],
+        boundingBox: childBoundingBox,
       });
     });
   }
