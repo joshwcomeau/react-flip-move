@@ -213,10 +213,14 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
       this.doesChildNeedToBeAnimated,
     );
 
-    dynamicChildren.forEach((child, n) => {
+    // Splitting DOM reads and writes to be peformed in batches
+    const childrenInitialStyles = dynamicChildren.map(child =>
+      this.computeInitialStyles(child),
+    );
+    dynamicChildren.forEach((child, index) => {
       this.remainingAnimations += 1;
       this.childrenToAnimate.push(getKey(child));
-      this.animateChild(child, n);
+      this.animateChild(child, index, childrenInitialStyles[index]);
     });
 
     if (typeof this.props.onStartAll === 'function') {
@@ -382,7 +386,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     });
   }
 
-  animateChild(child: ChildData, index: number) {
+  animateChild(child: ChildData, index: number, childInitialStyles: Styles) {
     const { domNode } = this.getChildData(getKey(child));
     if (!domNode) {
       return;
@@ -396,7 +400,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     // In FLIP terminology, this is the 'Invert' stage.
     applyStylesToDOMNode({
       domNode,
-      styles: this.computeInitialStyles(child),
+      styles: childInitialStyles,
     });
 
     // Start by invoking the onStart callback for this child.
@@ -553,12 +557,16 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
 
     this.parentData.boundingBox = this.props.getPosition(parentDomNode);
 
+    // Splitting DOM reads and writes to be peformed in batches
+    const childrenBoundingBoxes = [];
+
     this.state.children.forEach(child => {
       const childKey = getKey(child);
 
       // It is possible that a child does not have a `key` property;
       // Ignore these children, they don't need to be moved.
       if (!childKey) {
+        childrenBoundingBoxes.push(null);
         return;
       }
 
@@ -566,6 +574,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
       // populated for certain children. In this case, avoid doing this update.
       // see: https://github.com/joshwcomeau/react-flip-move/pull/91
       if (!this.hasChildData(childKey)) {
+        childrenBoundingBoxes.push(null);
         return;
       }
 
@@ -574,15 +583,30 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
       // If the child element returns null, we need to avoid trying to
       // account for it
       if (!childData.domNode || !child) {
+        childrenBoundingBoxes.push(null);
         return;
       }
 
-      this.setChildData(childKey, {
-        boundingBox: getRelativeBoundingBox({
+      childrenBoundingBoxes.push(
+        getRelativeBoundingBox({
           childDomNode: childData.domNode,
           parentDomNode,
           getPosition: this.props.getPosition,
         }),
+      );
+    });
+
+    this.state.children.forEach((child, index) => {
+      const childKey = getKey(child);
+
+      const childBoundingBox = childrenBoundingBoxes[index];
+
+      if (!childKey) {
+        return;
+      }
+
+      this.setChildData(childKey, {
+        boundingBox: childBoundingBox,
       });
     });
   }
