@@ -438,7 +438,7 @@ Please note that this will cause animations to break in Internet Explorer 11 and
 `);
       });
 
-      it("doesn't when child has disabled attribute", () => {
+      it("doesn't warn when child has disabled attribute if animations are disabled", () => {
         const items = [
           <button disabled key="1" />,
           <button disabled key="2" />,
