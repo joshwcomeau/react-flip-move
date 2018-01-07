@@ -353,8 +353,9 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
           !this.isAnimationDisabled(this.props) &&
           childData.domNode &&
           childData.domNode.disabled
-        )
+        ) {
           childIsDisabled();
+        }
 
         // We need to take the items out of the "flow" of the document, so that
         // its siblings can move to take its place.
