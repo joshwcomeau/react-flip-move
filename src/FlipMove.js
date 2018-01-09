@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom';
 // eslint-disable-next-line no-duplicate-imports
 import type { Element, ElementRef, Key, ChildrenArray } from 'react';
 
-import { parentNodePositionStatic } from './error-messages';
+import { parentNodePositionStatic, childIsDisabled } from './error-messages';
 import './polyfills';
 import propConverter from './prop-converter';
 import {
@@ -347,6 +347,15 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
 
       leavingChildren.forEach(leavingChild => {
         const childData = this.getChildData(getKey(leavingChild));
+
+        // Warn if child is disabled
+        if (
+          !this.isAnimationDisabled(this.props) &&
+          childData.domNode &&
+          childData.domNode.disabled
+        ) {
+          childIsDisabled();
+        }
 
         // We need to take the items out of the "flow" of the document, so that
         // its siblings can move to take its place.

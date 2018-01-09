@@ -72,3 +72,11 @@ FlipMove has added 'position: relative' to this node, to ensure Flip Move animat
 
 To avoid seeing this warning, simply apply a non-static position to that parent node.
 `);
+
+export const childIsDisabled = warnOnce(`
+>> Warning, via react-flip-move <<
+
+One or more of Flip Move's child elements have the html attribute 'disabled' set to true.
+
+Please note that this will cause animations to break in Internet Explorer 11 and below. Either remove the disabled attribute or set 'animation' to false.
+`);

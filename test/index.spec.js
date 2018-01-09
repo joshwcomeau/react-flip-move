@@ -408,6 +408,64 @@ Please wrap your value in a native element (eg. <span>), or a component.
         );
         expect(warnStub).to.not.have.been.called;
       });
+
+      it('warns when child has disabled attribute', () => {
+        const items = [
+          <button disabled key="1" />,
+          <button disabled key="2" />,
+        ];
+
+        class ButtonList extends Component {
+          state = {
+            items,
+          };
+
+          render() {
+            return <FlipMove>{this.state.items}</FlipMove>;
+          }
+        }
+
+        const component = mount(<ButtonList />);
+        component.setState({
+          items: [items[0]],
+        });
+        expect(warnStub).to.have.been.calledWith(`
+>> Warning, via react-flip-move <<
+
+One or more of Flip Move's child elements have the html attribute 'disabled' set to true.
+
+Please note that this will cause animations to break in Internet Explorer 11 and below. Either remove the disabled attribute or set 'animation' to false.
+`);
+      });
+
+      it("doesn't warn when child has disabled attribute if animations are disabled", () => {
+        const items = [
+          <button disabled key="1" />,
+          <button disabled key="2" />,
+        ];
+
+        class ButtonList extends Component {
+          state = {
+            items,
+          };
+
+          render() {
+            return <FlipMove disableAllAnimations>{this.state.items}</FlipMove>;
+          }
+        }
+
+        const component = mount(<ButtonList />);
+        component.setState({
+          items: [items[0]],
+        });
+        expect(warnStub).not.to.have.been.calledWith(`
+>> Warning, via react-flip-move <<
+
+One or more of Flip Move's child elements have the html attribute 'disabled' set to true.
+
+Please note that this will cause animations to break in Internet Explorer 11 and below. Either remove the disabled attribute or set 'animation' to false.
+`);
+      });
     });
 
     describe('falsy children', () => {
