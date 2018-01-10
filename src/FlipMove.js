@@ -770,4 +770,6 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   }
 }
 
-export default propConverter(FlipMove);
+const enhancedFlipMove = /* #__PURE__ */ propConverter(FlipMove);
+
+export default enhancedFlipMove;
