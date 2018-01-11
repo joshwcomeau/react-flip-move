@@ -1,15 +1,23 @@
 // @flow
 import type { Element } from 'react';
 
-export const find = (predicate, arr) => {
+export const find = <T>(
+  predicate: (T, number, T[]) => boolean,
+  arr: T[],
+): ?T => {
   for (let i = 0; i < arr.length; i++) {
     if (predicate(arr[i], i, arr)) {
       return arr[i];
     }
   }
+
+  return undefined;
 };
 
-export const every = (predicate, arr) => {
+export const every = <T>(
+  predicate: (T, number, T[]) => boolean,
+  arr: T[],
+): boolean => {
   for (let i = 0; i < arr.length; i++) {
     if (!predicate(arr[i], i, arr)) {
       return false;
@@ -18,8 +26,11 @@ export const every = (predicate, arr) => {
   return true;
 };
 
-export let isArray = (arr) => {
-  isArray = Array.isArray || (arg => Object.prototype.toString.call(arg) === '[object Array]');
+// eslint-disable-next-line import/no-mutable-exports
+export let isArray = (arr: mixed): boolean => {
+  isArray =
+    Array.isArray ||
+    (arg => Object.prototype.toString.call(arg) === '[object Array]');
   return isArray(arr);
 };
 
