@@ -144,7 +144,7 @@ function propConverter(
       if (typeof props.disableAnimations !== 'undefined') {
         workingProps.disableAllAnimations = props.disableAnimations;
 
-        if (!process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV !== 'production') {
           deprecatedDisableAnimations();
         }
       }
@@ -176,7 +176,7 @@ function propConverter(
       if (isNaN(value)) {
         const defaultValue: number = FlipMovePropConverter.defaultProps[prop];
 
-        if (!process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV !== 'production') {
           invalidTypeForTimingProp({
             prop,
             value: rawValue,
@@ -206,7 +206,7 @@ function propConverter(
           const presetKeys = Object.keys(presets);
 
           if (presetKeys.indexOf(animation) === -1) {
-            if (!process.env.NODE_ENV === 'production') {
+            if (process.env.NODE_ENV !== 'production') {
               invalidEnterLeavePreset({
                 value: animation,
                 acceptableValues: presetKeys
