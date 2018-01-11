@@ -47,20 +47,20 @@ You can supply your own CSS-based transitions to customize the behaviour. Both `
    enterAnimation={{
      from: {
        transform: 'rotateX(180deg)',
-       opacity: 0.1,
+       opacity: 0.1
      },
      to: {
-       transform: '',
-     },
+       transform: ''
+     }
    }}
    leaveAnimation={{
      from: {
-        transform: '',
+        transform: ''
      },
      to: {
        transform: 'rotateX(-120deg)',
-       opacity: 0.1,
-     },
+       opacity: 0.1
+     }
    }}
  >
    {this.renderRows()}
