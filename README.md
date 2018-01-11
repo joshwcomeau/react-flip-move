@@ -13,6 +13,8 @@ CSS transitions only work for CSS properties. If your list is shuffled, the item
 
 Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-animations/#the-general-approach) to work out what such a transition would look like, and fakes it using 60+ FPS hardware-accelerated CSS transforms.
 
+[**Read more about how it works**](https://medium.com/developers-writing/animating-the-unanimatable-1346a5aab3cd)
+
 [![demo](https://s3.amazonaws.com/githubdocs/fm-main-demo.gif)](http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle)
 
 
@@ -54,8 +56,7 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
   * Compatible with [Preact](https://preactjs.com/) (should work with other React-like libraries as well).
 
-  * Implementation based on the [_FLIP technique_](https://medium.com/developers-writing/animating-the-unanimatable-1346a5aab3cd), a beautiful-in-its-simplicity method of tackling this problem. UMD build, when minified and gzipped, is under 6kb! ⚡
-
+  * Tiny! Gzipped size is around 6kb! ⚡
 
 
 ## Quickstart
