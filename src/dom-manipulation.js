@@ -10,7 +10,7 @@
 import { findDOMNode } from 'react-dom';
 import type { ElementRef } from 'react';
 
-import { hyphenate } from './helpers';
+import { find, hyphenate } from './helpers';
 import type {
   Styles,
   ClientRect,
@@ -49,8 +49,9 @@ export function whichTransitionEvent(): string {
 
   const el = document.createElement('fakeelement');
 
-  const match = Object.keys(transitions).find(
+  const match = find(
     t => el.style.getPropertyValue(t) !== undefined,
+    Object.keys(transitions),
   );
 
   // If no `transition` is found, we must be running in a browser so ancient,

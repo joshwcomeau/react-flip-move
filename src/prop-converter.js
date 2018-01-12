@@ -47,14 +47,6 @@ declare var process: {
   },
 };
 
-function isProduction(): boolean {
-  try {
-    return process.env.NODE_ENV === 'production';
-  } catch (e) {
-    return false;
-  }
-}
-
 function propConverter(
   ComposedComponent: ComponentType<ConvertedProps>,
 ): ComponentType<FlipMoveProps> {
@@ -78,7 +70,7 @@ function propConverter(
     checkChildren(children) {
       // Skip all console warnings in production.
       // Bail early, to avoid unnecessary work.
-      if (isProduction()) {
+      if (process.env.NODE_ENV === 'production') {
         return;
       }
 
@@ -152,7 +144,7 @@ function propConverter(
       if (typeof props.disableAnimations !== 'undefined') {
         workingProps.disableAllAnimations = props.disableAnimations;
 
-        if (!isProduction()) {
+        if (process.env.NODE_ENV !== 'production') {
           deprecatedDisableAnimations();
         }
       }
@@ -184,7 +176,7 @@ function propConverter(
       if (isNaN(value)) {
         const defaultValue: number = FlipMovePropConverter.defaultProps[prop];
 
-        if (!isProduction()) {
+        if (process.env.NODE_ENV !== 'production') {
           invalidTypeForTimingProp({
             prop,
             value: rawValue,
@@ -214,7 +206,7 @@ function propConverter(
           const presetKeys = Object.keys(presets);
 
           if (presetKeys.indexOf(animation) === -1) {
-            if (!isProduction()) {
+            if (process.env.NODE_ENV !== 'production') {
               invalidEnterLeavePreset({
                 value: animation,
                 acceptableValues: presetKeys

@@ -14,7 +14,6 @@ import ReactDOM from 'react-dom';
 import type { Element, ElementRef, Key, ChildrenArray } from 'react';
 
 import { parentNodePositionStatic, childIsDisabled } from './error-messages';
-import './polyfills';
 import propConverter from './prop-converter';
 import {
   applyStylesToDOMNode,
@@ -26,7 +25,7 @@ import {
   updateHeightPlaceholder,
   whichTransitionEvent,
 } from './dom-manipulation';
-import { arraysEqual } from './helpers';
+import { arraysEqual, find } from './helpers';
 import type {
   Child,
   ConvertedProps,
@@ -313,7 +312,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     // keep incrementing.
     let numOfChildrenLeaving = 0;
     this.state.children.forEach((child: ChildData, index) => {
-      const isLeaving = !nextChildren.find(({ key }) => key === getKey(child));
+      const isLeaving = !find(({ key }) => key === getKey(child), nextChildren);
 
       // If the child isn't leaving (or, if there is no leave animation),
       // we don't need to add it into the state children.
@@ -680,7 +679,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   }
 
   findChildByKey(key: ?Key): ?ChildData {
-    return this.state.children.find(child => getKey(child) === key);
+    return find(child => getKey(child) === key, this.state.children);
   }
 
   hasChildData(key: Key): boolean {
@@ -770,4 +769,6 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
   }
 }
 
-export default propConverter(FlipMove);
+const enhancedFlipMove = /* #__PURE__ */ propConverter(FlipMove);
+
+export default enhancedFlipMove;

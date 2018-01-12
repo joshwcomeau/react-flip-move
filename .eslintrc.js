@@ -36,6 +36,7 @@ module.exports = {
       },
     ],
     'no-console': [1, { allow: ['warn', 'error'] }],
+    'no-plusplus': [1, { allowForLoopAfterthoughts: true }],
 
     'flowtype/delimiter-dangle': [2, 'always-multiline'],
     'flowtype/no-dupe-keys': 2,

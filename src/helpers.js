@@ -1,6 +1,39 @@
 // @flow
 import type { Element } from 'react';
 
+export const find = <T>(
+  predicate: (T, number, T[]) => boolean,
+  arr: T[],
+): ?T => {
+  for (let i = 0; i < arr.length; i++) {
+    if (predicate(arr[i], i, arr)) {
+      return arr[i];
+    }
+  }
+
+  return undefined;
+};
+
+export const every = <T>(
+  predicate: (T, number, T[]) => boolean,
+  arr: T[],
+): boolean => {
+  for (let i = 0; i < arr.length; i++) {
+    if (!predicate(arr[i], i, arr)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+// eslint-disable-next-line import/no-mutable-exports
+export let isArray = (arr: mixed): boolean => {
+  isArray =
+    Array.isArray ||
+    (arg => Object.prototype.toString.call(arg) === '[object Array]');
+  return isArray(arr);
+};
+
 export const isElementAnSFC = (element: Element<*>): boolean => {
   const isNativeDOMElement = typeof element.type === 'string';
 
@@ -27,14 +60,14 @@ export function arraysEqual<T>(a: Array<T>, b: Array<T>) {
     return true;
   }
 
-  const notBothArrays = !Array.isArray(a) || !Array.isArray(b);
+  const notBothArrays = !isArray(a) || !isArray(b);
   const differentLengths = a.length !== b.length;
 
   if (notBothArrays || differentLengths) {
     return false;
   }
 
-  return a.every((element, index) => element === b[index]);
+  return every((element, index) => element === b[index], a);
 }
 
 function memoizeString<T>(fn: string => T): string => T {
