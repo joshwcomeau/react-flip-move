@@ -56,7 +56,7 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
   * Compatible with [Preact](https://preactjs.com/) (should work with other React-like libraries as well).
 
-  * Tiny! Gzipped size is around 6kb! ⚡
+  * Tiny! Gzipped size is <5kb! ⚡
 
 
 ## Quickstart
