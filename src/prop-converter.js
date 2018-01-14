@@ -22,7 +22,6 @@ import {
   primitiveNodeSupplied,
   invalidTypeForTimingProp,
   invalidEnterLeavePreset,
-  deprecatedDisableAnimations,
 } from './error-messages';
 import {
   appearPresets,
@@ -140,15 +139,6 @@ function propConverter(
 
       this.checkChildren(workingProps.children);
 
-      // Accept `disableAnimations`, but add a deprecation warning
-      if (typeof props.disableAnimations !== 'undefined') {
-        workingProps.disableAllAnimations = props.disableAnimations;
-
-        if (process.env.NODE_ENV !== 'production') {
-          deprecatedDisableAnimations();
-        }
-      }
-
       // Gather any additional props;
       // they will be delegated to the ReactElement created.
       const primaryPropKeys = Object.keys(workingProps);
@@ -209,9 +199,7 @@ function propConverter(
             if (process.env.NODE_ENV !== 'production') {
               invalidEnterLeavePreset({
                 value: animation,
-                acceptableValues: presetKeys
-                  .filter(key => key.indexOf('accordian') === -1)
-                  .join(', '),
+                acceptableValues: presetKeys.join(', '),
                 defaultValue: defaultPreset,
               });
             }

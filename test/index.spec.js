@@ -318,7 +318,6 @@ describe('FlipMove', () => {
         </FlipMove>,
       );
       shallow(<FlipMove>hi</FlipMove>);
-      shallow(<FlipMove disableAnimations />);
       shallow(<FlipMove duration="hi" />);
       shallow(<FlipMove appearAnimation="unknown" />);
 
@@ -486,20 +485,6 @@ Please note that this will cause animations to break in Internet Explorer 11 and
           done();
         }, 750);
       });
-    });
-
-    it('warns once about deprecated disableAnimations prop', () => {
-      shallow(<FlipMove disableAnimations />);
-      const wrapper = shallow(<FlipMove disableAnimations />);
-      expect(warnStub).to.have.been.calledOnce;
-      expect(warnStub).to.have.been.calledWith(`
->> Warning, via react-flip-move <<
-
-The 'disableAnimations' prop you provided is deprecated. Please switch to use 'disableAllAnimations'.
-
-This will become a silent error in future versions of react-flip-move.
-`);
-      expect(wrapper.prop('disableAllAnimations')).to.equal(true);
     });
 
     describe('animation props', () => {

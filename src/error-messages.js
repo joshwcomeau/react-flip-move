@@ -41,14 +41,6 @@ The prop you provided for '${args.prop}' is invalid. It needs to be a positive i
 As a result,  the default value for this parameter will be used, which is '${args.defaultValue}'.
 `);
 
-export const deprecatedDisableAnimations = warnOnce(`
->> Warning, via react-flip-move <<
-
-The 'disableAnimations' prop you provided is deprecated. Please switch to use 'disableAllAnimations'.
-
-This will become a silent error in future versions of react-flip-move.
-`);
-
 export const invalidEnterLeavePreset = (args: {
   value: string,
   acceptableValues: string,
