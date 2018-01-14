@@ -1,7 +1,3 @@
 {
-  "presets": ["react", "env", "stage-0", "flow"],
-  "plugins": [
-     "transform-decorators-legacy",
-     "add-module-exports"
-  ]
+  "extends": "../.babelrc"
 }
