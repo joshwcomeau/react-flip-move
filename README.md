@@ -144,7 +144,7 @@ You can supply a different element type with the `typeName` prop:
 </FlipMove>
 
 // HTML
-<ul style="color: red;">
+<ul>
   <li key="a">Hello</li>
   <li key="b">World</li>
 </ul>
