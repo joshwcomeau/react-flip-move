@@ -1,7 +1,7 @@
 // tslint:disable:max-classes-per-file
 
 import * as React from 'react';
-import * as FlipMove from '..';
+import FlipMove from '..';
 
 function childHook(el: React.ReactElement<any>, node: HTMLElement) {}
 function childrenHook(els: Array<React.ReactElement<any>>, nodes: Array<HTMLElement>) {}
