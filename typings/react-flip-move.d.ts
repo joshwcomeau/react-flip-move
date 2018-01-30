@@ -7,7 +7,7 @@
 import { Component, ReactElement } from 'react';
 
 export as namespace FlipMove;
-export = FlipMove;
+export default FlipMove;
 
 declare class FlipMove extends Component<FlipMove.FlipMoveProps, any> { }
 
