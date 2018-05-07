@@ -91,7 +91,7 @@ const TopArticles = ({ articles }) => (
 /**
  * AFTER:
  */
-import Flip Move from 'react-flip-move';
+import FlipMove from 'react-flip-move';
 
 const TopArticles = ({ articles }) => (
   <FlipMove>
