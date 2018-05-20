@@ -232,7 +232,7 @@ Wrapperless mode is nice, because it makes Flip Move more "invisible", and makes
 
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
-  * Sometimes you'll want to update or change an item _without_ triggering a Flip Move animation. For example, with optimistic updating, you may render a temporary version before replacing it with the server-validated one. In this case, simply use the same `key` for both versions, and Flip Move will treat them as the same item.
+  * Sometimes you'll want to update or change an item _without_ triggering a Flip Move animation. For example, with optimistic updating, you may render a temporary version before replacing it with the server-validated one. In this case, use the same `key` for both versions, and Flip Move will treat them as the same item.
 
 
 ## Known Issues
