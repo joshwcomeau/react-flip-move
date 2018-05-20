@@ -9,7 +9,7 @@ React Flip Move
 
 This module was built to tackle the common but arduous problem of animating a list of items when the list's order changes.
 
-CSS transitions only work for CSS properties. If your list is shuffled, the items have rearranged themselves, but without the use of CSS. The DOM nodes don't know that their on-screen location has changed; they've just been removed and inserted elsewhere in the document.
+CSS transitions only work for CSS properties. If your list is shuffled, the items have rearranged themselves, but without the use of CSS. The DOM nodes don't know that their on-screen location has changed; from their perspective, they've been removed and inserted elsewhere in the document.
 
 Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-animations/#the-general-approach) to work out what such a transition would look like, and fakes it using 60+ FPS hardware-accelerated CSS transforms.
 
@@ -30,6 +30,8 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
 
 ## Installation
 
+Flip Move can be installed with [NPM](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/en/).
+
 ```bash
 yarn add react-flip-move
 
@@ -37,9 +39,22 @@ yarn add react-flip-move
 npm i -S react-flip-move
 ```
 
-UMD builds are also available via CDN:
+A UMD build is made available for those not using JS package managers:
 * [react-flip-move.js](https://unpkg.com/react-flip-move/dist/react-flip-move.js)
 * [react-flip-move.min.js](https://unpkg.com/react-flip-move/dist/react-flip-move.min.js)
+
+To use a UMD build, you can use `<script>` tags:
+
+```html
+<html>
+  <body>
+    <script src="https://unpkg.com/react-flip-move/dist/react-flip-move.js"></script>
+    <script>
+      // Will be available under the global 'FlipMove'.
+    </script>
+  </body>
+</html>
+```
 
 
 ## Features
@@ -61,19 +76,33 @@ Flip Move was inspired by Ryan Florence's awesome <a href="https://github.com/ry
 
 ## Quickstart
 
-The implementation couldn't be simpler. Just wrap the items you'd like to move in a `FlipMove`, with any [custom options](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/api_reference.md):
+Flip Move aims to be a "plug and play" solution, without needing a lot of tinkering. In the ideal case, you can wrap the children you already have with `<FlipMove>`, and get animation for free:
 
 ```jsx
+/**
+ * BEFORE:
+ */
+const TopArticles = ({ articles }) => (
+  {articles.map(article => (
+    <Article key={article.id} {...article} />
+  ))}
+);
+
+/**
+ * AFTER:
+ */
 import FlipMove from 'react-flip-move';
 
 const TopArticles = ({ articles }) => (
-  <FlipMove duration={750} easing="ease-out">
+  <FlipMove>
     {articles.map(article => (
       <Article key={article.id} {...article} />
     ))}
   </FlipMove>
 );
 ```
+
+There are a number of [options](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/api_reference.md) you can provide to customize Flip Move. There are also some [gotchas](https://github.com/joshwcomeau/react-flip-move#gotchas) to be aware of.
 
 
 ## API Reference
@@ -102,7 +131,7 @@ Curious how this works, under the hood? [__Read the Medium post__](https://mediu
 
 ### Wrapping Element
 
-By default, FlipMove wraps the children you pass it in a `<div>`:
+By default, Flip Move wraps the children you pass it in a `<div>`:
 
 ```jsx
 // JSX
@@ -168,10 +197,10 @@ Finally, if you're using React 16 or higher, and Flip Move 2.10 or higher, you c
 </div>
 ```
 
-Wrapperless mode is nice, because it makes FlipMove more "invisible", and makes it easier to integrate with parent-child CSS properties like flexbox. However, there are some things to note:
+Wrapperless mode is nice, because it makes Flip Move more "invisible", and makes it easier to integrate with parent-child CSS properties like flexbox. However, there are some things to note:
 
 - This is a new feature in FlipMove, and isn't as battle-tested as the traditional method. Please test thoroughly before using in production, and report any bugs!
-- FlipMove does some positioning magic for enter/exit animations - specifically, it temporarily applies `position: absolute` to its children. For this to work correctly, you'll need to make sure that `<FlipMove>` is within a container that has a non-static position (eg. `position: relative`), and no padding:
+- Flip Move does some positioning magic for enter/exit animations - specifically, it temporarily applies `position: absolute` to its children. For this to work correctly, you'll need to make sure that `<FlipMove>` is within a container that has a non-static position (eg. `position: relative`), and no padding:
 
 ```jsx
 // BAD - this will cause children to jump to a new position before exiting:
@@ -195,11 +224,11 @@ Wrapperless mode is nice, because it makes FlipMove more "invisible", and makes 
 
 ## Gotchas
 
-  * Does not work with stateless functional component children. This is because Flip Move uses refs to identify and apply styles to children, and stateless functional components cannot be given refs.
+  * Does not work with stateless functional components. This is because Flip Move uses refs to identify and apply styles to children, and stateless functional components cannot be given refs. Make sure the children you pass to `<FlipMove>` are either native DOM elements (like `<div>`), or class components.
 
   * All children **need a unique `key` property**. Even if Flip Move is only given a single child, it needs to have a unique `key` prop for Flip Move to track it.
 
-  * FlipMove clones the direct children passed to it and overwrites the `ref` prop. As a result, you won't be able to set a `ref` on the top-most elements passed to FlipMove. An easy workaround is just to wrap the elements you pass to FlipMove in a `<div>`.
+  * Flip Move clones the direct children passed to it and overwrites the `ref` prop. As a result, you won't be able to set a `ref` on the top-most elements passed to FlipMove. To work around this limitation, you can wrap each child you pass to `<FlipMove>` in a `<div>`.
 
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
