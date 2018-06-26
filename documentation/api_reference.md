@@ -199,6 +199,16 @@ When `false`, children are immediately removed from the DOM flow as they animate
 
 ---
 
+### `verticalAlignment`
+
+| **Accepted Types:** | **Default Value** | **Accepted Values** |
+|---------------------|-------------------|---------------------|
+|  `String`           | `'top'`           | `'top'`, `'bottom'` |
+
+If the container is bottom-aligned and an element is removed, the container's top edge moves lower. You can tell `react-flip-move` to account for this by passing `'bottom'` to the `verticalAlignment` prop.
+
+---
+
 ### `onStart`
 
 | **Accepted Types:** | **Default Value** |
