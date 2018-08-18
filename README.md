@@ -18,6 +18,14 @@ Flip Move uses the [_FLIP technique_](https://aerotwist.com/blog/flip-your-anima
 [![demo](https://s3.amazonaws.com/githubdocs/fm-main-demo.gif)](http://joshwcomeau.github.io/react-flip-move/examples/#/shuffle)
 
 
+## Current Status
+
+React Flip Move is [looking for maintainers](https://github.com/joshwcomeau/react-flip-move/issues/233)!
+
+In the meantime, we'll do our best to make sure React Flip Move continues to work with new versions of React, but otherwise it isn't being actively worked on.
+
+Because it isn't under active development, you may be interested in checking out projects like [react-flip-toolkit](https://github.com/aholachek/react-flip-toolkit).
+
 
 ## Demos
 
