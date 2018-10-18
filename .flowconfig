@@ -5,6 +5,7 @@
 .*/node_modules/preact/.*
 .*/node_modules/@storybook/.*
 .*/node_modules/radium/.*
+.*/node_modules/styled-components/test-utils/.*
 
 [include]
 
