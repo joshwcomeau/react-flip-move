@@ -599,7 +599,7 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
           <El key="c" id="c">
             Test
           </El>
-        </FlipMove>
+        </FlipMove>,
       );
 
       expect(wrapper.find('div#a').length).to.equal(1);
