@@ -590,9 +590,15 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
 
       const wrapper = mount(
         <FlipMove>
-          <El key="a" id="a">Test</El>
-          <El key="b" id="b">Test</El>
-          <El key="c" id="c">Test</El>
+          <El key="a" id="a">
+            Test
+          </El>
+          <El key="b" id="b">
+            Test
+          </El>
+          <El key="c" id="c">
+            Test
+          </El>
         </FlipMove>
       );
 

@@ -41,8 +41,8 @@ export const isElementAnSFC = (element: Element<*>): boolean => {
     return false;
   }
 
-  return typeof element.type === 'function' &&
-    !element.type.prototype.isReactComponent;
+  return (typeof element.type === 'function' &&
+    !element.type.prototype.isReactComponent);
 };
 
 export function omit<R: {}, T: R>(obj: T, attrs: Array<$Keys<T>> = []): R {
