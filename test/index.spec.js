@@ -588,7 +588,6 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
     it('should shallow-render styled components', () => {
       const El = styled.div``;
 
-      console.log("do this shit fucko!");
       const wrapper = mount(
         <FlipMove>
           <El key="a">Test</El>
@@ -596,6 +595,8 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
           <El key="c">Test</El>
         </FlipMove>
       );
+
+      console.log("wrapper: ", wrapper);
 
       expect(wrapper.find('div').length).to.equal(3);
     });
