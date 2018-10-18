@@ -43,7 +43,7 @@ export const isElementAnSFC = (element: Element<*>): boolean => {
 
   return (
     typeof element.type === 'function' &&
-      !element.type.prototype.isReactComponent
+    !element.type.prototype.isReactComponent
   );
 };
 
