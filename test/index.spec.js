@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import Enzyme, { shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import styled from 'styled-components';
 
 import { getContainerBox, getTagPositions } from './helpers';
 import FlipMove from '../src/FlipMove';
@@ -580,6 +581,23 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
       expect(containerBox.height).to.equal(
         getContainerBox(attachedWrapper).height,
       );
+    });
+  });
+
+  describe('styled components 4', () => {
+    it('should shallow-render styled components', () => {
+      const El = styled.div``;
+
+      console.log("do this shit fucko!");
+      const wrapper = mount(
+        <FlipMove>
+          <El key="a">Test</El>
+          <El key="b">Test</El>
+          <El key="c">Test</El>
+        </FlipMove>
+      );
+
+      expect(wrapper.find('div').length).to.equal(3);
     });
   });
 });
