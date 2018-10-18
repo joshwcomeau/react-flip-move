@@ -590,15 +590,15 @@ Acceptable values are elevator, fade, accordionVertical, accordionHorizontal, no
 
       const wrapper = mount(
         <FlipMove>
-          <El key="a">Test</El>
-          <El key="b">Test</El>
-          <El key="c">Test</El>
+          <El key="a" id="a">Test</El>
+          <El key="b" id="b">Test</El>
+          <El key="c" id="c">Test</El>
         </FlipMove>
       );
 
-      console.log("wrapper: ", wrapper);
-
-      expect(wrapper.find('div').length).to.equal(3);
+      expect(wrapper.find('div#a').length).to.equal(1);
+      expect(wrapper.find('div#b').length).to.equal(1);
+      expect(wrapper.find('div#c').length).to.equal(1);
     });
   });
 });

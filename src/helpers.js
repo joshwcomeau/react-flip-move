@@ -41,7 +41,7 @@ export const isElementAnSFC = (element: Element<*>): boolean => {
     return false;
   }
 
-  return typeof element === 'function' &&
+  return typeof element.type === 'function' &&
     !element.type.prototype.isReactComponent;
 };
 
