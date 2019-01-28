@@ -431,8 +431,14 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
         // to its new position.
 
         // eslint-disable-next-line flowtype/require-variable-type
+        let transition = '';
+        if (this.props.createTransitionString) {
+          transition = this.props.createTransitionString(index);
+        } else {
+          transition = createTransitionString(index, this.props);
+        }
         let styles = {
-          transition: createTransitionString(index, this.props),
+          transition,
           transform: '',
           opacity: '',
         };

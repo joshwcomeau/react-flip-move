@@ -62,6 +62,7 @@ declare module 'react-flip-move' {
     getPosition: GetPosition,
     maintainContainerHeight: boolean,
     verticalAlignment: VerticalAlignment,
+    createTransitionString: (index: number) => string,
   };
 
   declare type PolymorphicProps = {

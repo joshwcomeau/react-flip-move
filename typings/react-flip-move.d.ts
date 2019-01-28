@@ -231,5 +231,10 @@ declare namespace FlipMove {
         verticalAlignment?: string;
 
         style?: Styles;
+
+        /**
+         * This function is called to get custom transition css
+         */
+        createTransitionString?(index: string): string;
     }
 }

@@ -111,6 +111,7 @@ function propConverter(
         getPosition: props.getPosition,
         maintainContainerHeight: props.maintainContainerHeight,
         verticalAlignment: props.verticalAlignment,
+        createTransitionString: props.createTransitionString,
 
         // Do string-to-int conversion for all timing-related props
         duration: this.convertTimingProp('duration'),
