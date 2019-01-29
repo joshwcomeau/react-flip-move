@@ -216,10 +216,34 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     const childrenInitialStyles = dynamicChildren.map(child =>
       this.computeInitialStyles(child),
     );
+    const childrenFinishStyles = dynamicChildren.map(child =>
+      this.computeFinishStyles(child),
+    );
+    const transitionString = dynamicChildren.map((child, index) =>
+      this.createTransitionString(child, index),
+    );
+
     dynamicChildren.forEach((child, index) => {
       this.remainingAnimations += 1;
       this.childrenToAnimate.push(getKey(child));
-      this.animateChild(child, index, childrenInitialStyles[index]);
+      this.animateChild(
+        child,
+        index,
+        childrenInitialStyles[index],
+        childrenFinishStyles[index],
+        transitionString[index],
+      );
+    });
+
+    if (typeof this.props.onStartAll === 'function') {
+      this.callChildrenHook(this.props.onStartAll);
+    }
+  };
+
+    dynamicChildren.forEach((child, index) => {
+      this.remainingAnimations += 1;
+      this.childrenToAnimate.push(getKey(child));
+      this.animateChild(child, index, from, to, transition);
     });
 
     if (typeof this.props.onStartAll === 'function') {
@@ -394,7 +418,13 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     });
   }
 
-  animateChild(child: ChildData, index: number, childInitialStyles: Styles) {
+  animateChild(
+    child: ChildData,
+    index: number,
+    childInitialStyles: Styles,
+    childFinishStyles: Styles,
+    transitionString: string,
+  ) {
     const { domNode } = this.getChildData(getKey(child));
     if (!domNode) {
       return;
@@ -431,34 +461,12 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
         // to its new position.
 
         // eslint-disable-next-line flowtype/require-variable-type
-        let transition = '';
-        if (this.props.createTransitionString) {
-          transition = this.props.createTransitionString(index);
-        } else {
-          transition = createTransitionString(index, this.props);
-        }
-        let styles = {
-          transition,
+        const styles = {
+          transition: transitionString,
           transform: '',
           opacity: '',
+          ...childFinishStyles,
         };
-
-        if (child.appearing && this.props.appearAnimation) {
-          styles = {
-            ...styles,
-            ...this.props.appearAnimation.to,
-          };
-        } else if (child.entering && this.props.enterAnimation) {
-          styles = {
-            ...styles,
-            ...this.props.enterAnimation.to,
-          };
-        } else if (child.leaving && this.props.leaveAnimation) {
-          styles = {
-            ...styles,
-            ...this.props.leaveAnimation.to,
-          };
-        }
 
         // In FLIP terminology, this is the 'Play' stage.
         applyStylesToDOMNode({ domNode, styles });
@@ -665,6 +673,29 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     return {
       transform: `translate(${dX}px, ${dY}px)`,
     };
+  }
+
+  computeFinishStyles(child: ChildData): Styles {
+    if (child.appearing) {
+      return this.props.appearAnimation ? this.props.appearAnimation.to : {};
+    } else if (child.entering) {
+      return this.props.enterAnimation ? this.props.enterAnimation.to : {};
+    } else if (child.leaving) {
+      return this.props.leaveAnimation ? this.props.leaveAnimation.to : {};
+    }
+
+    return {};
+  }
+
+  createTransitionString(child: ChildData, index: number): string {
+    let transition = '';
+
+    if (this.props.createTransitionString) {
+      transition = this.props.createTransitionString(index);
+    } else {
+      transition = createTransitionString(index, this.props);
+    }
+    return transition;
   }
 
   // eslint-disable-next-line class-methods-use-this
