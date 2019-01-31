@@ -1,6 +1,6 @@
-/* global chai, expect, sinon */
+/* global expect, sinon */
 /* eslint-env mocha */
-/* eslint-disable react/prop-types, react/no-multi-comp, no-unused-expressions */
+/* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-pascal-case, no-unused-expressions, no-unused-vars */
 import React, { Component } from 'react';
 import Enzyme, { shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';

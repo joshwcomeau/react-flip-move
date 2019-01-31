@@ -1,10 +1,9 @@
-// @flow
-import type { Element } from 'react';
+import { ReactElement } from 'react';
 
 export const find = <T>(
-  predicate: (T, number, T[]) => boolean,
+  predicate: (t: T, i: number, arr: T[]) => boolean,
   arr: T[],
-): ?T => {
+): T => {
   for (let i = 0; i < arr.length; i++) {
     if (predicate(arr[i], i, arr)) {
       return arr[i];
@@ -15,7 +14,7 @@ export const find = <T>(
 };
 
 export const every = <T>(
-  predicate: (T, number, T[]) => boolean,
+  predicate: (t: T, i: number, arr: T[]) => boolean,
   arr: T[],
 ): boolean => {
   for (let i = 0; i < arr.length; i++) {
@@ -27,14 +26,14 @@ export const every = <T>(
 };
 
 // eslint-disable-next-line import/no-mutable-exports
-export let isArray = (arr: mixed): boolean => {
+export let isArray = (arr: any): boolean => {
   isArray =
     Array.isArray ||
     (arg => Object.prototype.toString.call(arg) === '[object Array]');
   return isArray(arr);
 };
 
-export const isElementAnSFC = (element: Element<*>): boolean => {
+export const isElementAnSFC = (element: ReactElement<any>): boolean => {
   const isNativeDOMElement = typeof element.type === 'string';
 
   if (isNativeDOMElement) {
@@ -47,14 +46,14 @@ export const isElementAnSFC = (element: Element<*>): boolean => {
   );
 };
 
-export function omit<R: {}, T: R>(obj: T, attrs: Array<$Keys<T>> = []): R {
-  const result: $Shape<T> = {};
-  Object.keys(obj).forEach((key: $Keys<T>) => {
+export function omit<R=Partial<T>, T={}>(obj: T, attrs: Array<keyof T> = []): R {
+  const result: Partial<T> = {};
+  (Object.keys(obj) as Array<keyof T>).forEach((key: keyof T) => {
     if (attrs.indexOf(key) === -1) {
       result[key] = obj[key];
     }
   });
-  return result;
+  return result as R;
 }
 
 export function arraysEqual<T>(a: Array<T>, b: Array<T>) {
@@ -73,8 +72,8 @@ export function arraysEqual<T>(a: Array<T>, b: Array<T>) {
   return every((element, index) => element === b[index], a);
 }
 
-function memoizeString<T>(fn: string => T): string => T {
-  const cache: { [string]: T } = {};
+function memoizeString<T>(fn: (str: string) => T): (str: string) => T {
+  const cache: { [key: string]: T } = {};
 
   return str => {
     if (!cache[str]) {

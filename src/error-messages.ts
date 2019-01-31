@@ -1,5 +1,4 @@
-// @flow
-import type { Presets } from './typings';
+import { Presets } from './typings';
 
 function warnOnce(msg: string) {
   let hasWarned = false;
@@ -44,7 +43,7 @@ As a result,  the default value for this parameter will be used, which is '${arg
 export const invalidEnterLeavePreset = (args: {
   value: string,
   acceptableValues: string,
-  defaultValue: $Keys<Presets>,
+  defaultValue: keyof Presets,
 }) =>
   // prettier-ignore
   console.error(`

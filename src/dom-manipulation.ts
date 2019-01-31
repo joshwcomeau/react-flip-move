@@ -7,11 +7,11 @@
  * They almost always have side effects, and will hopefully become the
  * only spot in the codebase with impure functions.
  */
-import { findDOMNode } from 'react-dom';
-import type { ElementRef } from 'react';
+import ReactDOM from 'react-dom';
+import { Ref } from 'react';
 
 import { find, hyphenate } from './helpers';
-import type {
+import {
   Styles,
   ClientRect,
   GetPosition,
@@ -93,8 +93,8 @@ export const getPositionDelta = ({
   getPosition,
 }: {
   childDomNode: HTMLElement,
-  childBoundingBox: ?ClientRect,
-  parentBoundingBox: ?ClientRect,
+  childBoundingBox: ClientRect,
+  parentBoundingBox: ClientRect,
   getPosition: GetPosition,
 }): [number, number] => {
   // TEMP: A mystery bug is sometimes causing unnecessary boundingBoxes to
@@ -156,7 +156,7 @@ export const removeNodeFromDOMFlow = (
   // eg. '21px' -> 21
   const marginAttrs = ['margin-top', 'margin-left', 'margin-right'];
   const margins: {
-    [string]: number,
+    [key: string]: number,
   } = marginAttrs.reduce((acc, margin) => {
     const propertyVal = computed.getPropertyValue(margin);
 
@@ -231,7 +231,7 @@ export const updateHeightPlaceholder = ({
   applyStylesToDOMNode({ domNode, styles });
 };
 
-export const getNativeNode = (element: ElementRef<*>): ?HTMLElement => {
+export const getNativeNode = (element: Ref<any>): HTMLElement => {
   // When running in a windowless environment, abort!
   if (typeof HTMLElement === 'undefined') {
     return null;
@@ -245,14 +245,14 @@ export const getNativeNode = (element: ElementRef<*>): ?HTMLElement => {
   // While ReactDOM's `findDOMNode` is discouraged, it's the only
   // publicly-exposed way to find the underlying DOM node for
   // composite components.
-  const foundNode: ?(Element | Text) = findDOMNode(element);
+  const foundNode: (Element | Text) = ReactDOM.findDOMNode(element);
 
   if (foundNode && foundNode.nodeType === Node.TEXT_NODE) {
     // Text nodes are not supported
     return null;
   }
   // eslint-disable-next-line flowtype/no-weak-types
-  return ((foundNode: any): ?HTMLElement);
+  return foundNode as HTMLElement;
 };
 
 export const createTransitionString = (
