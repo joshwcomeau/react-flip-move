@@ -15,6 +15,7 @@ import { ReactElement, Ref, Key } from 'react';
 
 import { parentNodePositionStatic, childIsDisabled } from './error-messages';
 import propConverter from './prop-converter';
+
 import {
   applyStylesToDOMNode,
   createTransitionString,
@@ -238,6 +239,26 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
         childrenFinishStyles[index],
         transitionString[index],
       );
+    });
+
+    if (typeof this.props.onStartAll === 'function') {
+      this.callChildrenHook(this.props.onStartAll);
+    }
+  };
+  
+  //todo 不应用any
+  runCustomAnimation = (keys, animate: any) => {
+    const children = this.props.children;
+    const strKeys = keys.map(key => String(key));
+    const dynamicChildren = this.state.children.filter((child, index) =>
+      strKeys.includes((children[index] as any).key),
+    );
+    
+    let { from, to, transition } = animate
+    dynamicChildren.forEach((child, index) => {
+      this.remainingAnimations += 1;
+      this.childrenToAnimate.push(getKey(child));
+      this.animateChild(child, index, from, to, transition);
     });
 
     if (typeof this.props.onStartAll === 'function') {

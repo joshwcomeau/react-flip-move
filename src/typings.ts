@@ -38,7 +38,6 @@ export type ElementShape = {
   props: ReactElement<any>['props'],
   key: ReactElement<any>['key'],
   ref: Ref<any>,
-
 };
 
 type ChildHook = (element: ElementShape, node: HTMLElement) => any;
@@ -110,7 +109,7 @@ export type ConvertedProps = CommonProps & {
   enterAnimation?: Animation,
   leaveAnimation?: Animation,
   // customAnimation?: Animation,
-  // customAnimationKeys: string[],
+  // customAnimationKeys?: string[],
   delegated: DelegatedProps,
 };
 

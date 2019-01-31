@@ -63,6 +63,13 @@ function propConverter(
       verticalAlignment: 'top' as any,
     };
 
+    componentRef = React.createRef<Component<ConvertedProps>>();
+
+    runCustomAnimation(keys, animation) {
+      if (this.componentRef.current !== null) {
+        this.componentRef.current.runCustomAnimation(keys, animation);
+      }
+    }
     // eslint-disable-next-line class-methods-use-this
     checkChildren(children) {
       // Skip all console warnings in production.
@@ -218,6 +225,7 @@ function propConverter(
     render() {
       return (
         <ComposedComponent 
+          ref ={this.componentRef}
           {...this.convertProps(this.props)}
         />
       );

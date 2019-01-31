@@ -9,7 +9,10 @@ import { Component, ReactElement } from 'react';
 export as namespace FlipMove;
 export default FlipMove;
 
-declare class FlipMove extends Component<FlipMove.FlipMoveProps, any> { }
+declare class FlipMove extends Component<FlipMove.FlipMoveProps, any> {
+    // todo 需要统一key 
+    runCustomAnimation(keys: (number|string)[], animation: FlipMove.Animation): void;
+}
 
 declare namespace FlipMove {
     type AnimationPreset = 'elevator' | 'fade' | 'accordionVertical' | 'accordionHorizontal' | 'none';
@@ -17,6 +20,7 @@ declare namespace FlipMove {
     interface Animation {
         from: Partial<CSSStyleDeclaration>;
         to: Partial<CSSStyleDeclaration>;
+        transition?: string;
     }
 
     interface Styles {
