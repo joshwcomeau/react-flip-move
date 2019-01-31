@@ -1,4 +1,4 @@
-/* eslint-disable react/forbid-prop-types */
+/* eslint-disable react/forbid-prop-types, no-useless-call */
 import React, { Component } from 'react';
 import { storiesOf } from '@storybook/react';
 import shuffle from 'lodash/shuffle';

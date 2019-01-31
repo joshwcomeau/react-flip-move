@@ -3,4 +3,4 @@ coverage
 lib
 dist
 flow-coverage
-!.storybook
+.storybook

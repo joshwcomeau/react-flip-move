@@ -1,4 +1,3 @@
-// @flow
 /**
  * React Flip Move | propConverter
  * (c) 2016-present Joshua Comeau
@@ -13,9 +12,8 @@
  */
 /* eslint-disable block-scoped-var */
 
-import React, { Component, Children } from 'react';
+import React, { Component, Children, ComponentClass, ReactElement } from 'react';
 // eslint-disable-next-line no-duplicate-imports
-import type { ComponentType, Element } from 'react';
 
 import {
   statelessFunctionalComponentSupplied,
@@ -31,7 +29,7 @@ import {
   disablePreset,
 } from './enter-leave-presets';
 import { isElementAnSFC, omit } from './helpers';
-import type {
+import {
   Animation,
   AnimationProp,
   Presets,
@@ -47,8 +45,8 @@ declare var process: {
 };
 
 function propConverter(
-  ComposedComponent: ComponentType<ConvertedProps>,
-): ComponentType<FlipMoveProps> {
+  ComposedComponent: ComponentClass<ConvertedProps>,
+): ComponentClass<FlipMoveProps> {
   return class FlipMovePropConverter extends Component<FlipMoveProps> {
     static defaultProps = {
       easing: 'ease-in-out',
@@ -62,9 +60,16 @@ function propConverter(
       disableAllAnimations: false,
       getPosition: (node: HTMLElement) => node.getBoundingClientRect(),
       maintainContainerHeight: false,
-      verticalAlignment: 'top',
+      verticalAlignment: 'top' as any,
     };
 
+    componentRef = React.createRef<Component<ConvertedProps>>();
+
+    runCustomAnimation(keys, animation) {
+      if (this.componentRef.current !== null) {
+        this.componentRef.current.runCustomAnimation(keys, animation);
+      }
+    }
     // eslint-disable-next-line class-methods-use-this
     checkChildren(children) {
       // Skip all console warnings in production.
@@ -74,7 +79,7 @@ function propConverter(
       }
 
       // same as React.Node, but without fragments, see https://github.com/facebook/flow/issues/4781
-      type Child = void | null | boolean | number | string | Element<*>;
+      type Child = void | null | boolean | number | string | ReactElement<any>;
 
       // FlipMove does not support stateless functional components.
       // Check to see if any supplied components won't work.
@@ -111,6 +116,7 @@ function propConverter(
         getPosition: props.getPosition,
         maintainContainerHeight: props.maintainContainerHeight,
         verticalAlignment: props.verticalAlignment,
+        createTransitionString: props.createTransitionString,
 
         // Do string-to-int conversion for all timing-related props
         duration: this.convertTimingProp('duration'),
@@ -142,7 +148,7 @@ function propConverter(
       // Gather any additional props;
       // they will be delegated to the ReactElement created.
       const primaryPropKeys = Object.keys(workingProps);
-      const delegatedProps: DelegatedProps = omit(this.props, primaryPropKeys);
+      const delegatedProps: DelegatedProps = omit(this.props as any, primaryPropKeys);
 
       // The FlipMove container element needs to have a non-static position.
       // We use `relative` by default, but it can be overridden by the user.
@@ -182,9 +188,9 @@ function propConverter(
 
     // eslint-disable-next-line class-methods-use-this
     convertAnimationProp(
-      animation: ?AnimationProp,
+      animation: AnimationProp,
       presets: Presets,
-    ): ?Animation {
+    ): Animation {
       switch (typeof animation) {
         case 'boolean': {
           // If it's true, we want to use the default preset.
@@ -217,7 +223,12 @@ function propConverter(
     }
 
     render() {
-      return <ComposedComponent {...this.convertProps(this.props)} />;
+      return (
+        <ComposedComponent 
+          ref ={this.componentRef}
+          {...this.convertProps(this.props)}
+        />
+      );
     }
   };
 }
