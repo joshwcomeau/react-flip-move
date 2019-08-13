@@ -1,6 +1,8 @@
 language: node_js
 services:
   - xvfb
+addons:
+  chrome: stable
 cache:
   directories:
     - node_modules
@@ -8,8 +10,6 @@ node_js:
   - "6"
   - "8"
 before_script:
-  - export CHROME_BIN=chromium-browser
-  - export DISPLAY=:99.0
   - npm install -g babel-cli
 script:
   - npm run build
