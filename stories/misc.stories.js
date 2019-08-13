@@ -140,7 +140,9 @@ storiesOf('Misc - wrapperless', module).add('within a static <div>', () => {
           }}
         >
           <FlipMove typeName={null}>
-            {this.state.items.map(item => <div key={item}>{item}</div>)}
+            {this.state.items.map(item => (
+              <div key={item}>{item}</div>
+            ))}
           </FlipMove>
         </div>
       );
