@@ -107,7 +107,7 @@
     "sinon-chai": "2.8.0",
     "styled-components": "^4.3.2",
     "tslint": "5.18.0",
-    "typescript": "2.3.2",
+    "typescript": "3.5.3",
     "webpack": "3.6.0"
   }
 }
