@@ -133,31 +133,6 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     }
   }
 
-  componentWillReceiveProps(nextProps: ConvertedProps) {
-    // When the component is handed new props, we need to figure out the
-    // "resting" position of all currently-rendered DOM nodes.
-    // We store that data in this.parent and this.children,
-    // so it can be used later to work out the animation.
-    this.updateBoundingBoxCaches();
-
-    // Convert opaque children object to array.
-    const nextChildren: Array<Element<*>> = getElementChildren(
-      nextProps.children,
-    );
-
-    // Next, we need to update our state, so that it contains our new set of
-    // children. If animation is disabled or unsupported, this is easy;
-    // we just copy our props into state.
-    // Assuming that we can animate, though, we have to do some work.
-    // Essentially, we want to keep just-deleted nodes in the DOM for a bit
-    // longer, so that we can animate them away.
-    this.setState({
-      children: this.isAnimationDisabled(nextProps)
-        ? nextChildren.map(element => ({ ...element, element }))
-        : this.calculateNextSetOfChildren(nextChildren),
-    });
-  }
-
   componentDidUpdate(previousProps: ConvertedProps) {
     if (this.props.typeName === null) {
       this.findDOMContainer();
@@ -391,6 +366,32 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
           },
         });
       }
+    });
+  }
+
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps(nextProps: ConvertedProps) {
+    // When the component is handed new props, we need to figure out the
+    // "resting" position of all currently-rendered DOM nodes.
+    // We store that data in this.parent and this.children,
+    // so it can be used later to work out the animation.
+    this.updateBoundingBoxCaches();
+
+    // Convert opaque children object to array.
+    const nextChildren: Array<Element<*>> = getElementChildren(
+      nextProps.children,
+    );
+
+    // Next, we need to update our state, so that it contains our new set of
+    // children. If animation is disabled or unsupported, this is easy;
+    // we just copy our props into state.
+    // Assuming that we can animate, though, we have to do some work.
+    // Essentially, we want to keep just-deleted nodes in the DOM for a bit
+    // longer, so that we can animate them away.
+    this.setState({
+      children: this.isAnimationDisabled(nextProps)
+        ? nextChildren.map(element => ({ ...element, element }))
+        : this.calculateNextSetOfChildren(nextChildren),
     });
   }
 
