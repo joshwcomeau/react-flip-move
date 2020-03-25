@@ -113,6 +113,32 @@ const TopArticles = ({ articles }) => (
 There are a number of [options](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/api_reference.md) you can provide to customize Flip Move. There are also some [gotchas](https://github.com/joshwcomeau/react-flip-move#gotchas) to be aware of.
 
 
+## Usage with Functional Components
+
+Functional components do not have a `ref`, which is needed by Flip Move to work. To make it work you need to wrap your functional component into [React.forwardRef](https://reactjs.org/docs/forwarding-refs.html) and pass it down to the first element which accepts refs, such as DOM elements or class components:
+
+```jsx
+import React, { forwardRef } from 'react';
+import FlipMove from 'react-flip-move';
+
+const FunctionalArticle = forwardRef((props, ref) => (
+  <div ref={ref}>
+    {props.articleName}
+  </div>
+));
+
+// you do not have to modify the parent component
+// this will stay as described in the quickstart
+const TopArticles = ({ articles }) => (
+  <FlipMove>
+    {articles.map(article => (
+      <FunctionalArticle key={article.id} {...article} />
+    ))}
+  </FlipMove>
+);
+```
+
+
 ## API Reference
 
 View the [full API reference documentation](https://github.com/joshwcomeau/react-flip-move/blob/master/documentation/api_reference.md)
@@ -232,7 +258,7 @@ Wrapperless mode is nice, because it makes Flip Move more "invisible", and makes
 
 ## Gotchas
 
-  * Does not work with stateless functional components (unless in combination with [React.forwardRef](https://reactjs.org/docs/forwarding-refs.html)). This is because Flip Move uses refs to identify and apply styles to children, and stateless functional components cannot be given refs. Make sure the children you pass to `<FlipMove>` are either native DOM elements (like `<div>`), or class components.
+  * Does not work with stateless functional components without a [React.forwardRef](https://reactjs.org/docs/forwarding-refs.html), read more about [here](#usage-with-functional-components). This is because Flip Move uses refs to identify and apply styles to children, and stateless functional components cannot be given refs. Make sure the children you pass to `<FlipMove>` are either native DOM elements (like `<div>`), or class components.
 
   * All children **need a unique `key` property**. Even if Flip Move is only given a single child, it needs to have a unique `key` prop for Flip Move to track it.
 
@@ -241,7 +267,6 @@ Wrapperless mode is nice, because it makes Flip Move more "invisible", and makes
   * Elements whose positions have not changed between states will not be animated. This means that no `onStart` or `onFinish` callbacks will be executed for those elements.
 
   * Sometimes you'll want to update or change an item _without_ triggering a Flip Move animation. For example, with optimistic updating, you may render a temporary version before replacing it with the server-validated one. In this case, use the same `key` for both versions, and Flip Move will treat them as the same item.
-
 
 ## Known Issues
 

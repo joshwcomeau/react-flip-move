@@ -730,7 +730,7 @@ class FlipMove extends Component<ConvertedProps, FlipMoveState> {
     return this.state.children.map(child =>
       cloneElement(child.element, {
         ref: (element: ?ElementRef<*>) => {
-          // Stateless Functional Components are not supported by FlipMove,
+          // Functional Components without a forwarded ref are not supported by FlipMove,
           // because they don't have instances.
           if (!element) {
             return;
