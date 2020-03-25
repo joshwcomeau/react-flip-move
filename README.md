@@ -232,7 +232,7 @@ Wrapperless mode is nice, because it makes Flip Move more "invisible", and makes
 
 ## Gotchas
 
-  * Does not work with stateless functional components. This is because Flip Move uses refs to identify and apply styles to children, and stateless functional components cannot be given refs. Make sure the children you pass to `<FlipMove>` are either native DOM elements (like `<div>`), or class components.
+  * Does not work with stateless functional components (unless in combination with [React.forwardRef](https://reactjs.org/docs/forwarding-refs.html)). This is because Flip Move uses refs to identify and apply styles to children, and stateless functional components cannot be given refs. Make sure the children you pass to `<FlipMove>` are either native DOM elements (like `<div>`), or class components.
 
   * All children **need a unique `key` property**. Even if Flip Move is only given a single child, it needs to have a unique `key` prop for Flip Move to track it.
 
