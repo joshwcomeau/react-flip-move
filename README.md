@@ -268,6 +268,8 @@ Wrapperless mode is nice, because it makes Flip Move more "invisible", and makes
 
   * Sometimes you'll want to update or change an item _without_ triggering a Flip Move animation. For example, with optimistic updating, you may render a temporary version before replacing it with the server-validated one. In this case, use the same `key` for both versions, and Flip Move will treat them as the same item.
 
+  * If you have a vertical list with numerous elements, exceeding viewport, and you are experiencing automatic scrolling issues when reordering an item (i.e. the browser scrolls to the moved item's position), you can add style={{ overflowAnchor: 'none' }} to the container element (e.g. <ul>) to prevent this issue.
+
 ## Known Issues
 
   * **Interrupted enter/leave animations can be funky**. This has gotten better recently thanks to our great contributors, but extremely fast adding/removing of items can cause weird visual glitches, or cause state to become inconsistent. Experiment with your usecase!
