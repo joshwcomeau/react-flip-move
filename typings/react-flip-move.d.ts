@@ -26,6 +26,11 @@ declare namespace FlipMove {
     type AnimationProp = AnimationPreset | Animation | boolean;
 
     interface FlipMoveProps {
+        /**
+         * The children to animate. Each child must have a unique key to work correctly.
+         */
+        children?: React.ReactNode;
+
         className?: string;
 
         /**
