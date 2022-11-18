@@ -3,7 +3,6 @@ node_modules
 coverage
 *.log
 lib
-dist
 examples
 flow-coverage
 .idea
