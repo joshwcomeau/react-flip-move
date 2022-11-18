@@ -17,7 +17,7 @@
     "build": "rollup -c",
     "flow": "flow",
     "flow-coverage": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
-    "prebuild": "npm run lint && flow check && npm run typescript && npm run test",
+    "prebuild": "npm run lint && flow check && npm run typescript",
     "prepublishOnly": "npm run build",
     "prepush": "npm run prebuild",
     "test": "cross-env NODE_ENV=test ./node_modules/.bin/karma start --single-run",
